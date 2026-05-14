@@ -1,25 +1,39 @@
 # NocturnalQuest
 
+修改檔案：
+
+./resources/app/dist/electron/browser/main-S57572R2.js
+
 ## 職業技能背景面板 隨機播放面板(每十秒刷新)
+
+https://e-hentai.org/g/3673116/377b49e7b1/
+
+### 職業名稱
+
+- Warrior
+- Wizard
+- Priest
+- Rogue
+- Warlock
+- Lycan
+- Shaman
+
+搜尋
+
+```js
+background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
+```
+替換成
+```js
+background-image: url('themes/talentsImage/`,`${t.unit.class}/${parseInt(Date.now()/1000/10)%10}`,`.webp');
+```
+
+每十秒刷新 talentsImage 目錄中 **職業名稱** 目錄 0.webp 1.webp ... 9.webp 圖片
+
 
 https://e-hentai.org/g/3935085/341fa9175e/
 
 [DyDy_cos] Hiyuki (Animated WEBP) [AI Generated]
-
-./resources/app/dist/electron/browser/main-S57572R2.js
-
-```js
-`
-background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
-`
-```
-每十秒刷新 talentsImage 目錄中 0.webp 1.webp ... 9.webp 圖片
-```js
-`
-background-image: url('cefc/talentsImage/`,`${parseInt(Date.now()/1000/10)%10}`,`.webp');
-`
-```
-
 
 ## 戰鬥地圖 (每次刷新)
 
