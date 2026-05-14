@@ -56,13 +56,19 @@ r.nativeElement.style.backgroundImage=`url(cefc/map/${parseInt(Date.now()/1000/1
 [DyDy_cos] Belfast & Enterprise (Animated WEBP) [AI Generated]
 
 ```js
-`
 "background-image","url(map.png)"
-`
+```
+
+淡化背景
+
+```js
+"background-image",`url(cefc/map/${Date.now()%10}.webp)`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"
 ```
 
 ```js
-`
-"background-image",`url(cefc/map/${Date.now()%10}.webp)`
-`
+"background-image","url(town_bg.jpg)"
+```
+
+```js
+"background-image",`url(cefc/map/${Date.now()%10}.webp)`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"
 ```
