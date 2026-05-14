@@ -4,9 +4,22 @@
 
 ./resources/app/dist/electron/browser/main-S57572R2.js
 
-## 職業技能背景面板 隨機播放面板(每十秒刷新)
+依照順序重新命名
+
+```sh
+i=0; for f in *.webp; do mv -vn "$f" "$((i++)).webp"; done
+```
+## 圖庫
 
 https://e-hentai.org/g/3673116/377b49e7b1/
+https://e-hentai.org/g/3935085/341fa9175e/
+https://e-hentai.org/s/2d15ebc1f6/3876902-4
+
+[DyDy_cos] Hiyuki (Animated WEBP) [AI Generated]
+[DyDy_cos] Belfast & Enterprise (Animated WEBP) [AI Generated]
+
+## 職業技能背景面板 隨機播放面板(每十秒刷新)
+
 
 ### 職業名稱
 
@@ -23,23 +36,17 @@ https://e-hentai.org/g/3673116/377b49e7b1/
 ```js
 background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
 ```
-替換成
+替換成（37=0-36）
 ```js
-background-image: url('themes/talentsImage/`,`${t.unit.class}/${parseInt(Date.now()/1000/10)%10}`,`.webp');
+background-image: url('_themes/talentsImage/`,`${parseInt(Date.now()/1000/10)%37}`,`.webp');
 ```
 
 每十秒刷新 talentsImage 目錄中 **職業名稱** 目錄 0.webp 1.webp ... 9.webp 圖片
 
 
-https://e-hentai.org/g/3935085/341fa9175e/
-
-[DyDy_cos] Hiyuki (Animated WEBP) [AI Generated]
-
 ## 戰鬥地圖 (每次刷新)
 
-[DyDy_cos] Belfast & Enterprise (Animated WEBP) [AI Generated]
-https://e-hentai.org/s/2d15ebc1f6/3876902-4
-
+### title
 ```js
 `
 background-image: url('`,n.mapBgImage,`');
@@ -48,9 +55,11 @@ background-image: url('`,n.mapBgImage,`');
 
 ```js
 `
-background-image: url('cefc/map/`,`${parseInt(Date.now()/1000/10)%10}`,`.webp');
+background-image: url('_themes/mapBgImage_title/`,`${parseInt(Date.now()/1000/10)%10}`,`.webp');
 `
 ```
+
+### bg
 
 ```js
 r.nativeElement.style.backgroundImage=`url(${x.mapBgImage})`
@@ -65,7 +74,7 @@ x.name =
 - IronMines
 
 ```js
-r.nativeElement.style.backgroundImage=`url(cefc/mapBgImage/${x.name}/${Date.now()%2}.webp)`
+r.nativeElement.style.backgroundImage=`url(_themes/mapBgImage/${Date.now()%15}.webp)`
 ```
 
 
