@@ -174,6 +174,17 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
 
 - [forest_map_2][黑暗森林]
     - elf_mutant 08/: 83
+      ```js
+      ",image:"frost_wraith.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/frost_wraith/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="frost_wraith.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/frost_wraith/${Math.floor(Math.random() * 18)}.jpg`
+      ```
     - dark_druid 05/: 21
     - fel_ent [邪能古樹] 19/: 50
     - iron_trunk [鐵樹幹] 
@@ -194,27 +205,115 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
       this.unit.unit.image=`themes/monster/ice_golem/${Math.floor(Math.random() * 63)}.jpg`
       ```
     - frost_wraith 22/: 18 
+      ```js
+      ",image:"frost_wraith.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/frost_wraith/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="frost_wraith.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/frost_wraith/${Math.floor(Math.random() * 18)}.jpg`
+      ```
     - king_of_winter 21/: 51
+      ```js
+      ",image:"king_of_winter.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/king_of_winter/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="king_of_winter.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/king_of_winter/${Math.floor(Math.random() * 51)}.jpg`
+      ```
     - ice_demon
     - frozen_abomination
 
 - 沙丘 
     - living_sands 20/: 62
+      ```js
+      ",image:"living_sands.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/living_sands/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="living_sands.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/living_sands/${Math.floor(Math.random() * 62)}.jpg`
+      ```
     - fire_elemental 09/: 19
+      ```js
+      ",image:"fire_elemental.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/fire_elemental/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="fire_elemental.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/fire_elemental/${Math.floor(Math.random() * 19)}.jpg`
+      ```
     - mega_scorpion 
     - fel_sphinx 
     - sand_titan 
 
 - 風暴堡壘 
     - iron_golem 10/: 55
+      ```js
+      ",image:"iron_golem.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/iron_golem/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="iron_golem.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/iron_golem/${Math.floor(Math.random() * 55)}.jpg`
+      ```
     - acolyte 14/: 50
+      ```js
+      ",image:"acolyte.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/acolyte/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="acolyte.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/acolyte/${Math.floor(Math.random() * 50)}.jpg`
+      ```
     - living_thunder 
     - thunderous_beast 
     - thunder_dragon 
 
 - 堡壘 
     - knight 13/: 50
+      ```js
+      ",image:"knight.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/knight/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="knight.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/knight/${Math.floor(Math.random() * 50)}.jpg`
+      ```
     - gargoyle 16/: 50
+      ```js
+      ",image:"gargoyle.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/gargoyle/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="gargoyle.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/gargoyle/${Math.floor(Math.random() * 50)}.jpg`
+      ```
     - beast 
     - black_giant  
     - lord_of_chaos 
