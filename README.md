@@ -26,6 +26,32 @@ https://e-hentai.org/s/2d15ebc1f6/3876902-4
 
 ### 職業名稱
 
+### 頭像定義
+
+```json
+avatars:{right:"lycan_wild.jpg",left:"lycan_dark.jpg",default:"lycan.jpg"}
+```
+```js
+updateHeroAvatarFromTalents(t){let e=this.heroes().get(t);if(!e)return null;let n=wr[e.class];if(!n)return null;let a=0,o=0;for(let l of Object.values(n.talents))for(let c of Object.values(l)){let m=c,b=e.effects.find(x=>x.name===m.def.name)?.parameters?.ranks||0;m.side==="left"?a+=b:o+=b}let r=a>o?"left":o>a?"right":"default",s=n.avatars[r];
+```
+
+```js
+updateHeroAvatarFromTalents(t) 
+{
+    let e = this.heroes().get(t); 
+    if (!e) return null; 
+    let n = wr[e.class]; // n =  職業資料
+    if (!n) return null;
+    let a = 0, o = 0;
+    for (let l of Object.values(n.talents))
+        for (let c of Object.values(l)) {
+            let m = c,
+                b = e.effects.find(x => x.name === m.def.name)?.parameters?.ranks || 0; m.side === "left" ? a += b : o += b
+        }
+    let r = a > o ? "left" : o > a ? "right" : "default", s = n.avatars[r]; // s = 選擇的頭像
+    //...
+}
+```
 - Warrior
 - Wizard
 - Priest
