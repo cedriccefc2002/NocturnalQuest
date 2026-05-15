@@ -7,7 +7,10 @@
 依照順序重新命名
 
 ```sh
-i=0; for f in *.webp; do mv -vn "$f" "themes.$((i++)).webp"; done
+# 命名成暫時名稱
+i=0; for f in *.webp; do mv -vn "$f" "temp.$((i++)).webp"; done
+# 命名成正式名稱
+i=0; for f in temp.*.webp; do mv -vn "$f" "themes.$((i++)).webp"; done
 ```
 ## 圖庫
 
@@ -38,7 +41,7 @@ background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
 ```
 替換成（37=0-36）
 ```js
-background-image: url('themes/themes.`,`${parseInt(Date.now()/1000/10)%220}`,`.webp');
+background-image: url('themes/themes.`,`${parseInt(Date.now()/1000/10)%418}`,`.webp');
 ```
 
 每十秒刷新 talentsImage 目錄中 **職業名稱** 目錄 0.webp 1.webp ... 9.webp 圖片
@@ -70,7 +73,7 @@ x.name =
 - IronMines
 
 ```js
-r.nativeElement.style.backgroundImage=`url(themes/themes.${Date.now()%220}.webp)`
+r.nativeElement.style.backgroundImage=`url(themes/themes.${Date.now()%418}.webp)`
 ```
 
 
