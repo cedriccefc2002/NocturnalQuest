@@ -153,74 +153,71 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
 ```
 
 ## 怪物
+- [mines_map][鐵礦]
+    - skeleton_warrior 01/: 73 
+      ```js
+      ",image:"skeleton_warrior.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/skeleton_warrior/0.jpg`,ranks:["
 
-- [mines_map][鐵礦] -> [百炼成神]
-    - skeleton_warrior [骷髅战士] 宁雨蝶 https://e-hentai.org/s/b804178d88/3928757-36
-    - skeleton_warlock [骷髅术士] 朱绾 https://e-hentai.org/s/164d8a0d87/3928745-26
-    - skeleton_ogre [骷髅食人魔] 溪幼琴 https://e-hentai.org/s/8af9f14b24/3894419-51
-    - skeleton_dragon [骷髅龙] 天穹 https://e-hentai.org/s/ae35197ac1/3837294-24
-    - skeleton_overlord [骷髅霸主] 青萝 https://e-hentai.org/s/901e3f3c5d/3837285-21
+      ```js
+      this.unit.unit.image="skeleton_warrior.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.jpg`
+      ```
+    - skeleton_warlock 02/: 21
+    - skeleton_ogre [骷髅食人魔] 18/: 21
+    - skeleton_dragon [骷髅龙] 
+    - skeleton_overlord [骷髅霸主] 
 
-- [forest_map_2][黑暗森林] -> [神墓]
-    - elf_mutant [精灵变种人] 梦可儿 https://e-hentai.org/s/76a0d5d60c/3894409-1
-    - dark_druid [黑暗德鲁伊] 楚月 https://e-hentai.org/s/f0326142f1/3916242-13
-    - fel_ent [邪能古樹] 南宫仙儿 https://e-hentai.org/s/9de8eaee05/3884347-26
-    - iron_trunk [鐵樹幹] 楚钰-尸王雨馨 https://e-hentai.org/s/2da6ab6c23/3797387-16
-    - ent_overlord 楚钰 https://e-hentai.org/s/a82ff6f1ea/3884356-20
+- [forest_map_2][黑暗森林]
+    - elf_mutant 08/: 83
+    - dark_druid 05/: 21
+    - fel_ent [邪能古樹] 19/: 50
+    - iron_trunk [鐵樹幹] 
+    - ent_overlord 
 
-### 冰封尖塔
-   
-#### ice_golem 23
+- 冰封尖塔
+    - ice_golem 23/: 63 
+      ```js
+      ",image:"ice_golem.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/ice_golem/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="ice_golem.jpg"
+      ```
 
-圖鑑
+      ```js
+      this.unit.unit.image=`themes/monster/ice_golem/${Math.floor(Math.random() * 63)}.jpg`
+      ```
+    - frost_wraith 22/: 18 
+    - king_of_winter 21/: 51
+    - ice_demon
+    - frozen_abomination
 
-```js
-",image:"ice_golem.jpg",ranks:["
-```
-```js
-",image:`themes/monster/ice_golem/0.jpg`,ranks:["
+- 沙丘 
+    - living_sands 20/: 62
+    - fire_elemental 09/: 19
+    - mega_scorpion 
+    - fel_sphinx 
+    - sand_titan 
 
-戰鬥畫面
+- 風暴堡壘 
+    - iron_golem 10/: 55
+    - acolyte 14/: 50
+    - living_thunder 
+    - thunderous_beast 
+    - thunder_dragon 
 
-```js
-this.unit.unit.image="ice_golem.jpg"
-```
-
-```js
-this.unit.unit.image=`themes/monster/ice_golem/${Math.floor(Math.random() * 63)}.jpg`
-```
-
-
-```
-
-    - frost_wraith 22
-    - king_of_winter 董白 https://e-hentai.org/s/d5efbe8c86/2835907-22
-    - ice_demon 孙尚香 https://e-hentai.org/s/9df610a65f/2219208-7
-    - frozen_abomination 吕玲绮 https://e-hentai.org/s/b4748264a7/2157089-21
-
-- 沙丘 -> 绝世唐门
-    - living_sands 唐舞桐 https://e-hentai.org/s/d523913f9e/3928935-41
-    - fire_elemental 唐雅 https://e-hentai.org/s/e960df44d4/3928809-4
-    - mega_scorpion 梦红 https://e-hentai.org/s/d3f1601277/3928806-2
-    - fel_sphinx 江楠楠 https://e-hentai.org/s/b2727ca932/3928804-19
-    - sand_titan 南秋秋 https://e-hentai.org/s/4edfce6983/3916101-1
-
-- 風暴堡壘 -> 绝世唐门
-    - iron_golem 小医仙 https://e-hentai.org/s/9d2c55d8a9/3928937-42
-    - acolyte 青仙子 https://e-hentai.org/s/7416c2abaf/3928931-33
-    - living_thunder 萧潇 https://e-hentai.org/s/fee9781696/3928938-1
-    - thunderous_beast 青鳞 https://e-hentai.org/s/7b124fec06/3928823-21
-    - thunder_dragon 萧薰儿 https://e-hentai.org/s/cc5df3a258/3928746-44
-
-- 堡壘 -> 斗罗大陆
-    - knight 千仞雪 https://e-hentai.org/s/aa3197cd3c/3928807-10
-    - gargoyle 小舞 https://e-hentai.org/s/f190086fd1/3894399-48
-    - beast 胡列娜 https://e-hentai.org/s/8cd94c7e5a/3894693-18
-    - black_giant 水月儿 https://e-hentai.org/s/6ccede1eed/3863723-66
-    - lord_of_chaos 独孤雁 https://e-hentai.org/s/011da97485/3865237-14
-
-
-
+- 堡壘 
+    - knight 13/: 50
+    - gargoyle 16/: 50
+    - beast 
+    - black_giant  
+    - lord_of_chaos 
 
 ## 地圖 每次啟動刷新
 
