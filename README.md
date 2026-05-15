@@ -12,6 +12,14 @@ i=0; for f in *.webp; do mv -vn "$f" "temp.$((i++)).webp"; done
 # 命名成正式名稱
 i=0; for f in temp.*.webp; do mv -vn "$f" "themes.$((i++)).webp"; done
 ```
+
+```sh
+# 命名成暫時名稱
+i=0; for f in *.jpg; do mv -vn "$f" "temp.$((i++)).jpg"; done
+# 命名成正式名稱
+i=0; for f in temp.*.jpg; do mv -vn "$f" "$((i++)).jpg"; done
+```
+
 ## 圖庫
 
 https://e-hentai.org/g/3673116/377b49e7b1/
@@ -62,8 +70,10 @@ s=n.avatars[r];
 s=`themes/themes.${Math.floor(Math.random() * 418)}.webp`;
 ```
 
+依照職業隨機
+
 ```js
-s=`themes/class/${n.avatars[r]}`;
+s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 62)}.jpg`;
 ```
 
 - Warrior
