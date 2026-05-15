@@ -91,7 +91,7 @@ background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
 ```
 替換成（37=0-36）
 ```js
-background-image: url('themes/themes.`,`${parseInt(Date.now()/1000/10)%418}`,`.webp');
+background-image: url('themes/bg/themes.`,`${parseInt(Date.now()/1000/10)%418}`,`.webp');
 ```
 
 每十秒刷新 talentsImage 目錄中 **職業名稱** 目錄 0.webp 1.webp ... 9.webp 圖片
@@ -105,7 +105,7 @@ background-image: url('`,n.mapBgImage,`');
 ```
 
 ```js
-background-image: url('themes/themes.`,`${parseInt(Date.now()/1000/10)%220}`,`.webp');
+background-image: url('themes/bg/themes.`,`${parseInt(Date.now()/1000/10)%418}`,`.webp');
 ```
 
 ### bg
@@ -123,7 +123,7 @@ x.name =
 - IronMines
 
 ```js
-r.nativeElement.style.backgroundImage=`url(themes/themes.${Date.now()%418}.webp)`
+r.nativeElement.style.backgroundImage=`url(themes/bg/themes.${Date.now()%418}.webp)`
 ```
 
 
