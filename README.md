@@ -251,3 +251,22 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/themes.${Date.now()%418}.we
 ```js
 "background-image",`url(cefc/map/${Date.now()%10}.webp)`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"
 ```
+
+## 怪物
+
+### 圖鑑
+
+```js
+{name:"Skeleton Warrior",image:"skeleton_warrior.jpg",ranks:["normal","elite"]}
+```
+```js
+{name:"Skeleton Warrior",image:`themes/class/wizard_frost/0.jpg`,ranks:["normal","elite"]}
+```
+### 戰鬥畫面
+
+```
+this.unit.unit.image="skeleton_warrior.jpg"
+```
+```
+this.unit.unit.image=`themes/class/wizard_frost/${Math.floor(Math.random() * 100)}.jpg`
+```
