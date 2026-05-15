@@ -13,11 +13,16 @@ i=0; for f in *.webp; do mv -vn "$f" "temp.$((i++)).webp"; done
 i=0; for f in temp.*.webp; do mv -vn "$f" "themes.$((i++)).webp"; done
 ```
 
+reindex.sh
+
 ```sh
-# 命名成暫時名稱
-i=0; for f in *.jpg; do mv -vn "$f" "temp.$((i++)).jpg"; done
-# 命名成正式名稱
-i=0; for f in temp.*.jpg; do mv -vn "$f" "$((i++)).jpg"; done
+#!/bin/bash
+for d in */; do
+  # 命名成暫時名稱
+  i=0; for f in ./$d/*.{jpg,png,webp}; do mv -vn "$f" "./$d/temp.$((i++)).jpg"; done
+  # 命名成正式名稱
+  i=0; for f in ./$d/temp.*.jpg; do mv -vn "$f" "./$d/$((i++)).jpg"; done
+done
 ```
 
 ## 圖庫
@@ -73,7 +78,7 @@ s=`themes/themes.${Math.floor(Math.random() * 418)}.webp`;
 依照職業隨機
 
 ```js
-s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 62)}.jpg`;
+s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 20)}.jpg`;
 ```
 
 - Warrior
