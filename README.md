@@ -60,8 +60,10 @@ s=n.avatars[r];
 ```
 ```js
 s=`themes/themes.${Math.floor(Math.random() * 418)}.webp`;
+```
 
-
+```js
+s=`themes/class/${n.avatars[r]}`;
 ```
 
 - Warrior
