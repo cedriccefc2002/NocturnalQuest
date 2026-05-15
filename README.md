@@ -168,7 +168,29 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
       this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.jpg`
       ```
     - skeleton_warlock 02/: 21
+      ```js
+      ",image:"skeleton_warlock.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/skeleton_warlock/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="skeleton_warlock.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/skeleton_warlock/${Math.floor(Math.random() * 21)}.jpg`
+      ```
     - skeleton_ogre [骷髅食人魔] 18/: 21
+    ```js
+      ",image:"skeleton_ogre.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/skeleton_ogre/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="skeleton_ogre.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/skeleton_ogre/${Math.floor(Math.random() * 21)}.jpg`
+      ```
     - skeleton_dragon [骷髅龙] 
     - skeleton_overlord [骷髅霸主] 
 
