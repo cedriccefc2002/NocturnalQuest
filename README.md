@@ -35,6 +35,8 @@ avatars:{right:"lycan_wild.jpg",left:"lycan_dark.jpg",default:"lycan.jpg"}
 updateHeroAvatarFromTalents(t){let e=this.heroes().get(t);if(!e)return null;let n=wr[e.class];if(!n)return null;let a=0,o=0;for(let l of Object.values(n.talents))for(let c of Object.values(l)){let m=c,b=e.effects.find(x=>x.name===m.def.name)?.parameters?.ranks||0;m.side==="left"?a+=b:o+=b}let r=a>o?"left":o>a?"right":"default",s=n.avatars[r];
 ```
 
+每次點變更天賦時更新頭像
+
 ```js
 updateHeroAvatarFromTalents(t) 
 {
@@ -52,6 +54,16 @@ updateHeroAvatarFromTalents(t)
     //...
 }
 ```
+
+```js
+s=n.avatars[r];
+```
+```js
+s=`themes/themes.${Math.floor(Math.random() * 418)}.webp`;
+
+
+```
+
 - Warrior
 - Wizard
 - Priest
