@@ -1,5 +1,13 @@
 # NocturnalQuest
 
+## 工具
+而比較保險的作法是建立一個垃圾桶目錄，將這些重複的檔案移到這個目錄中，等確認無誤後再把它們刪除：
+
+```sh
+mkdir trash_can
+fdupes -f ./themes/bg | xargs -I '{}' mv '{}' trash_can
+```
+
 修改檔案：
 
 ./resources/app/dist/electron/browser/main-S57572R2.js
@@ -7,10 +15,11 @@
 依照順序重新命名
 
 ```sh
+cd ./themes/bg
 # 命名成暫時名稱
 i=0; for f in *.webp; do mv -vn "$f" "temp.$((i++)).webp"; done
 # 命名成正式名稱
-i=0; for f in temp.*.webp; do mv -vn "$f" "themes.$((i++)).webp"; done
+i=0; for f in temp.*.webp; do mv -vn "$f" "$((i++)).webp"; done
 ```
 
 reindex and resize
@@ -36,7 +45,25 @@ https://e-hentai.org/s/2d15ebc1f6/3876902-4
 [DyDy_cos] Hiyuki (Animated WEBP) [AI Generated]
 [DyDy_cos] Belfast & Enterprise (Animated WEBP) [AI Generated]
 
-## 職業技能背景面板 隨機播放面板(每十秒刷新)
+
+
+## 職業
+
+### 技能背景面板 隨機播放面板(每十秒刷新)
+
+835
+
+搜尋
+
+```js
+background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
+```
+替換成 
+```js
+background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
+```
+
+每十秒刷新 talentsImage 目錄中 **職業名稱** 目錄 0.webp 1.webp ... 9.webp 圖片
 
 
 ### 職業名稱
@@ -91,17 +118,7 @@ s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.
 - Lycan
 - Shaman
 
-搜尋
 
-```js
-background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
-```
-替換成（37=0-36）
-```js
-background-image: url('themes/bg/themes.`,`${parseInt(Date.now()/1000/10)%418}`,`.webp');
-```
-
-每十秒刷新 talentsImage 目錄中 **職業名稱** 目錄 0.webp 1.webp ... 9.webp 圖片
 
 
 ## 戰鬥地圖 (每次刷新)
@@ -112,7 +129,7 @@ background-image: url('`,n.mapBgImage,`');
 ```
 
 ```js
-background-image: url('themes/bg/themes.`,`${parseInt(Date.now()/1000/10)%418}`,`.webp');
+background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
 ```
 
 ### bg
@@ -130,7 +147,7 @@ x.name =
 - IronMines
 
 ```js
-r.nativeElement.style.backgroundImage=`url(themes/bg/themes.${Date.now()%418}.webp)`
+r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
 ```
 
 
