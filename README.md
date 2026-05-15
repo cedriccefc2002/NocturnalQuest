@@ -13,15 +13,17 @@ i=0; for f in *.webp; do mv -vn "$f" "temp.$((i++)).webp"; done
 i=0; for f in temp.*.webp; do mv -vn "$f" "themes.$((i++)).webp"; done
 ```
 
-reindex.sh
+reindex and resize
 
 ```sh
 #!/bin/bash
 for d in */; do
-  # 命名成暫時名稱
-  i=0; for f in ./$d/*.{jpg,png,webp}; do mv -vn "$f" "./$d/temp.$((i++)).jpg"; done
-  # 命名成正式名稱
-  i=0; for f in ./$d/temp.*.jpg; do mv -vn "$f" "./$d/$((i++)).jpg"; done
+  echo $d
+  for f in ./$d*.{jpg,png,webp}; do
+    # echo resize $f
+    convert "$f" -resize 395x564 "$f.resize.jpg"
+  done
+  i=0; for f in ./$d*.resize.jpg; do mv "$f" "./$d$((i++)).jpg"; done
 done
 ```
 
@@ -78,7 +80,7 @@ s=`themes/themes.${Math.floor(Math.random() * 418)}.webp`;
 依照職業隨機
 
 ```js
-s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 20)}.jpg`;
+s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.jpg`;
 ```
 
 - Warrior
