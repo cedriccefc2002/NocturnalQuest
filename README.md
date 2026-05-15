@@ -175,18 +175,40 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
 - [forest_map_2][黑暗森林]
     - elf_mutant 08/: 83
       ```js
-      ",image:"frost_wraith.jpg",ranks:["
+      ",image:"elf_mutant.jpg",ranks:["
       ```
       ```js
-      ",image:`themes/monster/frost_wraith/0.jpg`,ranks:["
+      ",image:`themes/monster/elf_mutant/0.jpg`,ranks:["
       ```js
-      this.unit.unit.image="frost_wraith.jpg"
+      this.unit.unit.image="elf_mutant.jpg"
       ```
       ```js
-      this.unit.unit.image=`themes/monster/frost_wraith/${Math.floor(Math.random() * 18)}.jpg`
+      this.unit.unit.image=`themes/monster/elf_mutant/${Math.floor(Math.random() * 83)}.jpg`
       ```
     - dark_druid 05/: 21
+      ```js
+      ",image:"dark_druid.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/dark_druid/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="dark_druid.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/dark_druid/${Math.floor(Math.random() * 21)}.jpg`
+      ```
     - fel_ent [邪能古樹] 19/: 50
+      ```js
+      ",image:"fel_ent.jpg",ranks:["
+      ```
+      ```js
+      ",image:`themes/monster/fel_ent/0.jpg`,ranks:["
+      ```js
+      this.unit.unit.image="fel_ent.jpg"
+      ```
+      ```js
+      this.unit.unit.image=`themes/monster/fel_ent/${Math.floor(Math.random() * 50)}.jpg`
+      ```
     - iron_trunk [鐵樹幹] 
     - ent_overlord 
 
