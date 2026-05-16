@@ -105,6 +105,20 @@ if (cfg.替換.職業) {
     // s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.jpg`;
     classKind = `n.avatars[r]`;
   }
+/*
+s=((t)=>{
+  t = t.split(".")[0];
+  let s = 0;
+  if(t==="lycan") s=31;
+if(t==="priest") s=50;
+if(t==="rogue") s=50;
+if(t==="shaman") s=30;
+if(t==="warlock") s=50;
+if(t==="warrior") s=46;
+if(t==="wizard") s=48;
+  return "themes/class/"+t+"/"+Math.floor(Math.random()*s)+".jpg";
+})(n.avatars["default"]);
+*/
   const replaceString =
     `
 s=((t)=>{
