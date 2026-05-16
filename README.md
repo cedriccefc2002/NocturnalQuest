@@ -9,7 +9,7 @@ wget https://github.com/electron/electron/releases/download/v34.5.8/electron-v34
 unzip -d v34 electron-v34.5.8-linux-x64.zip
 mv v34/resources v34/resources_bak
 ln -s ~/.local/share/Steam/steamapps/common/NocturnalQuest/resources v34/resources
-./v34/electron --no-sandbox
+~/.local/share/Steam/steamapps/common/NocturnalQuest-linux/v34/electron --no-sandbox
 ```
 下載 [electron-v34.5.8-linux-x64.zip](https://github.com/electron/electron/releases/download/v34.5.8/electron-v34.5.8-linux-x64.zip)
 
