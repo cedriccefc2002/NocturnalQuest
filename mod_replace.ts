@@ -103,7 +103,7 @@ if (cfg.替換.職業) {
     classKind = `n.avatars["default"]`;
   } else {
     // s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.jpg`;
-    classKind = `s=\`${classPath}/\${n.avatars[r].split(".")[0]}/\`;`;
+    classKind = `n.avatars[r]`;
   }
   const replaceString =
     `
