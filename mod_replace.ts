@@ -70,7 +70,7 @@ const random = (count: number) => `\${Math.floor(Math.random() * ${count})}`
 const randomByDate = (count: number, sec: number = 10) => `\${parseInt(Date.now()/1000/${sec})%${count}}`
 
 if (cfg.替換.技能背景面板) {
-  // background-image: url('`,n.mapBgImage,`');
+  // background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
   const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
   // background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
   const replaceString = `background-image: url('${bgPath}/\`,\`${randomByDate(bgCount)}\`,\`.webp');`;

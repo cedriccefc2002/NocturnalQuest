@@ -4,11 +4,11 @@ export const config = {
         "模組路徑": "themes",
         "背景動圖路徑": "bg",
         "動圖副檔名": ".webp",
-        "職業模式": 1, // 1 不分天賦
+        "職業模式": 2, // 1 不分天賦
         "職業路徑": "class",
         "怪物路徑": "monster",
         "職業子目錄": ["lycan", "priest", "rogue", "shaman", "warlock", "warrior", "wizard"],
-        "圖副檔名": ".jpg",
+        "圖副檔名": ".webp",
     },
     "替換": {
         "替換檔": "app/dist/electron/browser/main-S57572R2.js",
