@@ -119,7 +119,58 @@ if (cfg.替換.怪物) {
   }
 }
 
+// "background-image",`url(cefc/map/${Date.now()%10}.webp)`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"
+const globalbg = `"background-image",\`url(${bgPath}/\${Date.now()%${bgCount}}.webp)\`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"`;
+if (cfg.替換.鍊金術) {
+  // "background-image","url(alchemist_bg.jpg)"
+  mainjs = _replaceIfFind(mainjs, `"background-image","url(alchemist_bg.jpg)"`, globalbg);
+}
+if (cfg.替換.植物學家) {
+  // "background-image","url(botanist_bg.jpg)"
+  mainjs = _replaceIfFind(mainjs, `"background-image","url(botanist_bg.jpg)"`, globalbg);
+}
+
+if (cfg.替換.商店) {
+  // "background-image","url(shop_bg.jpg)"
+  mainjs = _replaceIfFind(mainjs, `"background-image","url(shop_bg.jpg)"`, globalbg);
+}
+
+if (cfg.替換.城鎮) {
+  // "background-image","url(town_bg.jpg)"
+  mainjs = _replaceIfFind(mainjs, `"background-image","url(town_bg.jpg)"`, globalbg);
+}
+
+if (cfg.替換.總部) {
+  // "background","linear-gradient(to top, #000000c7, #00000052), url(dunes_map.jpg)"
+  const searchString = `"background","linear-gradient(to top, #000000c7, #00000052), url(dunes_map.jpg)"`;
+  // "background",`linear-gradient(to top, #000000c7, #00000052), url(cefc/map/${Date.now()%10}.webp)`
+  const replaceString = `"background",\`linear-gradient(to top, #000000c7, #00000052), url(${bgPath}/\${Date.now()%${bgCount}}.webp)\``;
+  mainjs = _replaceIfFind(mainjs, searchString, replaceString);
+}
+
+if (cfg.替換.鐵匠) {
+  // 天賦背景
+  // "background-image",'url("blacksmith_talents_bg.jpg")'
+  mainjs = _replaceIfFind(mainjs, `"background-image",'url("blacksmith_talents_bg.jpg")'`, globalbg);
+}
+
 if (hasModify) {
   await Deno.rename(cfg.替換.替換檔, `${cfg.替換.替換檔}.${Date.now()}.bak`);
   await Deno.writeTextFile(cfg.替換.替換檔, mainjs);
 }
+
+
+async function pressAnyKey(message = "Press any key to continue...") {
+  console.log(message);
+  
+  // Set stdin to raw mode to capture single keypresses
+  Deno.stdin.setRaw(true);
+  
+  const buffer = new Uint8Array(1);
+  await Deno.stdin.read(buffer);
+  
+  // Return to normal mode
+  Deno.stdin.setRaw(false);
+}
+
+await pressAnyKey();

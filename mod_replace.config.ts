@@ -18,6 +18,15 @@ export const config = {
         "戰鬥地圖": {
             "上方橫幅": true
         },
-        "戰鬥背景": true
+        "戰鬥背景": true,
+        "鍊金術": true,
+        "植物學家": true,
+        "商店": true,
+        // "珠寶商": true,
+        "城鎮": false,
+        "鐵匠": true,
+        // "自動法師小屋": true,
+        // "酒館": true,
+        "總部": true
     }
 };
