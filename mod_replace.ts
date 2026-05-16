@@ -64,11 +64,14 @@ const monsterSettings = await _dirSubCount(`${cfg.模組.基礎路徑}/${cfg.模
 console.log("monsterPath", monsterPath);
 console.log("monsterSettings", monsterSettings);
 
+const random = (count: number) => `\${Math.floor(Math.random() * ${count})}`
+const randomByDate = (count: number, sec: number = 10) => `\${parseInt(Date.now()/1000/${sec})%${count}}`
+
 if (cfg.替換.技能背景面板) {
   // background-image: url('`,n.mapBgImage,`');
   const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
   // background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
-  const replaceString = `background-image: url('${bgPath}/\`,\`\${parseInt(Date.now()/1000/10)%${bgCount}}\`,\`.webp');`;
+  const replaceString = `background-image: url('${bgPath}/\`,\`${randomByDate(bgCount)}\`,\`.webp');`;
   mainjs = _replaceIfFind(mainjs, searchString, replaceString);
 }
 
@@ -84,7 +87,7 @@ if (cfg.替換.戰鬥背景) {
   // r.nativeElement.style.backgroundImage=`url(${x.mapBgImage})`
   const searchString = `r.nativeElement.style.backgroundImage=\`url(\${x.mapBgImage})\``;
   // r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
-  const replaceString = `r.nativeElement.style.backgroundImage=\`url(${bgPath}/\${Date.now()%${bgCount}}.webp)\``;
+  const replaceString = `r.nativeElement.style.backgroundImage=\`url(${bgPath}/${random(bgCount)}.webp)\``;
   mainjs = _replaceIfFind(mainjs, searchString, replaceString);
 }
 
@@ -95,10 +98,10 @@ if (cfg.替換.職業) {
 
   if (cfg.模組.職業模式 == 1) {
     // s=`themes/class/${n.avatars["default"].split(".")[0]}/${Math.floor(Math.random() * 30)}.jpg`;
-    replaceString = `s=\`${classPath}/\${n.avatars["default"].split(".")[0]}/\${Math.floor(Math.random() * ${classCount})}.jpg\`;`;
+    replaceString = `s=\`${classPath}/\${n.avatars["default"].split(".")[0]}/${random(classCount)}.jpg\`;`;
   } else {
     // s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.jpg`;
-    replaceString = `s=\`${classPath}/\${n.avatars[r].split(".")[0]}/\${Math.floor(Math.random() * ${classCount})}.jpg\`;`;
+    replaceString = `s=\`${classPath}/\${n.avatars[r].split(".")[0]}/${random(classCount)}.jpg\`;`;
   }
   mainjs = _replaceIfFind(mainjs, searchString, replaceString);
 }
@@ -114,13 +117,13 @@ if (cfg.替換.怪物) {
     // this.unit.unit.image="skeleton_warrior.jpg"
     const searchString2 = `this.unit.unit.image="${name}.jpg"`;
     // this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.jpg`
-    const replaceString2 = `this.unit.unit.image=\`${monsterPath}/${name}/\${Math.floor(Math.random() * ${count})}.jpg\``;
+    const replaceString2 = `this.unit.unit.image=\`${monsterPath}/${name}/${random(count)}.jpg\``;
     mainjs = _replaceIfFind(mainjs, searchString2, replaceString2);
   }
 }
 
 // "background-image",`url(cefc/map/${Date.now()%10}.webp)`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"
-const globalbg = `"background-image",\`url(${bgPath}/\${Date.now()%${bgCount}}.webp)\`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"`;
+const globalbg = `"background-image",\`url(${bgPath}/${random(bgCount)}.webp)\`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"`;
 if (cfg.替換.鍊金術) {
   // "background-image","url(alchemist_bg.jpg)"
   mainjs = _replaceIfFind(mainjs, `"background-image","url(alchemist_bg.jpg)"`, globalbg);
@@ -155,20 +158,20 @@ if (cfg.替換.鐵匠) {
 }
 
 if (hasModify) {
-  await Deno.rename(cfg.替換.替換檔, `${cfg.替換.替換檔}.${Date.now()}.bak`);
+  // await Deno.rename(cfg.替換.替換檔, `${cfg.替換.替換檔}.${Date.now()}.bak`);
   await Deno.writeTextFile(cfg.替換.替換檔, mainjs);
 }
 
 
 async function pressAnyKey(message = "Press any key to continue...") {
   console.log(message);
-  
+
   // Set stdin to raw mode to capture single keypresses
   Deno.stdin.setRaw(true);
-  
+
   const buffer = new Uint8Array(1);
   await Deno.stdin.read(buffer);
-  
+
   // Return to normal mode
   Deno.stdin.setRaw(false);
 }

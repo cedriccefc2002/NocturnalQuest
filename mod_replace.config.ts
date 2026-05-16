@@ -16,7 +16,7 @@ export const config = {
         "職業": true,
         "技能背景面板": true,
         "戰鬥地圖": {
-            "上方橫幅": true
+            "上方橫幅": false
         },
         "戰鬥背景": true,
         "鍊金術": true,
