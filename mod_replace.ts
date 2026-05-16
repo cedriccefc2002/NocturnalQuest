@@ -7,15 +7,37 @@ let mainjs = await Deno.readTextFile(cfg.替換.替換檔);
 let hasModify = false;
 console.log("mainjs", mainjs.length);
 
+function _replaceIfFind(mainjs: string, searchString: string, replaceString: string) {
+  if (mainjs.indexOf(searchString) > 0) {
+    console.log("find", searchString);
+    console.log("replace", replaceString);
+    hasModify = true;
+    return mainjs.replace(searchString, replaceString);
+  } else {
+    return mainjs;
+  }
+}
+
 async function _dirCount(path: string, ext: string) {
   let count = 0;
-  console.log("_dirCount", path, ext);
+  // console.log("_dirCount", path, ext);
   for await (const entry of Deno.readDir(path)) {
-    if (extname(entry.name) == ext) {
+    if (entry.isFile && extname(entry.name) == ext) {
       count++;
     }
   }
   return count;
+}
+
+async function _dirSubCount(path: string, ext: string) {
+  const results: [name: string, count: number][] = [];
+  for await (const entry of Deno.readDir(path)) {
+    if (entry.isDirectory) {
+      // console.log("_dirSubCount", path, ext);
+      results.push([entry.name, await _dirCount(`${path}/${entry.name}`, ext)])
+    }
+  }
+  return results;
 }
 
 const bgCount = await _dirCount(`${cfg.模組.基礎路徑}/${cfg.模組.模組路徑}/${cfg.模組.背景動圖路徑}`, cfg.模組.動圖副檔名);
@@ -25,9 +47,7 @@ console.log("bgCount", bgCount);
 
 let classCount = -1;
 const classPath = `${cfg.模組.模組路徑}/${cfg.模組.職業路徑}`;
-
-for (const element of cfg.模組.職業子目錄) {
-  const c = await _dirCount(`${cfg.模組.基礎路徑}/${cfg.模組.模組路徑}/${cfg.模組.職業路徑}/${element}`, cfg.模組.圖副檔名);
+for (const [_, c] of await _dirSubCount(`${cfg.模組.基礎路徑}/${cfg.模組.模組路徑}/${cfg.模組.職業路徑}`, cfg.模組.圖副檔名)) {
   if (classCount < 0) {
     classCount = c;
   } else {
@@ -39,17 +59,17 @@ for (const element of cfg.模組.職業子目錄) {
 console.log("classPath", classPath);
 console.log("classCount", classCount);
 
+const monsterPath = `${cfg.模組.模組路徑}/${cfg.模組.怪物路徑}`;
+const monsterSettings = await _dirSubCount(`${cfg.模組.基礎路徑}/${cfg.模組.模組路徑}/${cfg.模組.怪物路徑}`, cfg.模組.圖副檔名);
+console.log("monsterPath", monsterPath);
+console.log("monsterSettings", monsterSettings);
+
 if (cfg.替換.技能背景面板) {
   // background-image: url('`,n.mapBgImage,`');
   const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
   // background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
   const replaceString = `background-image: url('${bgPath}/\`,\`\${parseInt(Date.now()/1000/10)%${bgCount}}\`,\`.webp');`;
-  if (mainjs.indexOf(searchString) > 0) {
-    console.log("find", searchString);
-    console.log("replace", replaceString);
-    mainjs = mainjs.replace(searchString, replaceString);
-    hasModify = true;
-  }
+  mainjs = _replaceIfFind(mainjs, searchString, replaceString);
 }
 
 if (cfg.替換.戰鬥地圖.上方橫幅) {
@@ -57,12 +77,7 @@ if (cfg.替換.戰鬥地圖.上方橫幅) {
   const searchString = `background-image: url('\`,n.mapBgImage,\`');`;
   // background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
   const replaceString = `background-image: url('${bgPath}/\`,\`\${parseInt(Date.now()/1000/10)%${bgCount}}\`,\`.webp');`;
-  if (mainjs.indexOf(searchString) > 0) {
-    console.log("find", searchString);
-    console.log("replace", replaceString);
-    mainjs = mainjs.replace(searchString, replaceString);
-    hasModify = true;
-  }
+  mainjs = _replaceIfFind(mainjs, searchString, replaceString);
 }
 
 if (cfg.替換.戰鬥背景) {
@@ -70,12 +85,7 @@ if (cfg.替換.戰鬥背景) {
   const searchString = `r.nativeElement.style.backgroundImage=\`url(\${x.mapBgImage})\``;
   // r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
   const replaceString = `r.nativeElement.style.backgroundImage=\`url(${bgPath}/\${Date.now()%${bgCount}}.webp)\``;
-  if (mainjs.indexOf(searchString) > 0) {
-    console.log("find", searchString);
-    console.log("replace", replaceString);
-    mainjs = mainjs.replace(searchString, replaceString);
-    hasModify = true;
-  }
+  mainjs = _replaceIfFind(mainjs, searchString, replaceString);
 }
 
 if (cfg.替換.職業) {
@@ -90,12 +100,22 @@ if (cfg.替換.職業) {
     // s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.jpg`;
     replaceString = `s=\`${classPath}/\${n.avatars[r].split(".")[0]}/\${Math.floor(Math.random() * ${classCount})}.jpg\`;`;
   }
+  mainjs = _replaceIfFind(mainjs, searchString, replaceString);
+}
 
-  if (mainjs.indexOf(searchString) > 0) {
-    console.log("find", searchString);
-    console.log("replace", replaceString);
-    mainjs = mainjs.replace(searchString, replaceString);
-    hasModify = true;
+if (cfg.替換.怪物) {
+  for (const [name, count] of monsterSettings) {
+    console.log(name, count);
+    // ",image:"skeleton_warrior.jpg",ranks:["
+    const searchString1 = `",image:"${name}.jpg",ranks:["`;
+    // ",image:`themes/monster/skeleton_warrior/0.jpg`,ranks:["
+    const replaceString1 = `",image:\`${monsterPath}/${name}/0.jpg\`,ranks:["`;
+    mainjs = _replaceIfFind(mainjs, searchString1, replaceString1);
+    // this.unit.unit.image="skeleton_warrior.jpg"
+    const searchString2 = `this.unit.unit.image="${name}.jpg"`;
+    // this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.jpg`
+    const replaceString2 = `this.unit.unit.image=\`${monsterPath}/${name}/\${Math.floor(Math.random() * ${count})}.jpg\``;
+    mainjs = _replaceIfFind(mainjs, searchString2, replaceString2);
   }
 }
 
