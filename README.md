@@ -1,5 +1,20 @@
 # NocturnalQuest
 
+
+## 原生 linux 支援
+
+```sh
+mkdir ~/.local/share/Steam/steamapps/common/NocturnalQuest-linux/
+wget https://github.com/electron/electron/releases/download/v34.5.8/electron-v34.5.8-linux-x64.zip
+unzip -d v34 electron-v34.5.8-linux-x64.zip
+mv v34/resources v34/resources_bak
+ln -s ~/.local/share/Steam/steamapps/common/NocturnalQuest/resources v34/resources
+./v34/electron --no-sandbox
+```
+下載 [electron-v34.5.8-linux-x64.zip](https://github.com/electron/electron/releases/download/v34.5.8/electron-v34.5.8-linux-x64.zip)
+
+
+
 ## 工具
 而比較保險的作法是建立一個垃圾桶目錄，將這些重複的檔案移到這個目錄中，等確認無誤後再把它們刪除：
 
