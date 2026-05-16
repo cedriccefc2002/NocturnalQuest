@@ -11,8 +11,14 @@ mv v34/resources v34/resources_bak
 ln -s ~/.local/share/Steam/steamapps/common/NocturnalQuest/resources v34/resources
 ~/.local/share/Steam/steamapps/common/NocturnalQuest-linux/v34/electron --no-sandbox
 ```
-下載 [electron-v34.5.8-linux-x64.zip](https://github.com/electron/electron/releases/download/v34.5.8/electron-v34.5.8-linux-x64.zip)
 
+目前 原本遊戲使用版本為 34.2.0 但是測試下列版本都可以使用
+
+- electron-v34.5.8-linux-x64.zip
+- electron-v35.7.5-linux-x64.zip
+- electron-v36.9.5-linux-x64.zip
+- electron-v39.8.10-linux-x64.zip
+- electron-v42.1.0-linux-x64.zip
 
 
 ## 工具
