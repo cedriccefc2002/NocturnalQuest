@@ -43,19 +43,6 @@ i=0; for f in *.webp; do mv -vn "$f" "temp.$((i++)).webp"; done
 i=0; for f in temp.*.webp; do mv -vn "$f" "$((i++)).webp"; done
 ```
 
-reindex and resize
-
-```sh
-#!/bin/bash
-for d in */; do
-  echo $d
-  for f in ./$d*.{jpg,png,webp}; do
-    # echo resize $f
-    convert "$f" -resize 395x564 "$f.resize.jpg"
-  done
-  i=0; for f in ./$d*.resize.jpg; do mv "$f" "./$d$((i++)).jpg"; done
-done
-```
 
 ## 圖庫
 

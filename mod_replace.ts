@@ -99,10 +99,10 @@ if (cfg.替換.職業) {
   let classKind = `n.avatars[r]`;
 
   if (cfg.模組.職業模式 == 1) {
-    // s=`themes/class/${n.avatars["default"].split(".")[0]}/${Math.floor(Math.random() * 30)}.jpg`;
+    // s=`themes/class/${n.avatars["default"].split(".")[0]}/${Math.floor(Math.random() * 30)}.webp`;
     classKind = `n.avatars["default"]`;
   } else {
-    // s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.jpg`;
+    // s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.webp`;
     classKind = `n.avatars[r]`;
   }
 /*
@@ -116,7 +116,7 @@ if(t==="shaman") s=30;
 if(t==="warlock") s=50;
 if(t==="warrior") s=46;
 if(t==="wizard") s=48;
-  return "themes/class/"+t+"/"+Math.floor(Math.random()*s)+".jpg";
+  return "themes/class/"+t+"/"+Math.floor(Math.random()*s)+".webp";
 })(n.avatars["default"]);
 */
   const replaceString =
@@ -125,7 +125,7 @@ s=((t)=>{
   t = t.split(".")[0];
   let s = 0;
   ${classSettings.map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
-  return "${classPath}/"+t+"/"+Math.floor(Math.random()*s)+".jpg";
+  return "${classPath}/"+t+"/"+Math.floor(Math.random()*s)+".webp";
 })(${classKind});
   `;
   mainjs = _replaceIfFind(mainjs, searchString, replaceString);
@@ -136,13 +136,13 @@ if (cfg.替換.怪物) {
     console.log(name, count);
     // ",image:"skeleton_warrior.jpg",ranks:["
     const searchString1 = `",image:"${name}.jpg",ranks:["`;
-    // ",image:`themes/monster/skeleton_warrior/0.jpg`,ranks:["
-    const replaceString1 = `",image:\`${monsterPath}/${name}/0.jpg\`,ranks:["`;
+    // ",image:`themes/monster/skeleton_warrior/0.webp`,ranks:["
+    const replaceString1 = `",image:\`${monsterPath}/${name}/0.webp\`,ranks:["`;
     mainjs = _replaceIfFind(mainjs, searchString1, replaceString1);
     // this.unit.unit.image="skeleton_warrior.jpg"
     const searchString2 = `this.unit.unit.image="${name}.jpg"`;
-    // this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.jpg`
-    const replaceString2 = `this.unit.unit.image=\`${monsterPath}/${name}/${random(count)}.jpg\``;
+    // this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.webp`
+    const replaceString2 = `this.unit.unit.image=\`${monsterPath}/${name}/${random(count)}.webp\``;
     mainjs = _replaceIfFind(mainjs, searchString2, replaceString2);
   }
 }
