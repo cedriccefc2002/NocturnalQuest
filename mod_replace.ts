@@ -45,19 +45,21 @@ const bgPath = `${cfg.模組.模組路徑}/${cfg.模組.背景動圖路徑}`;
 console.log("bgPath", bgPath);
 console.log("bgCount", bgCount);
 
-let classCount = -1;
 const classPath = `${cfg.模組.模組路徑}/${cfg.模組.職業路徑}`;
-for (const [_, c] of await _dirSubCount(`${cfg.模組.基礎路徑}/${cfg.模組.模組路徑}/${cfg.模組.職業路徑}`, cfg.模組.圖副檔名)) {
-  if (classCount < 0) {
-    classCount = c;
-  } else {
-    if (classCount > c) {
-      classCount = c;
-    }
-  }
-}
+const classSettings = await _dirSubCount(`${cfg.模組.基礎路徑}/${cfg.模組.模組路徑}/${cfg.模組.職業路徑}`, cfg.模組.圖副檔名);
+// let classCount = -1;
+// for (const [_, c] of classSettings) {
+//   if (classCount < 0) {
+//     classCount = c;
+//   } else {
+//     if (classCount > c) {
+//       classCount = c;
+//     }
+//   }
+// }
 console.log("classPath", classPath);
-console.log("classCount", classCount);
+// console.log("classCount", classCount);
+console.log("classSettings", classSettings);
 
 const monsterPath = `${cfg.模組.模組路徑}/${cfg.模組.怪物路徑}`;
 const monsterSettings = await _dirSubCount(`${cfg.模組.基礎路徑}/${cfg.模組.模組路徑}/${cfg.模組.怪物路徑}`, cfg.模組.圖副檔名);
@@ -94,15 +96,24 @@ if (cfg.替換.戰鬥背景) {
 if (cfg.替換.職業) {
   // s=n.avatars[r];
   const searchString = `s=n.avatars[r];`;
-  let replaceString = searchString;
+  let classKind = `n.avatars[r]`;
 
   if (cfg.模組.職業模式 == 1) {
     // s=`themes/class/${n.avatars["default"].split(".")[0]}/${Math.floor(Math.random() * 30)}.jpg`;
-    replaceString = `s=\`${classPath}/\${n.avatars["default"].split(".")[0]}/${random(classCount)}.jpg\`;`;
+    classKind = `n.avatars["default"]`;
   } else {
     // s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.jpg`;
-    replaceString = `s=\`${classPath}/\${n.avatars[r].split(".")[0]}/${random(classCount)}.jpg\`;`;
+    classKind = `s=\`${classPath}/\${n.avatars[r].split(".")[0]}/\`;`;
   }
+  const replaceString =
+    `
+s=((t)=>{
+  t = t.split(".")[0];
+  let s = 0;
+  ${classSettings.map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  return "${classPath}/"+t+"/"+Math.floor(Math.random()*s)+".jpg";
+})(${classKind});
+  `;
   mainjs = _replaceIfFind(mainjs, searchString, replaceString);
 }
 
