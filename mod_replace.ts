@@ -31,7 +31,7 @@ if (cfg.替換.職業技能背景) {
     ((t)=>{
   let ts = t.split(".")[0];
   let s = 0;
-  ${settings.filter(x => x[1] > 0).map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  ${settings.filter(x => x[1] > 0).map(x => `if(ts==="${x[0]}") s=${x[1]};`).join("\n")}
   return s<=0 ? t : "${bgPath}/"+ts+"/"+parseInt(Date.now()/1000/10)%s+".webp";
 })(e.classesDict[t.unit.class].talentsImage)
     `;
@@ -56,7 +56,7 @@ if (cfg.替換.地下城選擇上方橫幅) {
     ((t)=>{
   let ts = t.split(".")[0];
   let s = 0;
-  ${settings.filter(x => x[1] > 0).map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  ${settings.filter(x => x[1] > 0).map(x => `if(ts==="${x[0]}") s=${x[1]};`).join("\n")}
   return s<=0 ? t : "${bgPath}/"+ts+"/"+parseInt(Date.now()/1000/10)%s+".webp";
 })(n.mapBgImage)
     `;
@@ -81,7 +81,7 @@ if (cfg.替換.戰鬥時背景) {
     ((t)=>{
   let ts = t.split(".")[0];
   let s = 0;
-  ${settings.filter(x => x[1] > 0).map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  ${settings.filter(x => x[1] > 0).map(x => `if(ts==="${x[0]}") s=${x[1]};`).join("\n")}
   return s<=0 ? t : "${bgPath}/"+ts+"/"+Math.floor(Math.random()*s)+".webp";
 })(x.mapBgImage)
     `;
@@ -130,7 +130,7 @@ if (cfg.替換.職業卡片) {
 s=((t)=>{
   let ts = t.split(".")[0];
   let s = 0;
-  ${settings.filter(x => x[1] > 0).map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  ${settings.filter(x => x[1] > 0).map(x => `if(ts==="${x[0]}") s=${x[1]};`).join("\n")}
   return s<=0 ? t : "${classPath}/"+ts+"/"+Math.floor(Math.random()*s)+".webp";
 })(${classKind});
   `;
