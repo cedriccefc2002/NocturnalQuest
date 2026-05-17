@@ -444,7 +444,7 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
 ```
 "background-image","url(../map.webp)"
 "background-image","url(../../../map.webp)"
-"background-image","url(../../../../themes/default/town_bg.jpg)"
+"background-image","url(../../../../themes/default/town_bg.webp)"
 "background-image","url(../../../../themes/private/bg/200.webp)"
 
 ```js
