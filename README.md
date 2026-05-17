@@ -442,6 +442,9 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
 ```js
 "background-image","url(town_bg.jpg)"
 ```
+"background-image","url(../map.webp)"
+"background-image","url(../../../map.webp)"
+"background-image","url(../../../../themes/default/town_bg.jpg)"
 
 ```js
 "background-image",`url(cefc/map/${Date.now()%10}.webp)`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"
