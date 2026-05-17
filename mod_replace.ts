@@ -25,15 +25,15 @@ if (cfg.替換.職業技能背景) {
   if (settings.length > 0) {
     // background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
     const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
-    const action  =`
+    const action = `
     ((t)=>{
-  t = t.split(".")[0];
+  let ts = t.split(".")[0];
   let s = 0;
-  ${settings.map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
-  return "${bgPath}/"+t+"/"+parseInt(Date.now()/1000/10)%s+".webp";
+  ${settings.filter(x => x[1] > 0).map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  return s<=0 ? t : "${bgPath}/"+ts+"/"+parseInt(Date.now()/1000/10)%s+".webp";
 })(e.classesDict[t.unit.class].talentsImage)
     `;
-    const replaceString =`background-image: url('\`,${action},\`');`;
+    const replaceString = `background-image: url('\`,${action},\`');`;
     // background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
     // const replaceString = `background-image: url('${bgPath}/\`,\`${randomByDate(bgCount)}\`,\`.webp');`;
     replaceIfFind(mainjs, searchString, replaceString);
@@ -41,42 +41,60 @@ if (cfg.替換.職業技能背景) {
 }
 
 if (cfg.替換.地下城選擇上方橫幅) {
-  const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.地下城選擇上方橫幅}`, cfg.模組.圖片副檔名);
   const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.地下城選擇上方橫幅}`;
+  const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.地下城選擇上方橫幅}`, cfg.模組.圖片副檔名);
   console.log("地下城選擇上方橫幅 Path", bgPath);
-  console.log("地下城選擇上方橫幅 Count", bgCount);
+  console.log("地下城選擇上方橫幅 Settings", settings);
 
-  if (bgCount > 0) {
+  if (settings.length > 0) {
     // background-image: url('`,n.mapBgImage,`');
     const searchString = `background-image: url('\`,n.mapBgImage,\`');`;
+    const action = `
+    ((t)=>{
+  let ts = t.split(".")[0];
+  let s = 0;
+  ${settings.filter(x => x[1] > 0).map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  return s<=0 ? t : "${bgPath}/"+ts+"/"+parseInt(Date.now()/1000/10)%s+".webp";
+})(n.mapBgImage)
+    `;
+    const replaceString = `background-image: url('\`,${action},\`');`;
     // background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
-    const replaceString = `background-image: url('${bgPath}/\`,\`\${parseInt(Date.now()/1000/10)%${bgCount}}\`,\`.webp');`;
+    // const replaceString = `background-image: url('${bgPath}/\`,\`\${parseInt(Date.now()/1000/10)%${bgCount}}\`,\`.webp');`;
     replaceIfFind(mainjs, searchString, replaceString);
   }
 }
 
 if (cfg.替換.戰鬥時背景) {
-  const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.戰鬥時背景}`, cfg.模組.圖片副檔名);
   const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.戰鬥時背景}`;
+  const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.戰鬥時背景}`, cfg.模組.圖片副檔名);
   console.log("戰鬥時背景 Path", bgPath);
-  console.log("戰鬥時背景 Count", bgCount);
+  console.log("戰鬥時背景 Settings", settings);
 
-  if (bgCount > 0) {
+  if (settings.length > 0) {
     // r.nativeElement.style.backgroundImage=`url(${x.mapBgImage})`
     const searchString = `r.nativeElement.style.backgroundImage=\`url(\${x.mapBgImage})\``;
+    const action = `
+    ((t)=>{
+  let ts = t.split(".")[0];
+  let s = 0;
+  ${settings.filter(x => x[1] > 0).map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  return s<=0 ? t : "${bgPath}/"+ts+"/"+Math.floor(Math.random()*s)+".webp";
+})(n.mapBgImage)
+    `;
+    const replaceString = `r.nativeElement.style.backgroundImage=\`url(\${${action}})\``;
     // r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
-    const replaceString = `r.nativeElement.style.backgroundImage=\`url(${bgPath}/${random(bgCount)}.webp)\``;
+    // const replaceString = `r.nativeElement.style.backgroundImage=\`url(${bgPath}/${random(bgCount)}.webp)\``;
     replaceIfFind(mainjs, searchString, replaceString);
   }
 }
 
 if (cfg.替換.職業卡片) {
   const classPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.職業卡片}`;
-  const classSettings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.職業卡片}`, cfg.模組.圖片副檔名);
+  const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.職業卡片}`, cfg.模組.圖片副檔名);
   console.log("職業卡片 Path", classPath);
-  console.log("職業卡片 Settings", classSettings);
+  console.log("職業卡片 Settings", settings);
 
-  if (classSettings.length > 0) {
+  if (settings.length > 0) {
     // s=n.avatars[r];
     const searchString = `s=n.avatars[r];`;
     let classKind = `n.avatars[r]`;
@@ -105,10 +123,10 @@ if (cfg.替換.職業卡片) {
     const replaceString =
       `
 s=((t)=>{
-  t = t.split(".")[0];
+  let ts = t.split(".")[0];
   let s = 0;
-  ${classSettings.map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
-  return "${classPath}/"+t+"/"+Math.floor(Math.random()*s)+".webp";
+  ${settings.filter(x => x[1] > 0).map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  return s<=0 ? t : "${classPath}/"+ts+"/"+Math.floor(Math.random()*s)+".webp";
 })(${classKind});
   `;
     replaceIfFind(mainjs, searchString, replaceString);
