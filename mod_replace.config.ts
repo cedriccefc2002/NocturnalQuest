@@ -15,6 +15,14 @@ export type 佈景主題各子目錄 = {
     "酒館上方橫幅": string,
     "總部背景": string
 }
+export const 地圖 = [
+    "bastion_of_storms",
+    "citadel",
+    "forest_map_2",
+    "dunes_map",
+    "frostbound_spire",
+    "mines_map",
+];
 export const 職業技能背景 = [
     "lycan_talents",
     "priest_talents",
