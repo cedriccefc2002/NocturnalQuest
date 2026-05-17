@@ -22,7 +22,8 @@ if (cfg.替換.職業技能背景) {
   console.log("職業技能背景 Path", bgPath);
   console.log("職業技能背景 Settings", settings);
 
-  if (settings.length > 0) {
+  // 有子目錄且圖檔總數大於0
+  if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
     // background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
     // w("bgImg",e.classesDict[t.unit.class].talentsImage) beta
     const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
@@ -47,7 +48,8 @@ if (cfg.替換.地下城選擇上方橫幅) {
   console.log("地下城選擇上方橫幅 Path", bgPath);
   console.log("地下城選擇上方橫幅 Settings", settings);
 
-  if (settings.length > 0) {
+  // 有子目錄且圖檔總數大於0
+  if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
     // background-image: url('`,n.mapBgImage,`');
     const searchString = `background-image: url('\`,n.mapBgImage,\`');`;
     const action = `
@@ -71,7 +73,8 @@ if (cfg.替換.戰鬥時背景) {
   console.log("戰鬥時背景 Path", bgPath);
   console.log("戰鬥時背景 Settings", settings);
 
-  if (settings.length > 0) {
+  // 有子目錄且圖檔總數大於0
+  if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
     // r.nativeElement.style.backgroundImage=`url(${x.mapBgImage})`
     const searchString = `r.nativeElement.style.backgroundImage=\`url(\${x.mapBgImage})\``;
     const action = `
@@ -95,7 +98,8 @@ if (cfg.替換.職業卡片) {
   console.log("職業卡片 Path", classPath);
   console.log("職業卡片 Settings", settings);
 
-  if (settings.length > 0) {
+  // 有子目錄且圖檔總數大於0
+  if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
     // s=n.avatars[r];
     const searchString = `s=n.avatars[r];`;
     let classKind = `n.avatars[r]`;
@@ -135,24 +139,25 @@ s=((t)=>{
 }
 
 if (cfg.替換.怪物卡片) {
-  const monsterPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.怪物卡片}`;
-  const monsterSettings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.怪物卡片}`, cfg.模組.圖片副檔名);
-  console.log("怪物卡片 Path", monsterPath);
-  console.log("怪物卡片 Settings", monsterSettings);
+  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.怪物卡片}`;
+  const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.怪物卡片}`, cfg.模組.圖片副檔名);
+  console.log("怪物卡片 Path", bgPath);
+  console.log("怪物卡片 Settings", settings);
 
-  if (monsterSettings.length > 0) {
-    for (const [name, count] of monsterSettings) {
+  // 有子目錄且圖檔總數大於0
+  if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
+    for (const [name, count] of settings) {
       console.log(name, count);
       if (count > 0) {
         // ",image:"skeleton_warrior.jpg",ranks:["
         const searchString1 = `",image:"${name}.jpg",ranks:["`;
         // ",image:`themes/monster/skeleton_warrior/0.webp`,ranks:["
-        const replaceString1 = `",image:\`${monsterPath}/${name}/0.webp\`,ranks:["`;
+        const replaceString1 = `",image:\`${bgPath}/${name}/0.webp\`,ranks:["`;
         replaceIfFind(mainjs, searchString1, replaceString1);
         // this.unit.unit.image="skeleton_warrior.jpg"
         const searchString2 = `this.unit.unit.image="${name}.jpg"`;
         // this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.webp`
-        const replaceString2 = `this.unit.unit.image=\`${monsterPath}/${name}/${random(count)}.webp\``;
+        const replaceString2 = `this.unit.unit.image=\`${bgPath}/${name}/${random(count)}.webp\``;
         replaceIfFind(mainjs, searchString2, replaceString2);
       }
     }
