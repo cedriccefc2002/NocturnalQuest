@@ -79,7 +79,7 @@ if (cfg.替換.戰鬥時背景) {
   let s = 0;
   ${settings.filter(x => x[1] > 0).map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
   return s<=0 ? t : "${bgPath}/"+ts+"/"+Math.floor(Math.random()*s)+".webp";
-})(n.mapBgImage)
+})(x.mapBgImage)
     `;
     const replaceString = `r.nativeElement.style.backgroundImage=\`url(\${${action}})\``;
     // r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
