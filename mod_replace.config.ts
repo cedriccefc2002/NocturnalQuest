@@ -105,19 +105,19 @@ export const config = {
     "存檔前先備份": true,
     "替換檔路徑": "./app/dist/electron/browser/main-S57572R2.js",
     "替換": {
-        "怪物卡片": false,
-        "職業卡片": false,
-        "職業技能背景": false,
-        "地下城選擇上方橫幅": false,
-        "戰鬥時背景": false,
+        "怪物卡片": true,
+        "職業卡片": true,
+        "職業技能背景": true,
+        "地下城選擇上方橫幅": true,
+        "戰鬥時背景": true,
         "鍊金術背景": true,
-        "植物學家背景": false,
-        "商店背景": false,
-        "珠寶商上方橫幅": false,
-        "城鎮背景": false,
-        "鐵匠天賦背景": false,
-        "自動法師小屋上方橫幅": false,
-        "酒館上方橫幅": false,
-        "總部背景": false
+        "植物學家背景": true,
+        "商店背景": true,
+        "珠寶商上方橫幅": true,
+        "城鎮背景": true,
+        "鐵匠天賦背景": true,
+        "自動法師小屋上方橫幅": true,
+        "酒館上方橫幅": true,
+        "總部背景": true
     }
 };
