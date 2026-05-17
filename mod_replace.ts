@@ -24,6 +24,7 @@ if (cfg.替換.職業技能背景) {
 
   if (settings.length > 0) {
     // background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
+    // w("bgImg",e.classesDict[t.unit.class].talentsImage) beta
     const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
     const action = `
     ((t)=>{

@@ -110,7 +110,7 @@ export const config = {
         /**
          * default, private
          * */
-        "佈景主題": "default",
+        "佈景主題": "aldult",
         /**
          * 1:不分天賦
          * 2:分天賦 
@@ -119,7 +119,7 @@ export const config = {
         "圖片副檔名": ".webp",
         佈景主題各子目錄
     },
-    "存檔前先備份": true,
+    "存檔前先備份": false,
     "替換檔路徑": "./app/dist/electron/browser/main-S57572R2.js",
     "替換": {
         "怪物卡片": true,
