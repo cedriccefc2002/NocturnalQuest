@@ -1,5 +1,6 @@
 {
   "tasks": {
+    "init": "deno run --allow-read --allow-write init.ts",
     "mod_replace": "deno run --allow-read --allow-write mod_replace.ts",
     "build": "deno compile --allow-read --allow-write mod_replace.ts",
     "build-win": "deno compile --allow-read --allow-write --target=x86_64-pc-windows-msvc mod_replace.ts"
