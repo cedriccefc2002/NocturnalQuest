@@ -14,19 +14,28 @@ const basePath = `${cfg.模組.基礎路徑}/${cfg.模組.佈景主題}`;
 const baseWebPath = `${cfg.模組.Web路徑}/${cfg.模組.佈景主題}`;
 
 const random = (count: number) => `\${Math.floor(Math.random() * ${count})}`
-const randomByDate = (count: number, sec: number = 10) => `\${parseInt(Date.now()/1000/${sec})%${count}}`
+// const randomByDate = (count: number, sec: number = 10) => `\${parseInt(Date.now()/1000/${sec})%${count}}`
 
 if (cfg.替換.職業技能背景) {
-  const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.職業技能背景}`, cfg.模組.圖片副檔名);
   const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.職業技能背景}`;
+  const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.職業技能背景}`, cfg.模組.圖片副檔名);
   console.log("職業技能背景 Path", bgPath);
-  console.log("職業技能背景 Count", bgCount);
+  console.log("職業技能背景 Settings", settings);
 
-  if (bgCount > 0) {
+  if (settings.length > 0) {
     // background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
     const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
+    const action  =`
+    ((t)=>{
+  t = t.split(".")[0];
+  let s = 0;
+  ${settings.map(x => `if(t==="${x[0]}") s=${x[1]};`).join("\n")}
+  return "${bgPath}/"+t+"/"+parseInt(Date.now()/1000/10)%s+".webp";
+})(e.classesDict[t.unit.class].talentsImage)
+    `;
+    const replaceString =`background-image: url('\`,${action},\`');`;
     // background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
-    const replaceString = `background-image: url('${bgPath}/\`,\`${randomByDate(bgCount)}\`,\`.webp');`;
+    // const replaceString = `background-image: url('${bgPath}/\`,\`${randomByDate(bgCount)}\`,\`.webp');`;
     replaceIfFind(mainjs, searchString, replaceString);
   }
 }

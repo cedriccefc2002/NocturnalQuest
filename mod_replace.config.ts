@@ -15,6 +15,15 @@ export type 佈景主題各子目錄 = {
     "酒館上方橫幅": string,
     "總部背景": string
 }
+export const 職業技能背景 = [
+    "lycan_talents",
+    "priest_talents",
+    "rogue_talents",
+    "shaman_talents",
+    "warlock_talents",
+    "warrior_talents",
+    "wizard_talents",
+];
 export const 職業 = [
     "lycan",
     "lycan_dark",
