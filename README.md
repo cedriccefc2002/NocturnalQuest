@@ -5,6 +5,7 @@
 
 ```sh
 mkdir ~/.local/share/Steam/steamapps/common/NocturnalQuest-linux/
+cd ~/.local/share/Steam/steamapps/common/NocturnalQuest-linux/
 wget https://github.com/electron/electron/releases/download/v34.5.8/electron-v34.5.8-linux-x64.zip
 unzip -d v34 electron-v34.5.8-linux-x64.zip
 mv v34/resources v34/resources_bak
