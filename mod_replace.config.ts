@@ -101,7 +101,9 @@ const 佈景主題各子目錄: 佈景主題各子目錄 = {
     "鐵匠天賦背景": "blacksmith_talents_bg",
     "自動法師小屋上方橫幅": "automagus_bg",
     "酒館上方橫幅": "tavern",
-    "總部背景": "dunes_map"
+    "總部背景": "dunes_map",
+    "城鎮背景音樂": "town_bg_audio",
+    "戰鬥背景音樂": "combat_bg_audio"
 }
 export const config = {
     "模組": {
@@ -117,9 +119,11 @@ export const config = {
          */
         "職業模式": 2,
         "圖片副檔名": ".webp",
+        "音樂副檔名": ".mp3",
         佈景主題各子目錄
     },
     "存檔前先備份": false,
+    "備份修改後的檔案到佈景主題目錄": true,
     "替換檔路徑": "./app/dist/electron/browser/main-S57572R2.js",
     "替換": {
         "怪物卡片": true,
@@ -135,6 +139,8 @@ export const config = {
         "鐵匠天賦背景": true,
         "自動法師小屋上方橫幅": true,
         "酒館上方橫幅": true,
-        "總部背景": true
+        "總部背景": true,
+        "城鎮背景音樂": true,
+        "戰鬥背景音樂": true,
     }
 };

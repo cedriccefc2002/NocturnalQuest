@@ -1,4 +1,6 @@
-import { pressAnyKey, dirCount, dirSubCount, replaceIfFind, source } from "./common.ts";
+import { basename, join } from "node:path";
+import { pressAnyKey, dirCount, dirSubCount, replaceIfFind, source, dirFiles } from "./common.ts";
+import { url } from "node:inspector";
 
 const cfg = (await import("./mod_replace.config.ts")).config;
 console.log("config:", cfg);
@@ -281,9 +283,44 @@ if (cfg.替換.酒館上方橫幅) {
   }
 }
 
+if (cfg.替換.城鎮背景音樂) {
+  const bgFiles = await dirFiles(`${basePath}/${cfg.模組.佈景主題各子目錄.城鎮背景音樂}`, cfg.模組.音樂副檔名);
+  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.城鎮背景音樂}`;
+  console.log("城鎮背景音樂 Path", bgPath);
+  console.log("城鎮背景音樂 Files", bgFiles);
+
+  if (bgFiles.length > 0) {
+    // 城鎮背景音樂
+    // ["audio/Impact Lento.mp3","audio/Long Road Ahead B.mp3","audio/Arcadia.mp3","audio/bg_town_female_voices.mp3","audio/bg_town_very_slow_enchanting.mp3","audio/bg_town_harp_piano.mp3","audio/bg_town_harp_xylophone_1.mp3","audio/bg_town_harp_xylophone_2.mp3"]
+    const searchString = `["audio/Impact Lento.mp3","audio/Long Road Ahead B.mp3","audio/Arcadia.mp3","audio/bg_town_female_voices.mp3","audio/bg_town_very_slow_enchanting.mp3","audio/bg_town_harp_piano.mp3","audio/bg_town_harp_xylophone_1.mp3","audio/bg_town_harp_xylophone_2.mp3"]`
+    const replaceString = JSON.stringify(bgFiles.map(x => `${bgPath}/${encodeURIComponent(x)}`));
+    replaceIfFind(mainjs, searchString, replaceString);
+  }
+}
+
+if (cfg.替換.戰鬥背景音樂) {
+  const bgFiles = await dirFiles(`${basePath}/${cfg.模組.佈景主題各子目錄.戰鬥背景音樂}`, cfg.模組.音樂副檔名);
+  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.戰鬥背景音樂}`;
+  console.log("戰鬥背景音樂 Path", bgPath);
+  console.log("戰鬥背景音樂 Files", bgFiles);
+
+  if (bgFiles.length > 0) {
+    // 戰鬥背景音樂
+    // ["audio/Full On.mp3","audio/bg_combat_slow_start.mp3","audio/bg_combat_violin_drums.mp3"]
+    const searchString = `["audio/Full On.mp3","audio/bg_combat_slow_start.mp3","audio/bg_combat_violin_drums.mp3"]`
+    const replaceString = JSON.stringify(bgFiles.map(x => `${bgPath}/${encodeURIComponent(x)}`));
+    replaceIfFind(mainjs, searchString, replaceString);
+  }
+}
+// tavern:new xv(["audio/tavern_ambience.mp3"]),
+// battle:new xv((0,gM.shuffle)(["audio/Full On.mp3","audio/bg_combat_slow_start.mp3","audio/bg_combat_violin_drums.mp3"]))
+
 if (mainjs.hasModify) {
   if (cfg.存檔前先備份) {
     await Deno.rename(cfg.替換檔路徑, `${cfg.替換檔路徑}.${Date.now()}.bak`);
+  }
+  if (cfg.備份修改後的檔案到佈景主題目錄) {
+    await Deno.writeTextFile(join(basePath, basename(cfg.替換檔路徑)), mainjs.content);
   }
   await Deno.writeTextFile(cfg.替換檔路徑, mainjs.content);
 }
