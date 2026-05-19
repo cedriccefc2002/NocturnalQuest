@@ -1,6 +1,5 @@
 import { basename, join } from "node:path";
 import { pressAnyKey, dirCount, dirSubCount, replaceIfFind, source, dirFiles } from "./common.ts";
-import { url } from "node:inspector";
 
 const cfg = (await import("./mod_replace.config.ts")).config;
 console.log("config:", cfg);
