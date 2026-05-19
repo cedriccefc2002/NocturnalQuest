@@ -3,17 +3,31 @@
 
 ## 原生 linux 支援
 
+使用 electron 在linux 上原生執行遊戲，會比模擬模式效能更好
+
 ```sh
-mkdir ~/.local/share/Steam/steamapps/common/NocturnalQuest-linux/
-cd ~/.local/share/Steam/steamapps/common/NocturnalQuest-linux/
-wget https://github.com/electron/electron/releases/download/v34.5.8/electron-v34.5.8-linux-x64.zip
-unzip -d v34 electron-v34.5.8-linux-x64.zip
-mv v34/resources v34/resources_bak
-ln -s ~/.local/share/Steam/steamapps/common/NocturnalQuest/resources v34/resources
-~/.local/share/Steam/steamapps/common/NocturnalQuest-linux/v34/electron --no-sandbox
+cd ~
+mkdir -p ~/NocturnalQuest-linux/v42
+wget https://github.com/electron/electron/releases/download/v42.1.0/electron-v42.1.0-linux-x64.zip
+unzip -d ~/NocturnalQuest-linux/v42 electron-v42.1.0-linux-x64.zip
+mv NocturnalQuest-linux/v42/resources NocturnalQuest-linux/v42/resources_bak
+ln -s ~/.local/share/Steam/steamapps/common/NocturnalQuest/resources NocturnalQuest-linux/v42/resources
+~/NocturnalQuest-linux/v42/electron --no-sandbox
 ```
 
-目前 原本遊戲使用版本為 34.2.0 但是測試下列版本都可以使用
+原本遊戲使用版本為 34.2.0
+
+```sh
+cd ~
+mkdir -p ~/NocturnalQuest-linux/v34
+wget https://github.com/electron/electron/releases/download/v34.5.8/electron-v34.5.8-linux-x64.zip
+unzip -d ~/NocturnalQuest-linux/v34 electron-v34.5.8-linux-x64.zip
+mv NocturnalQuest-linux/v34/resources NocturnalQuest-linux/v42/resources_bak
+ln -s ~/.local/share/Steam/steamapps/common/NocturnalQuest/resources NocturnalQuest-linux/v34/resources
+~/NocturnalQuest-linux/v34/electron --no-sandbox
+```
+
+但是測試下列版本都可以使用
 
 - electron-v34.5.8-linux-x64.zip
 - electron-v35.7.5-linux-x64.zip
