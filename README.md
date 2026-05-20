@@ -510,6 +510,7 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
 
 ```js
 {Wizard:{left:["I'll play it cool.","wizard_play_cool"],right:["A little heat never hurt anyone!","wizard_heat"],default:["Balance.","wizard_ah_balance"]},Warrior:{left:["There will be blood!","warrior_there_will_be_blood"],right:["And you have my shield.","warrior_you_have_my_shield"],default:["Best of both.","warrior_best_of_both"]},Priest:{left:["May the lights be blinding.","priest_holy"],right:["Let's have some fun.","priest_shadow"],default:["No light without the dark.","priest_balance"]},Rogue:{left:["Cloak and dagger.","rogue_cloak_and_dagger"],right:["Death from within.","rogue_death_from_within"],default:["Restraint.","rogue_restraint"]},Warlock:{left:["I shall become the darkness.","warlock_i_shall_become_the_darkness"],right:["I will embrace the demonic flame.","warlock_i_will_embrace_the_demonic_flame"],default:["Shadow and flame.","warlock_shadow_and_flame"]},Lycan:{left:["We are one.","lycan_we_are_one"],right:["The earth will prevail.","lycan_the_earth_will_prevail"],default:["Balance above all.","lycan_balance_above_all"]}}[t]?.[e];
+```
 
 ```js
 let a = {
