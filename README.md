@@ -506,5 +506,103 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
 ```js
 "background-image",`url(cefc/map/${Date.now()%10}.webp)`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"
 ```
+# 語音
+
+```js
+{Wizard:{left:["I'll play it cool.","wizard_play_cool"],right:["A little heat never hurt anyone!","wizard_heat"],default:["Balance.","wizard_ah_balance"]},Warrior:{left:["There will be blood!","warrior_there_will_be_blood"],right:["And you have my shield.","warrior_you_have_my_shield"],default:["Best of both.","warrior_best_of_both"]},Priest:{left:["May the lights be blinding.","priest_holy"],right:["Let's have some fun.","priest_shadow"],default:["No light without the dark.","priest_balance"]},Rogue:{left:["Cloak and dagger.","rogue_cloak_and_dagger"],right:["Death from within.","rogue_death_from_within"],default:["Restraint.","rogue_restraint"]},Warlock:{left:["I shall become the darkness.","warlock_i_shall_become_the_darkness"],right:["I will embrace the demonic flame.","warlock_i_will_embrace_the_demonic_flame"],default:["Shadow and flame.","warlock_shadow_and_flame"]},Lycan:{left:["We are one.","lycan_we_are_one"],right:["The earth will prevail.","lycan_the_earth_will_prevail"],default:["Balance above all.","lycan_balance_above_all"]}}[t]?.[e];
+
+```js
+let a = {
+    Wizard: {
+        left: ["I'll play it cool.", "wizard_play_cool"],
+        right: ["A little heat never hurt anyone!", "wizard_heat"],
+        default: ["Balance.", "wizard_ah_balance"],
+    },
+    Warrior: {
+        left: ["There will be blood!", "warrior_there_will_be_blood"],
+        right: ["And you have my shield.", "warrior_you_have_my_shield"],
+        default: ["Best of both.", "warrior_best_of_both"],
+    },
+    Priest: {
+        left: ["May the lights be blinding.", "priest_holy"],
+        right: ["Let's have some fun.", "priest_shadow"],
+        default: ["No light without the dark.", "priest_balance"],
+    },
+    Rogue: {
+        left: ["Cloak and dagger.", "rogue_cloak_and_dagger"],
+        right: ["Death from within.", "rogue_death_from_within"],
+        default: ["Restraint.", "rogue_restraint"],
+    },
+    Warlock: {
+        left: [
+            "I shall become the darkness.",
+            "warlock_i_shall_become_the_darkness",
+        ],
+        right: [
+            "I will embrace the demonic flame.",
+            "warlock_i_will_embrace_the_demonic_flame",
+        ],
+        default: ["Shadow and flame.", "warlock_shadow_and_flame"],
+    },
+    Lycan: {
+        left: ["We are one.", "lycan_we_are_one"],
+        right: ["The earth will prevail.", "lycan_the_earth_will_prevail"],
+        default: ["Balance above all.", "lycan_balance_above_all"],
+    },
+}[t]?.[e];
+```
+
+
+```js
+{warrior_you_have_my_shield:new Audio("audio/speech/warrior_you_have_my_shield.mp3"),warrior_there_will_be_blood:new Audio("audio/speech/warrior_there_will_be_blood.mp3"),warrior_best_of_both:new Audio("audio/speech/warrior_best_of_both.mp3"),priest_holy:new Audio("audio/speech/priest_holy.mp3"),priest_shadow:new Audio("audio/speech/priest_shadow.mp3"),priest_balance:new Audio("audio/speech/priest_balance.mp3"),rogue_cloak_and_dagger:new Audio("audio/speech/rogue_cloak_and_dagger.mp3"),rogue_death_from_within:new Audio("audio/speech/rogue_death_from_within.mp3"),rogue_restraint:new Audio("audio/speech/rogue_restraint.mp3"),warlock_i_shall_become_the_darkness:new Audio("audio/speech/warlock_i_shall_become_the_darkness.mp3"),warlock_i_will_embrace_the_demonic_flame:new Audio("audio/speech/warlock_i_will_embrace_the_demonic_flame.mp3"),warlock_shadow_and_flame:new Audio("audio/speech/warlock_shadow_and_flame.mp3"),lycan_the_earth_will_prevail:new Audio("audio/speech/lycan_the_earth_will_prevail.mp3"),lycan_we_are_one:new Audio("audio/speech/lycan_we_are_one.mp3"),lycan_balance_above_all:new Audio("audio/speech/lycan_balance_above_all.mp3"),tavern_decorate:new Audio("audio/sfx/tavern_decorate.mp3")}
+```
+```js
+let a = {
+    warrior_you_have_my_shield: new Audio(
+        "audio/speech/warrior_you_have_my_shield.mp3",
+    ),
+    warrior_there_will_be_blood: new Audio(
+        "audio/speech/warrior_there_will_be_blood.mp3",
+    ),
+    warrior_best_of_both: new Audio("audio/speech/warrior_best_of_both.mp3"),
+    priest_holy: new Audio("audio/speech/priest_holy.mp3"),
+    priest_shadow: new Audio("audio/speech/priest_shadow.mp3"),
+    priest_balance: new Audio("audio/speech/priest_balance.mp3"),
+    rogue_cloak_and_dagger: new Audio(
+        "audio/speech/rogue_cloak_and_dagger.mp3",
+    ),
+    rogue_death_from_within: new Audio(
+        "audio/speech/rogue_death_from_within.mp3",
+    ),
+    rogue_restraint: new Audio("audio/speech/rogue_restraint.mp3"),
+    warlock_i_shall_become_the_darkness: new Audio(
+        "audio/speech/warlock_i_shall_become_the_darkness.mp3",
+    ),
+    warlock_i_will_embrace_the_demonic_flame: new Audio(
+        "audio/speech/warlock_i_will_embrace_the_demonic_flame.mp3",
+    ),
+    warlock_shadow_and_flame: new Audio(
+        "audio/speech/warlock_shadow_and_flame.mp3",
+    ),
+    lycan_the_earth_will_prevail: new Audio(
+        "audio/speech/lycan_the_earth_will_prevail.mp3",
+    ),
+    lycan_we_are_one: new Audio("audio/speech/lycan_we_are_one.mp3"),
+    lycan_balance_above_all: new Audio(
+        "audio/speech/lycan_balance_above_all.mp3",
+    ),
+    tavern_decorate: new Audio("audio/sfx/tavern_decorate.mp3"),
+};
+
+```
 
 https://cdn.steamusercontent.com/ugc/14076377065325801635/2BBABC06555FA2AA7915C0C3B4A404EACCEF6C6F/
+
+# 圖片網站
+
+- https://e-shuushuu.net/
+- http://www.minitokyo.net/
+- https://safebooru.org/
+- https://www.deviantart.com/
+- https://www.pinterest.com/
+- https://wall.alphacoders.com/
