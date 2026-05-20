@@ -507,3 +507,4 @@ r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
 "background-image",`url(cefc/map/${Date.now()%10}.webp)`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"
 ```
 
+https://cdn.steamusercontent.com/ugc/14076377065325801635/2BBABC06555FA2AA7915C0C3B4A404EACCEF6C6F/
