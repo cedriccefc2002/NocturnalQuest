@@ -112,9 +112,9 @@ export const config = {
         "基礎路徑": "./themes",
         "Web路徑": "../../../../themes",
         /**
-         * default, private
+         * default, aldult, pokemon
          * */
-        "佈景主題": "default",
+        "佈景主題": "aldult",
         /**
          * 1:不分天賦
          * 2:分天賦 
