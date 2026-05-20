@@ -13,7 +13,8 @@ export type 佈景主題各子目錄 = {
     "鐵匠天賦背景": string,
     "自動法師小屋上方橫幅": string,
     "酒館上方橫幅": string,
-    "總部背景": string
+    "總部背景": string,
+    "職業語音": string
 }
 export const 地圖 = [
     "bastion_of_storms",
@@ -103,7 +104,8 @@ const 佈景主題各子目錄: 佈景主題各子目錄 = {
     "酒館上方橫幅": "tavern",
     "總部背景": "dunes_map",
     "城鎮背景音樂": "town_bg_audio",
-    "戰鬥背景音樂": "combat_bg_audio"
+    "戰鬥背景音樂": "combat_bg_audio",
+    "職業語音": "class_speech"
 }
 export const config = {
     "模組": {
@@ -112,7 +114,7 @@ export const config = {
         /**
          * default, private
          * */
-        "佈景主題": "aldult",
+        "佈景主題": "default",
         /**
          * 1:不分天賦
          * 2:分天賦 
