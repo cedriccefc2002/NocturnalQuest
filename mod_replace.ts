@@ -1,5 +1,6 @@
 import { basename, join } from "node:path";
 import { pressAnyKey, dirCount, dirSubCount, replaceIfFind, source, dirFiles } from "./common.ts";
+import { json } from "node:stream/consumers";
 
 const cfg = (await import("./mod_replace.config.ts")).config;
 console.log("config:", cfg);
@@ -315,6 +316,43 @@ if (cfg.替換.戰鬥背景音樂) {
     const searchString = `["audio/Full On.mp3","audio/bg_combat_slow_start.mp3","audio/bg_combat_violin_drums.mp3"]`
     const replaceString = JSON.stringify(bgFiles.map(x => `${bgPath}/${encodeURIComponent(x)}`));
     replaceIfFind(mainjs, searchString, replaceString);
+  }
+}
+
+if (cfg.替換.職業天賦對應語音) {
+  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.職業天賦對應語音}`;
+  console.log("職業天賦對應語音 Path", bgPath);
+  //{Wizard:{left:[..."lycan_balance_above_all"]}}
+  // const searchString = /\{Wizard:\{left:\[[\w+]]\"lycan_balance_above_all\"]\}\}/;
+  const regex = /\{Wizard:\{left\:[\["\w' .,\]:!\}\{}]+"lycan_balance_above_all"\]\}\}/;
+  const found = regex.exec(mainjs.content);
+  if (found === null) {
+    console.log("職業天賦對應語音 miss");
+  } else {
+    console.log("職業天賦對應語音 found", found[0]);
+    // deno-lint-ignore no-explicit-any
+    const modifyObj: any = {};
+    const replaceFn = (oldPath: string, newPath: string) => {
+      if (oldPath === "") {
+        const append = `,tavern_decorate:new Audio("audio/sfx/tavern_decorate.mp3")`;
+        replaceIfFind(mainjs, append, `${append},${newPath}:new Audio("${bgPath}/${newPath}.mp3")`);
+      } else {
+        const search = `${oldPath}:new Audio("audio/speech/${oldPath}.mp3")`;
+        replaceIfFind(mainjs, search, `${newPath}:new Audio("${bgPath}/${newPath}.mp3")`);
+      }
+    }
+    for (const key in cfg.模組.職業天賦對應語音) {
+      const item = cfg.模組.職業天賦對應語音[key];
+      modifyObj[key] = {
+        left: [item.left[0], item.left[1]],
+        right: [item.right[0], item.right[1]],
+        default: [item.default[0], item.default[1]]
+      };
+      replaceFn(item.left[2], item.left[1]);
+      replaceFn(item.right[2], item.right[1]);
+      replaceFn(item.default[2], item.default[1]);
+    }
+    replaceIfFind(mainjs, found[0], JSON.stringify(modifyObj));
   }
 }
 // tavern:new xv(["audio/tavern_ambience.mp3"]),

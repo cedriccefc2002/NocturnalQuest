@@ -14,7 +14,7 @@ export type 佈景主題各子目錄 = {
     "自動法師小屋上方橫幅": string,
     "酒館上方橫幅": string,
     "總部背景": string,
-    "職業語音": string
+    "職業天賦對應語音": string
 }
 export const 地圖 = [
     "bastion_of_storms",
@@ -105,8 +105,62 @@ const 佈景主題各子目錄: 佈景主題各子目錄 = {
     "總部背景": "dunes_map",
     "城鎮背景音樂": "town_bg_audio",
     "戰鬥背景音樂": "combat_bg_audio",
-    "職業語音": "class_speech"
+    "職業天賦對應語音": "class_speech"
 }
+export type 文字語音 = [文字: string, 語音名稱: string, 原本名稱: string];
+export type 職業語音 = {
+    left: 文字語音,
+    right: 文字語音,
+    default: 文字語音
+};
+export type 職業天賦對應語音 = {
+    [key: string]: 職業語音,
+}
+export const 職業天賦對應語音: 職業天賦對應語音 = {
+    Wizard: {
+        left: ["wizard_left", "wizard_left", "wizard_play_cool"],
+        right: ["wizard_right", "wizard_right", "wizard_heat"],
+        default: ["wizard_balance", "wizard_balance", "wizard_ah_balance"],
+    },
+    Warrior: {
+        left: ["warrior_left", "warrior_left", "warrior_there_will_be_blood"],
+        right: ["warrior_right", "warrior_right", "warrior_you_have_my_shield"],
+        default: ["warrior_default", "warrior_default", "warrior_best_of_both"],
+    },
+    Priest: {
+        left: ["priest_left", "priest_left", "priest_holy"],
+        right: ["priest_right", "priest_right", "priest_shadow"],
+        default: ["priest_default", "priest_default", "priest_balance"],
+    },
+    Rogue: {
+        left: ["rogue_left", "rogue_left", "rogue_cloak_and_dagger"],
+        right: ["rogue_right", "rogue_right", "rogue_death_from_within"],
+        default: ["rogue_default", "rogue_default", "rogue_restraint"],
+    },
+    Warlock: {
+        left: [
+            "warlock_left",
+            "warlock_left",
+            "warlock_i_shall_become_the_darkness"
+        ],
+        right: [
+            "warlock_right",
+            "warlock_right",
+            "warlock_i_will_embrace_the_demonic_flame",
+        ],
+        default: ["warlock_default", "warlock_default", "warlock_shadow_and_flame"],
+    },
+    Lycan: {
+        left: ["lycan_left", "lycan_left", "lycan_we_are_one"],
+        right: ["lycan_right", "lycan_right", "lycan_the_earth_will_prevail"],
+        default: ["lycan_default", "lycan_default", "lycan_balance_above_all"],
+    },
+    Shaman: {
+        left: ["shaman_left", "shaman_left", ""],
+        right: ["shaman_right", "shaman_right", ""],
+        default: ["shaman_default", "shaman_default", ""],
+    }
+};
 export const config = {
     "模組": {
         "基礎路徑": "./themes",
@@ -122,7 +176,8 @@ export const config = {
         "職業模式": 2,
         "圖片副檔名": ".webp",
         "音樂副檔名": ".mp3",
-        佈景主題各子目錄
+        佈景主題各子目錄,
+        職業天賦對應語音
     },
     "存檔前先備份": false,
     "備份修改後的檔案到佈景主題目錄": true,
@@ -144,5 +199,6 @@ export const config = {
         "總部背景": true,
         "城鎮背景音樂": true,
         "戰鬥背景音樂": true,
+        "職業天賦對應語音": true,
     }
 };
