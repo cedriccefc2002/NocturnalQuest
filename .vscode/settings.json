@@ -1,0 +1,9 @@
+{
+    "launch": {
+        "configurations": [],
+        "compounds": []
+    },
+    "json.schemaDownload.trustedDomains": {
+        "https://raw.githubusercontent.com/denoland/deno/main/cli/schemas/lint-rules.v1.json": true
+    }
+}
