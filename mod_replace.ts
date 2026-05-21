@@ -52,6 +52,8 @@ if (cfg.替換.地下城選擇上方橫幅) {
   // 有子目錄且圖檔總數大於0
   if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
     // background-image: url('`,n.mapBgImage,`');
+    // nt("data-journey-progress-bar",o.name),g(),Lo("bgImg",o.iconImage) beta
+    // we("background-color","#1f1f1f"),g(),Lo("bgImg",i.iconImage) beta
     const searchString = `background-image: url('\`,n.mapBgImage,\`');`;
     const action = `
     ((t)=>{
@@ -77,6 +79,7 @@ if (cfg.替換.戰鬥時背景) {
   // 有子目錄且圖檔總數大於0
   if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
     // r.nativeElement.style.backgroundImage=`url(${x.mapBgImage})`
+    // a.nativeElement.style.backgroundImage=`url(${m.mapBgImage})` beta
     const searchString = `r.nativeElement.style.backgroundImage=\`url(\${x.mapBgImage})\``;
     const action = `
     ((t)=>{
@@ -102,6 +105,7 @@ if (cfg.替換.職業卡片) {
   // 有子目錄且圖檔總數大於0
   if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
     // s=n.avatars[r];
+    // u=e.avatars[a]; beta
     const searchString = `s=n.avatars[r];`;
     let classKind = `n.avatars[r]`;
 
@@ -156,6 +160,7 @@ if (cfg.替換.怪物卡片) {
         const replaceString1 = `",image:\`${bgPath}/${name}/0.webp\`,ranks:["`;
         replaceIfFind(mainjs, searchString1, replaceString1);
         // this.unit.unit.image="skeleton_warrior.jpg"
+        // this.unit.unit.image="skeleton_warrior.jpg" beta
         const searchString2 = `this.unit.unit.image="${name}.jpg"`;
         // this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.webp`
         const replaceString2 = `this.unit.unit.image=\`${bgPath}/${name}/${random(count)}.webp\``;
@@ -278,6 +283,7 @@ if (cfg.替換.酒館上方橫幅) {
   if (bgCount > 0) {
     // 酒館上方橫幅
     // "background-image","url(tavern.jpg)"
+    // ["bgImg","tavern_bg.png",1,"h-[140px]","bg-cover","bg-no-repeat","shrink-0","flex","flex-col","items-end","justify-end"],[1,"my-2","mx-4"] beta
     replaceIfFind(mainjs, `"background-image","url(tavern.jpg)"`, globalbg(bgPath, bgCount));
   }
 }
