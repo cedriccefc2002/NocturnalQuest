@@ -184,29 +184,29 @@ const globalbg = (bgPath: string, bgCount: number) => `"background-image",\`url(
 //     replaceIfFind(mainjs, `"background-image","url(alchemist_bg.jpg)"`, globalbg(bgPath, bgCount));
 //   }
 // }
-if (cfg.替換.植物學家背景) {
-  const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.植物學家背景}`, cfg.模組.圖片副檔名);
-  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.植物學家背景}`;
-  console.log("植物學家背景 Path", bgPath);
-  console.log("植物學家背景 Count", bgCount);
+// if (cfg.替換.植物學家背景) {
+//   const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.植物學家背景}`, cfg.模組.圖片副檔名);
+//   const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.植物學家背景}`;
+//   console.log("植物學家背景 Path", bgPath);
+//   console.log("植物學家背景 Count", bgCount);
 
-  if (bgCount > 0) {
-    // "background-image","url(botanist_bg.jpg)"
-    replaceIfFind(mainjs, `"background-image","url(botanist_bg.jpg)"`, globalbg(bgPath, bgCount));
-  }
-}
+//   if (bgCount > 0) {
+//     // "background-image","url(botanist_bg.jpg)"
+//     replaceIfFind(mainjs, `"background-image","url(botanist_bg.jpg)"`, globalbg(bgPath, bgCount));
+//   }
+// }
 
-if (cfg.替換.商店背景) {
-  const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.商店背景}`, cfg.模組.圖片副檔名);
-  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.商店背景}`;
-  console.log("商店背景 Path", bgPath);
-  console.log("商店背景 Count", bgCount);
+// if (cfg.替換.商店背景) {
+//   const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.商店背景}`, cfg.模組.圖片副檔名);
+//   const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.商店背景}`;
+//   console.log("商店背景 Path", bgPath);
+//   console.log("商店背景 Count", bgCount);
 
-  if (bgCount > 0) {
-    // "background-image","url(shop_bg.jpg)"
-    replaceIfFind(mainjs, `"background-image","url(shop_bg.jpg)"`, globalbg(bgPath, bgCount));
-  }
-}
+//   if (bgCount > 0) {
+//     // "background-image","url(shop_bg.jpg)"
+//     replaceIfFind(mainjs, `"background-image","url(shop_bg.jpg)"`, globalbg(bgPath, bgCount));
+//   }
+// }
 
 // if (cfg.替換.城鎮背景) {
 //   const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.城鎮背景}`, cfg.模組.圖片副檔名);
