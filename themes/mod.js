@@ -31,6 +31,45 @@ function Clock(elem) {
     elem.textContent = `${now.toLocaleTimeString()}`;
     setTimeout(Clock, 1000, elem);
 }
+function ChangeAlchemistBgInit() {
+    let current = "";
+    const timer_check = () => {
+        if (current !== "") {
+            //const em = document.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md");
+            // "ng-star-inserted"
+            const elements = Array.from(document.querySelectorAll('div.ng-star-inserted'));
+            const match = elements.find(el => el.textContent.trim().startsWith("炼金术士"));
+            const bg = match?.parentElement?.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md");
+            // absolute bg-center bg-cover bg-no-repeat top-0 left-0 w-full h-full z-0 rounded-b-md
+            if (bg) {
+                // background-image: url(alchemist_bg.jpg);
+                console.log(bg);
+                const elem = bg;
+                if (elem.style.backgroundImage !== current) {
+                    elem.style.backgroundImage = current;
+                    elem.style.backgroundRepeat = "repeat-x";
+                    elem.style.backgroundSize = "contain";
+                    elem.style.backgroundAttachment = "fixed";
+                    elem.style.backgroundPosition = "center";
+                }
+            }
+        }
+        setTimeout(timer_check, 1000);
+    };
+    const timer_change = async (i) => {
+        i++;
+        if (i >= cfg.alchemist_bg.count) {
+            i = 0;
+        }
+        ;
+        const url = await preloadImage(`../../../../themes/${cfg.theme}/alchemist_bg/${i}.webp`);
+        current = `url(${await preloadImage(url)})`;
+        setTimeout(timer_change, cfg.alchemist_bg.change_sec * 1000, i);
+    };
+    setTimeout(timer_check, 1000);
+    const i = Math.floor(Math.random() * cfg.alchemist_bg.count);
+    setTimeout(timer_change, 0, i);
+}
 /**
  * 城鎮背景 init
  * @param {HTMLElement} elem
@@ -58,7 +97,7 @@ async function ChangeTownBg(elem, i) {
     ;
     // elem.style.backgroundImage = `url(../../../../themes/${cfg.theme}/town_bg/${Math.floor(Math.random() * cfg.town_bg_count)}.webp)`;
     const url = await preloadImage(`../../../../themes/${cfg.theme}/town_bg/${i}.webp`);
-    elem.style.backgroundImage = await preloadImage(`url(${url})`);
+    elem.style.backgroundImage = `url(${await preloadImage(url)})`;
     setTimeout(ChangeTownBg, cfg.town_bg.change_sec * 1000, elem, i);
 }
 function WatchInit() {
@@ -101,6 +140,10 @@ function WatchInit() {
                 stat.town_bg_init = true;
                 console.log("town_bg_init");
             }
+        }
+        if (cfg.alchemist_bg.enable && !stat.alchemist_bg_init) {
+            ChangeAlchemistBgInit();
+            stat.alchemist_bg_init = true;
         }
     }
     for (const initState in stat) {

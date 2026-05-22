@@ -188,7 +188,7 @@ export const config = {
         "職業技能背景": true,
         "地下城選擇上方橫幅": true,
         "戰鬥時背景": true,
-        "鍊金術背景": true,
+        // "鍊金術背景": true,
         "植物學家背景": true,
         "商店背景": true,
         "珠寶商上方橫幅": true,

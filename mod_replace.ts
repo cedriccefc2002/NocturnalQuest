@@ -173,17 +173,17 @@ if (cfg.替換.怪物卡片) {
 
 // "background-image",`url(cefc/map/${Date.now()%10}.webp)`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"
 const globalbg = (bgPath: string, bgCount: number) => `"background-image",\`url(${bgPath}/${random(bgCount)}.webp)\`,"background-color","rgba(255, 255, 255, 0.6)","background-blend-mode","darken"`;
-if (cfg.替換.鍊金術背景) {
-  const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.鍊金術背景}`, cfg.模組.圖片副檔名);
-  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.鍊金術背景}`;
-  console.log("鍊金術背景 Path", bgPath);
-  console.log("鍊金術背景 Count", bgCount);
+// if (cfg.替換.鍊金術背景) {
+//   const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.鍊金術背景}`, cfg.模組.圖片副檔名);
+//   const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.鍊金術背景}`;
+//   console.log("鍊金術背景 Path", bgPath);
+//   console.log("鍊金術背景 Count", bgCount);
 
-  if (bgCount > 0) {
-    // "background-image","url(alchemist_bg.jpg)"
-    replaceIfFind(mainjs, `"background-image","url(alchemist_bg.jpg)"`, globalbg(bgPath, bgCount));
-  }
-}
+//   if (bgCount > 0) {
+//     // "background-image","url(alchemist_bg.jpg)"
+//     replaceIfFind(mainjs, `"background-image","url(alchemist_bg.jpg)"`, globalbg(bgPath, bgCount));
+//   }
+// }
 if (cfg.替換.植物學家背景) {
   const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.植物學家背景}`, cfg.模組.圖片副檔名);
   const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.植物學家背景}`;
