@@ -44,7 +44,7 @@ function ChangeTownBg(elem, i) {
     if (i >= cfg.town_bg_count) { i = 0 };
     // elem.style.backgroundImage = `url(../../../../themes/${cfg.theme}/town_bg/${Math.floor(Math.random() * cfg.town_bg_count)}.webp)`;
     elem.style.backgroundImage = `url(../../../../themes/${cfg.theme}/town_bg/${i}.webp)`;
-    setTimeout(ChangeTownBg, 6000, elem, i);
+    setTimeout(ChangeTownBg, cfg.town_bg_change_sec * 1000, elem, i);
 }
 
 function WatchInit() {

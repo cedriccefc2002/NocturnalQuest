@@ -610,3 +610,24 @@ https://cdn.steamusercontent.com/ugc/14076377065325801635/2BBABC06555FA2AA7915C0
 - https://www.deviantart.com/
 - https://www.pinterest.com/
 - https://wall.alphacoders.com/
+
+---
+
+## 主程式
+
+Nocturnal Quest: An Idle RPG Adventure
+
+連結
+
+Steam
+store.steampowered.com/app/2330930/Nocturnal_Quest_An_Idle_RPG_Adventure
+
+Discord
+discord.gg/D9Ds982cQD
+
+TikTok
+tiktok.com/@nocturnal.quest
+更多資訊
+kosmas.papadatos@gmail.com
+www.youtube.com/@nocturnal_quest
+加入日期：2026年1月30日
