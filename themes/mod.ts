@@ -36,6 +36,7 @@ function Clock(elem: Element) {
 
 function ChangeAlchemistBgInit() {
     let current = "";
+    let preLoad = true;
     const timer_check = () => {
         if (current !== "") {
             //const em = document.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md");
@@ -47,6 +48,7 @@ function ChangeAlchemistBgInit() {
             const bg = match?.parentElement?.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md")
             // absolute bg-center bg-cover bg-no-repeat top-0 left-0 w-full h-full z-0 rounded-b-md
             if (bg) {
+                preLoad = true;
                 // background-image: url(alchemist_bg.jpg);
                 // console.log(bg);
                 const elem = bg as HTMLElement;
@@ -57,6 +59,8 @@ function ChangeAlchemistBgInit() {
                     elem.style.backgroundAttachment = "fixed";
                     elem.style.backgroundPosition = "center";
                 }
+            } else {
+                preLoad = false;
             }
         }
         setTimeout(timer_check, 1000);
@@ -64,7 +68,10 @@ function ChangeAlchemistBgInit() {
     const timer_change = async (i: number) => {
         i++;
         if (i >= cfg.alchemist_bg.count) { i = 0 };
-        const url = await preloadImage(`../../../../themes/${cfg.theme}/alchemist_bg/${i}.webp`);
+        const url = `../../../../themes/${cfg.theme}/alchemist_bg/${i}.webp`;
+        if (preLoad) {
+            await preloadImage(url);
+        }
         current = `url(${await preloadImage(url)})`;
         setTimeout(timer_change, cfg.alchemist_bg.change_sec * 1000, i);
     }
@@ -76,6 +83,7 @@ function ChangeAlchemistBgInit() {
 // 商店
 function ChangeShopBgInit() {
     let current = "";
+    let preLoad = true;
     const timer_check = () => {
         if (current !== "") {
             // ant-modal-header cdk-drag-handle ng-tns-c2116847144-8 ng-star-inserted // ng-tns-c2116847144-8 隨機生成
@@ -85,8 +93,9 @@ function ChangeShopBgInit() {
             const bg = match?.parentElement?.querySelector("div.absolute.inset-0.bg-cover.bg-center.bg-no-repeat")
             // class="absolute inset-0 bg-cover bg-center bg-no-repeat"
             if (bg) {
+                preLoad = true;
                 // background-image: url(alchemist_bg.jpg);
-                console.log(bg);
+                // console.log(bg);
                 const elem = bg as HTMLElement;
                 if (elem.style.backgroundImage !== current) {
                     elem.style.backgroundImage = current;
@@ -95,6 +104,8 @@ function ChangeShopBgInit() {
                     elem.style.backgroundAttachment = "fixed";
                     elem.style.backgroundPosition = "center";
                 }
+            } else {
+                preLoad = false;
             }
         }
         setTimeout(timer_check, 1000);
@@ -102,7 +113,10 @@ function ChangeShopBgInit() {
     const timer_change = async (i: number) => {
         i++;
         if (i >= cfg.shop_bg.count) { i = 0 };
-        const url = await preloadImage(`../../../../themes/${cfg.theme}/shop_bg/${i}.webp`);
+        const url = `../../../../themes/${cfg.theme}/shop_bg/${i}.webp`;
+        if (preLoad) {
+            await preloadImage(url);
+        }
         current = `url(${await preloadImage(url)})`;
         setTimeout(timer_change, cfg.shop_bg.change_sec * 1000, i);
     }
@@ -113,6 +127,7 @@ function ChangeShopBgInit() {
 
 function ChangeBotanistBgInit() {
     let current = "";
+    let preLoad = true;
     const timer_check = () => {
         if (current !== "") {
             //const em = document.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md");
@@ -124,6 +139,7 @@ function ChangeBotanistBgInit() {
             const bg = match?.parentElement?.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md")
             // absolute bg-center bg-cover bg-no-repeat top-0 left-0 w-full h-full z-0 rounded-b-md
             if (bg) {
+                preLoad = true;
                 // background-image: url(alchemist_bg.jpg);
                 // console.log(bg);
                 const elem = bg as HTMLElement;
@@ -134,6 +150,8 @@ function ChangeBotanistBgInit() {
                     elem.style.backgroundAttachment = "fixed";
                     elem.style.backgroundPosition = "center";
                 }
+            } else {
+                preLoad = false;
             }
         }
         setTimeout(timer_check, 1000);
@@ -141,7 +159,10 @@ function ChangeBotanistBgInit() {
     const timer_change = async (i: number) => {
         i++;
         if (i >= cfg.botanist_bg.count) { i = 0 };
-        const url = await preloadImage(`../../../../themes/${cfg.theme}/botanist_bg/${i}.webp`);
+        const url = `../../../../themes/${cfg.theme}/botanist_bg/${i}.webp`;
+        if (preLoad) {
+            await preloadImage(url);
+        }
         current = `url(${await preloadImage(url)})`;
         setTimeout(timer_change, cfg.botanist_bg.change_sec * 1000, i);
     }
