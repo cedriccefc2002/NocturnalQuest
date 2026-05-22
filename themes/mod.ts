@@ -1,41 +1,44 @@
 // <script rel="modulepreload" src="../../../../themes/config.js" type="module"></script>
 // <script src="../../../../themes/mod.js" type="module"></script>
+
 import { config as cfg, stat } from "./config.js";
 /**
  * 預加載圖片以解決變更圖片切換時畫面閃爍的問題
  */
-function preloadImage(url) {
+function preloadImage(url: string): Promise<string> {
     return new Promise((resolve, _) => {
         const img = new Image();
         img.src = url;
         // console.log(img);
         img.onload = () => resolve(url);
         img.onerror = () => {
-            console.log("preloadImage fail", url);
-            resolve(url);
+            console.log("preloadImage fail", url)
+            resolve(url)
         };
     });
 }
-function ClockInit(parent) {
+
+function ClockInit(parent: Element) {
     const elem = document.createElement("div");
     elem.className = "absolute bottom-4 left-4";
     elem.style.padding = "10px";
     // elem.style.paddingLeft = "20px";
-    elem.style.fontSize = "20px";
+    elem.style.fontSize = "20px"
     elem.style.backgroundColor = "rgb(0, 0, 0)";
     parent.appendChild(elem);
     setTimeout(Clock, 1, elem);
 }
-function Clock(elem) {
+function Clock(elem: Element) {
     const now = new Date();
     elem.textContent = `${now.toLocaleTimeString()}`;
     setTimeout(Clock, 1000, elem);
 }
+
 /**
- * 城鎮背景 init
+ * 城鎮背景 init 
  * @param {HTMLElement} elem
  */
-function ChangeTownBgInit(elem) {
+function ChangeTownBgInit(elem: HTMLElement) {
     const i = Math.floor(Math.random() * cfg.town_bg.count);
     // elem.style.backgroundColor = "rgb(255, 255, 255, 0.6)";
     // elem.style.backgroundBlendMode = "darken";
@@ -47,20 +50,18 @@ function ChangeTownBgInit(elem) {
 }
 /**
  * 城鎮背景
- * @param {HTMLElement} elem
+ * @param {HTMLElement} elem 
  * @param {number} i -1 代表隨機
  */
-async function ChangeTownBg(elem, i) {
+async function ChangeTownBg(elem: HTMLElement, i: number) {
     i++;
-    if (i >= cfg.town_bg.count) {
-        i = 0;
-    }
-    ;
+    if (i >= cfg.town_bg.count) { i = 0 };
     // elem.style.backgroundImage = `url(../../../../themes/${cfg.theme}/town_bg/${Math.floor(Math.random() * cfg.town_bg_count)}.webp)`;
     const url = await preloadImage(`../../../../themes/${cfg.theme}/town_bg/${i}.webp`);
     elem.style.backgroundImage = await preloadImage(`url(${url})`);
     setTimeout(ChangeTownBg, cfg.town_bg.change_sec * 1000, elem, i);
 }
+
 function WatchInit() {
     console.log("WatchInit checking");
     // const tuiRoot = document.getElementsByTagName("tui-root");
@@ -77,6 +78,7 @@ function WatchInit() {
     //         }
     //     }
     // }
+
     const appGame = document.getElementsByTagName("app-game");
     if (appGame && appGame.length > 0 && appGame[0] !== undefined) {
         // console.log(appGame[0]);
@@ -88,13 +90,13 @@ function WatchInit() {
             const townBg = appGame[0].getElementsByClassName("town bg-cover bg-center bg-no-repeat ng-tns-c4281862251-5");
             if (townBg && townBg.length > 0 && townBg[0] !== undefined) {
                 // console.log(townBg[0]);
-                ChangeTownBgInit(townBg[0]);
+                ChangeTownBgInit(townBg[0] as HTMLElement);
                 if (cfg.town_bg.icon_black_bg) {
                     const icons = townBg[0].getElementsByClassName("building-icon-container ng-tns-c4281862251-5 ng-star-inserted");
                     if (icons && icons.length > 0) {
                         console.log(icons[0]);
                         for (const elem of icons) {
-                            elem.style.backgroundColor = "rgb(0, 0, 0)";
+                            (elem as HTMLElement).style.backgroundColor = "rgb(0, 0, 0)";
                         }
                     }
                 }

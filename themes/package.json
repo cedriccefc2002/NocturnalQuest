@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "name": "nocturnal-theme",
+  "version": "0.0.1",
+  "main": "mod.js",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "private": true,
+  "devDependencies": {
+    "typescript": "6.0.3"
+  }
+}
