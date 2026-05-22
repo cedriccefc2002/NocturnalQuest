@@ -208,17 +208,17 @@ if (cfg.替換.商店背景) {
   }
 }
 
-if (cfg.替換.城鎮背景) {
-  const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.城鎮背景}`, cfg.模組.圖片副檔名);
-  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.城鎮背景}`;
-  console.log("城鎮背景 Path", bgPath);
-  console.log("城鎮背景 Count", bgCount);
+// if (cfg.替換.城鎮背景) {
+//   const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.城鎮背景}`, cfg.模組.圖片副檔名);
+//   const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.城鎮背景}`;
+//   console.log("城鎮背景 Path", bgPath);
+//   console.log("城鎮背景 Count", bgCount);
 
-  if (bgCount > 0) {
-    // "background-image","url(town_bg.jpg)"
-    replaceIfFind(mainjs, `"background-image","url(town_bg.jpg)"`, globalbg(bgPath, bgCount));
-  }
-}
+//   if (bgCount > 0) {
+//     // "background-image","url(town_bg.jpg)"
+//     replaceIfFind(mainjs, `"background-image","url(town_bg.jpg)"`, globalbg(bgPath, bgCount));
+//   }
+// }
 
 if (cfg.替換.總部背景) {
   const bgCount = await dirCount(`${basePath}/${cfg.模組.佈景主題各子目錄.總部背景}`, cfg.模組.圖片副檔名);

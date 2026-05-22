@@ -192,7 +192,7 @@ export const config = {
         "植物學家背景": true,
         "商店背景": true,
         "珠寶商上方橫幅": true,
-        "城鎮背景": true,
+        // "城鎮背景": true,
         "鐵匠天賦背景": true,
         "自動法師小屋上方橫幅": true,
         "酒館上方橫幅": true,
