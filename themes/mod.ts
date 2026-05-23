@@ -1,3 +1,4 @@
+// app/dist/electron/browser/index.html 檔案中加入
 // <script rel="modulepreload" src="../../../../themes/config.js" type="module"></script>
 // <script src="../../../../themes/mod.js" type="module"></script>
 
@@ -34,63 +35,26 @@ function Clock(elem: Element) {
     setTimeout(Clock, 1000, elem);
 }
 
-function ChangeAlchemistBgInit() {
-    let current = "";
-    let preLoad = true;
-    const timer_check = () => {
-        if (current !== "") {
-            //const em = document.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md");
-            // "ng-star-inserted"
-            // const elements = Array.from(document.querySelectorAll('div.ng-star-inserted'));
-            // ant-modal-header cdk-drag-handle ng-tns-c2116847144-8 ng-star-inserted // ng-tns-c2116847144-8 隨機生成
-            const elements = Array.from(document.querySelectorAll('div.ant-modal-header.cdk-drag-handle.ng-star-inserted'));
-            const match = elements.find(el => el.textContent.trim().startsWith("炼金术士"));
-            const bg = match?.parentElement?.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md")
-            // absolute bg-center bg-cover bg-no-repeat top-0 left-0 w-full h-full z-0 rounded-b-md
-            if (bg) {
-                preLoad = true;
-                // background-image: url(alchemist_bg.jpg);
-                // console.log(bg);
-                const elem = bg as HTMLElement;
-                if (elem.style.backgroundImage !== current) {
-                    elem.style.backgroundImage = current;
-                    elem.style.backgroundRepeat = "repeat-x";
-                    elem.style.backgroundSize = "contain";
-                    elem.style.backgroundAttachment = "fixed";
-                    elem.style.backgroundPosition = "center";
-                }
-            } else {
-                preLoad = false;
-            }
-        }
-        setTimeout(timer_check, 1000);
+type ChangeBgInitTemplConfig = {
+    titleQuerySelector: string;
+    bgQuerySelector: string;
+    title: string;
+    change: {
+        subdirname: string;
+        enable: boolean;
+        count: number;
+        change_sec: number;
     }
-    const timer_change = async (i: number) => {
-        i++;
-        if (i >= cfg.alchemist_bg.count) { i = 0 };
-        const url = `../../../../themes/${cfg.theme}/alchemist_bg/${i}.webp`;
-        if (preLoad) {
-            await preloadImage(url);
-        }
-        current = `url(${await preloadImage(url)})`;
-        setTimeout(timer_change, cfg.alchemist_bg.change_sec * 1000, i);
-    }
-    setTimeout(timer_check, 1000);
-    const i = Math.floor(Math.random() * cfg.alchemist_bg.count);
-    setTimeout(timer_change, 0, i);
 }
-
-// 商店
-function ChangeShopBgInit() {
+function ChangeBgInitTempl(config: ChangeBgInitTemplConfig) {
     let current = "";
     let preLoad = true;
     const timer_check = () => {
         if (current !== "") {
             // ant-modal-header cdk-drag-handle ng-tns-c2116847144-8 ng-star-inserted // ng-tns-c2116847144-8 隨機生成
-            const elements = Array.from(document.querySelectorAll('div.ant-modal-header.cdk-drag-handle.ng-star-inserted'));
-            const match = elements.find(el => el.textContent.trim().startsWith("商店"));
-            console.log(match);
-            const bg = match?.parentElement?.querySelector("div.absolute.inset-0.bg-cover.bg-center.bg-no-repeat")
+            const elements = Array.from(document.querySelectorAll(config.titleQuerySelector));
+            const match = elements.find(el => el.textContent.trim().startsWith(config.title));
+            const bg = match?.parentElement?.querySelector(config.bgQuerySelector)
             // class="absolute inset-0 bg-cover bg-center bg-no-repeat"
             if (bg) {
                 preLoad = true;
@@ -112,63 +76,55 @@ function ChangeShopBgInit() {
     }
     const timer_change = async (i: number) => {
         i++;
-        if (i >= cfg.shop_bg.count) { i = 0 };
-        const url = `../../../../themes/${cfg.theme}/shop_bg/${i}.webp`;
+        if (i >= config.change.count) { i = 0 };
+        const url = `../../../../themes/${cfg.theme}/${config.change.subdirname}/${i}.webp`;
         if (preLoad) {
             await preloadImage(url);
         }
         current = `url(${await preloadImage(url)})`;
-        setTimeout(timer_change, cfg.shop_bg.change_sec * 1000, i);
+        setTimeout(timer_change, config.change.change_sec * 1000, i);
     }
     setTimeout(timer_check, 1000);
-    const i = Math.floor(Math.random() * cfg.shop_bg.count);
+    const i = Math.floor(Math.random() * config.change.count);
     setTimeout(timer_change, 0, i);
 }
 
+function ChangeAlchemistBgInit() {
+    ChangeBgInitTempl({
+        // ant-modal-header cdk-drag-handle ng-tns-c2116847144-8 ng-star-inserted // ng-tns-c2116847144-8 隨機生成
+        titleQuerySelector: 'div.ant-modal-header.cdk-drag-handle.ng-star-inserted',
+        title: "炼金术士",
+        // class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        //        absolute bg-center bg-cover bg-no-repeat top-0 left-0 w-full h-full z-0 rounded-b-md
+        bgQuerySelector: "div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md",
+        change: { ...cfg.shop_bg }
+    });
+}
+
+// 商店
+function ChangeShopBgInit() {
+    ChangeBgInitTempl({
+        // ant-modal-header cdk-drag-handle ng-tns-c2116847144-8 ng-star-inserted // ng-tns-c2116847144-8 隨機生成
+        titleQuerySelector: 'div.ant-modal-header.cdk-drag-handle.ng-star-inserted',
+        title: "商店",
+        // class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        bgQuerySelector: "div.absolute.inset-0.bg-cover.bg-center.bg-no-repeat",
+        change: { ...cfg.shop_bg }
+    });
+}
+
 function ChangeBotanistBgInit() {
-    let current = "";
-    let preLoad = true;
-    const timer_check = () => {
-        if (current !== "") {
-            //const em = document.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md");
-            // "ng-star-inserted"
-            // const elements = Array.from(document.querySelectorAll('div.ng-star-inserted'));
-            // ant-modal-header cdk-drag-handle ng-tns-c2116847144-8 ng-star-inserted // ng-tns-c2116847144-8 隨機生成
-            const elements = Array.from(document.querySelectorAll('div.ant-modal-header.cdk-drag-handle.ng-star-inserted'));
-            const match = elements.find(el => el.textContent.trim().startsWith("植物学家"));
-            const bg = match?.parentElement?.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md")
-            // absolute bg-center bg-cover bg-no-repeat top-0 left-0 w-full h-full z-0 rounded-b-md
-            if (bg) {
-                preLoad = true;
-                // background-image: url(alchemist_bg.jpg);
-                // console.log(bg);
-                const elem = bg as HTMLElement;
-                if (elem.style.backgroundImage !== current) {
-                    elem.style.backgroundImage = current;
-                    elem.style.backgroundRepeat = "repeat-x";
-                    elem.style.backgroundSize = "contain";
-                    elem.style.backgroundAttachment = "fixed";
-                    elem.style.backgroundPosition = "center";
-                }
-            } else {
-                preLoad = false;
-            }
-        }
-        setTimeout(timer_check, 1000);
-    }
-    const timer_change = async (i: number) => {
-        i++;
-        if (i >= cfg.botanist_bg.count) { i = 0 };
-        const url = `../../../../themes/${cfg.theme}/botanist_bg/${i}.webp`;
-        if (preLoad) {
-            await preloadImage(url);
-        }
-        current = `url(${await preloadImage(url)})`;
-        setTimeout(timer_change, cfg.botanist_bg.change_sec * 1000, i);
-    }
-    setTimeout(timer_check, 1000);
-    const i = Math.floor(Math.random() * cfg.botanist_bg.count);
-    setTimeout(timer_change, 0, i);
+    ChangeBgInitTempl({
+        //const em = document.querySelector("div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md");
+        // "ng-star-inserted"
+        // const elements = Array.from(document.querySelectorAll('div.ng-star-inserted'));
+        // ant-modal-header cdk-drag-handle ng-tns-c2116847144-8 ng-star-inserted // ng-tns-c2116847144-8 隨機生成
+        titleQuerySelector: 'div.ant-modal-header.cdk-drag-handle.ng-star-inserted',
+        title: "植物学家",
+        // class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        bgQuerySelector: "div.absolute.bg-center.bg-cover.bg-no-repeat.top-0.left-0.w-full.h-full.z-0.rounded-b-md",
+        change: { ...cfg.botanist_bg }
+    });
 }
 
 /**
@@ -194,7 +150,7 @@ async function ChangeTownBg(elem: HTMLElement, i: number) {
     i++;
     if (i >= cfg.town_bg.count) { i = 0 };
     // elem.style.backgroundImage = `url(../../../../themes/${cfg.theme}/town_bg/${Math.floor(Math.random() * cfg.town_bg_count)}.webp)`;
-    const url = await preloadImage(`../../../../themes/${cfg.theme}/town_bg/${i}.webp`);
+    const url = await preloadImage(`../../../../themes/${cfg.theme}/${cfg.town_bg.subdirname}/${i}.webp`);
     elem.style.backgroundImage = `url(${await preloadImage(url)})`;
     setTimeout(ChangeTownBg, cfg.town_bg.change_sec * 1000, elem, i);
 }
@@ -262,6 +218,19 @@ function WatchInit() {
             stat.shop_bg_init = true
         } else {
             stat.shop_bg_init = true;
+        }
+        if (cfg.blacksmith_talents_bg.enable && !stat.blacksmith_talents_bg_init) {
+            ChangeBgInitTempl({
+                // ant-modal-header cdk-drag-handle ng-tns-c2116847144-8 ng-star-inserted // ng-tns-c2116847144-8 隨機生成
+                titleQuerySelector: 'div.ant-modal-header.cdk-drag-handle.ng-star-inserted',
+                title: "铁匠",
+                // rounded bg-center bg-cover w-full flex-grow flex flex-col gap-3 items-center justify-center ng-tns-c2312799977-7
+                bgQuerySelector: "div.rounded.bg-center.bg-cover.w-full.flex-grow.flex.flex-col.gap-3.items-center.justify-center",
+                change: { ...cfg.blacksmith_talents_bg }
+            });
+            stat.blacksmith_talents_bg_init = true
+        } else {
+            stat.blacksmith_talents_bg_init = true;
         }
     }
     for (const initState in stat) {
