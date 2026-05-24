@@ -1,5 +1,5 @@
 sources = [
-    "/media/cefc/Data/Data/Source/",
+    "/media/cefc/Data/Data/Source/AICosplay Animated/00_DyDy_cos",
 ]
 exts = [".webp", ".jpg", ".png"]
 [Server]

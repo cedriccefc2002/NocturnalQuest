@@ -39,11 +39,12 @@ RouteMap.set(new URLPattern({ pathname: "/image/rand/:id" }), async () => {
   // Open the file for reading
   const randomNum = Math.floor(Math.random() * ImageArray.length);
   const filename = ImageArray[randomNum];
-  console.log(filename);
+  const ext = contentType(extname(filename)) ?? "binary/octet-stream";
+  console.log(`"${filename}","${ext}"`);
   const file = await Deno.open(filename, { read: true });
   return new Response(file.readable, {
     headers: {
-      "content-type": contentType(extname(filename)) ?? "binary/octet-stream",
+      "content-type": ext,
       // Cache-Control: public, max-age=604800, immutable
       "cache-control": "public, max-age=604800, immutable" // 讓遊戲可以預載資源後減少切換閃爍
     }
