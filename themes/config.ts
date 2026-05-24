@@ -1,4 +1,9 @@
 export const config = {
+    loadfromserver:
+    {
+        enable: true,
+        url: () => `http://127.0.0.1:8000/image/rand/${Date.now()}`
+    },
     theme: "aldult",
     clock: {
         enable: true,
@@ -34,20 +39,4 @@ export const config = {
         change_sec: 6,
         subdirname: "blacksmith_talents_bg",
     },
-}
-export const stat: {
-    [key: string]: boolean,
-    clock_init: boolean,
-    town_bg_init: boolean,
-    alchemist_bg_init: boolean,
-    botanist_bg_init: boolean,
-    shop_bg_init: boolean,
-    blacksmith_talents_bg_init: boolean,
-} = {
-    clock_init: false,
-    town_bg_init: false,
-    alchemist_bg_init: false,
-    botanist_bg_init: false,
-    shop_bg_init: false,
-    blacksmith_talents_bg_init: false,
 }

@@ -25,13 +25,13 @@ export function replaceIfFind(source: source, searchString: string, replaceStrin
   }
 }
 
-export async function dirAllFiles(path: string, ext: string) {
+export async function dirAllFiles(path: string, exts: string[]) {
   const dirFiles: string[] = [];
   for await (const entry of Deno.readDir(path)) {
     const fullname = pathJoin(path, entry.name);
     if (entry.isDirectory) {
-      dirFiles.push(... await dirAllFiles(fullname, ext));
-    } else if (entry.isFile && extname(entry.name) == ext) {
+      dirFiles.push(... await dirAllFiles(fullname, exts));
+    } else if (entry.isFile && exts.indexOf(extname(entry.name)) >= 0) {
       dirFiles.push(fullname);
     }
   }

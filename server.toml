@@ -1,0 +1,8 @@
+sources = [
+    "/media/cefc/Data/Data/DyDy_cos] 2025-12 Monthly Pack Animated (WEBP) [AI Generated]/",
+    "/media/cefc/MediaData/Data/02_Wallpaper/",
+]
+exts = [".webp", ".jpg", ".png"]
+[Server]
+port = 8000
+hostname = "127.0.0.1"
