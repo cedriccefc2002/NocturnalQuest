@@ -1,4 +1,4 @@
-import { extname } from "node:path";
+import { extname, join as pathJoin } from "node:path";
 
 export async function pressAnyKey(message = "Press any key to continue...") {
   console.log(message);
@@ -23,6 +23,19 @@ export function replaceIfFind(source: source, searchString: string, replaceStrin
     source.hasModify = true;
     source.content = source.content.replace(searchString, replaceString)
   }
+}
+
+export async function dirAllFiles(path: string, ext: string) {
+  const dirFiles: string[] = [];
+  for await (const entry of Deno.readDir(path)) {
+    const fullname = pathJoin(path, entry.name);
+    if (entry.isDirectory) {
+      dirFiles.push(... await dirAllFiles(fullname, ext));
+    } else if (entry.isFile && extname(entry.name) == ext) {
+      dirFiles.push(fullname);
+    }
+  }
+  return dirFiles;
 }
 
 export async function dirFiles(path: string, ext: string) {
