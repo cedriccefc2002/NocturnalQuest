@@ -38,7 +38,7 @@ import { dirAllFiles } from "./common.ts"
 const imageArray = await dirAllFiles("themes/aldult", ".webp");
 console.log("find imageArray", imageArray.length)
 
-Deno.serve(async () => {
+Deno.serve({ port: 8000, hostname: "127.0.0.1" }, async () => {
   try {
     // Open the file for reading
     const randomNum = Math.floor(Math.random() * imageArray.length); 
