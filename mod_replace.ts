@@ -397,5 +397,8 @@ if (html.indexOf(append) < 0) {
   console.log("html add", append)
   html += append;
   await Deno.writeTextFile(cfg.html替換檔路徑, html);
+  if (cfg.備份修改後的檔案到佈景主題目錄) {
+    await Deno.writeTextFile(join(basePath, basename(cfg.html替換檔路徑)), html);
+  }
 }
 await pressAnyKey();

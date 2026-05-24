@@ -1,6 +1,7 @@
 sources = [
     "/media/cefc/Data/Data/DyDy_cos] 2025-12 Monthly Pack Animated (WEBP) [AI Generated]/",
     "/media/cefc/MediaData/Data/02_Wallpaper/",
+    "/home/cefc/下載/Grabit/",
 ]
 exts = [".webp", ".jpg", ".png"]
 [Server]
