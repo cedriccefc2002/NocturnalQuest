@@ -4,7 +4,6 @@ import { extname } from "node:path";
 
 import { dirAllFiles } from "./common.ts"
 
-const ImageSet = new Set<string>();
 let ImageArray: string[] = [];
 const RouteMap = new Map<URLPattern, (req: Request, match: URLPatternResult) => Promise<Response>>();
 const cfg = parse(Deno.readTextFileSync("./server.toml")) as {
@@ -16,13 +15,15 @@ const cfg = parse(Deno.readTextFileSync("./server.toml")) as {
   }
 };
 async function loadFrom(dirs: string[]) {
+  const set = new Set<string>();
   for (const dir of dirs) {
     for (const element of (await dirAllFiles(dir, cfg.exts))) {
-      ImageSet.add(element);
+      set.add(element);
     }
   }
-  ImageArray = [...ImageSet.values()];
-  console.log("ImageSet", ImageArray.length)
+  ImageArray = [...set.values()];
+  console.log("ImageSet", ImageArray.length);
+  set.clear()
 }
 RouteMap.set(new URLPattern({ pathname: "/" }), () => {
   return new Promise((resolve) => {
