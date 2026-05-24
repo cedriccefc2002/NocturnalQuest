@@ -162,6 +162,11 @@ export const 職業天賦對應語音: 職業天賦對應語音 = {
     }
 };
 export const config = {
+    loadfromserver:
+    {
+        enable: true,
+        url: "http://127.0.0.1:8000/image/rand/${parseInt(Date.now()/1000/10)}"
+    },
     "模組": {
         "基礎路徑": "./themes",
         "Web路徑": "../../../../themes",
@@ -182,6 +187,7 @@ export const config = {
     "存檔前先備份": false,
     "備份修改後的檔案到佈景主題目錄": true,
     "替換檔路徑": "./app/dist/electron/browser/main-S57572R2.js",
+    "html替換檔路徑": "./app/dist/electron/browser/index.html",
     "替換": {
         "怪物卡片": true,
         "職業卡片": true,

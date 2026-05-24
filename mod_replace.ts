@@ -1,6 +1,5 @@
 import { basename, join } from "node:path";
 import { pressAnyKey, dirCount, dirSubCount, replaceIfFind, source, dirFiles } from "./common.ts";
-import { json } from "node:stream/consumers";
 
 const cfg = (await import("./mod_replace.config.ts")).config;
 console.log("config:", cfg);
@@ -19,17 +18,24 @@ const random = (count: number) => `\${Math.floor(Math.random() * ${count})}`
 // const randomByDate = (count: number, sec: number = 10) => `\${parseInt(Date.now()/1000/${sec})%${count}}`
 
 if (cfg.替換.職業技能背景) {
-  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.職業技能背景}`;
-  const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.職業技能背景}`, cfg.模組.圖片副檔名);
-  console.log("職業技能背景 Path", bgPath);
-  console.log("職業技能背景 Settings", settings);
-
-  // 有子目錄且圖檔總數大於0
-  if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
+  if (cfg.loadfromserver.enable) {
     // background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
     // w("bgImg",e.classesDict[t.unit.class].talentsImage) beta
     const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
-    const action = `
+    const replaceString = `background-image: url('\`,\`${cfg.loadfromserver.url}\`,\`');`;
+    replaceIfFind(mainjs, searchString, replaceString);
+  } else {
+    const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.職業技能背景}`;
+    const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.職業技能背景}`, cfg.模組.圖片副檔名);
+    console.log("職業技能背景 Path", bgPath);
+    console.log("職業技能背景 Settings", settings);
+
+    // 有子目錄且圖檔總數大於0
+    if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
+      // background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
+      // w("bgImg",e.classesDict[t.unit.class].talentsImage) beta
+      const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
+      const action = `
     ((t)=>{
   let ts = t.split(".")[0];
   let s = 0;
@@ -37,10 +43,11 @@ if (cfg.替換.職業技能背景) {
   return s<=0 ? t : "${bgPath}/"+ts+"/"+parseInt(Date.now()/1000/10)%s+".webp";
 })(e.classesDict[t.unit.class].talentsImage)
     `;
-    const replaceString = `background-image: url('\`,${action},\`');`;
-    // background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
-    // const replaceString = `background-image: url('${bgPath}/\`,\`${randomByDate(bgCount)}\`,\`.webp');`;
-    replaceIfFind(mainjs, searchString, replaceString);
+      const replaceString = `background-image: url('\`,${action},\`');`;
+      // background-image: url('themes/bg/`,`${parseInt(Date.now()/1000/10)%835}`,`.webp');
+      // const replaceString = `background-image: url('${bgPath}/\`,\`${randomByDate(bgCount)}\`,\`.webp');`;
+      replaceIfFind(mainjs, searchString, replaceString);
+    }
   }
 }
 
@@ -72,17 +79,25 @@ if (cfg.替換.地下城選擇上方橫幅) {
 }
 
 if (cfg.替換.戰鬥時背景) {
-  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.戰鬥時背景}`;
-  const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.戰鬥時背景}`, cfg.模組.圖片副檔名);
-  console.log("戰鬥時背景 Path", bgPath);
-  console.log("戰鬥時背景 Settings", settings);
-
-  // 有子目錄且圖檔總數大於0
-  if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
+  if (cfg.loadfromserver.enable) {
     // r.nativeElement.style.backgroundImage=`url(${x.mapBgImage})`
     // a.nativeElement.style.backgroundImage=`url(${m.mapBgImage})` beta
     const searchString = `r.nativeElement.style.backgroundImage=\`url(\${x.mapBgImage})\``;
-    const action = `
+    // r.nativeElement.style.backgroundImage=`url(http://127.0.0.1:8000/image/rand/${Date.now()})`
+    const replaceString = `r.nativeElement.style.backgroundImage=\`url(${cfg.loadfromserver.url})\``;
+    replaceIfFind(mainjs, searchString, replaceString);
+  } else {
+    const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.戰鬥時背景}`;
+    const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.戰鬥時背景}`, cfg.模組.圖片副檔名);
+    console.log("戰鬥時背景 Path", bgPath);
+    console.log("戰鬥時背景 Settings", settings);
+
+    // 有子目錄且圖檔總數大於0
+    if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
+      // r.nativeElement.style.backgroundImage=`url(${x.mapBgImage})`
+      // a.nativeElement.style.backgroundImage=`url(${m.mapBgImage})` beta
+      const searchString = `r.nativeElement.style.backgroundImage=\`url(\${x.mapBgImage})\``;
+      const action = `
     ((t)=>{
   let ts = t.split(".")[0];
   let s = 0;
@@ -90,10 +105,11 @@ if (cfg.替換.戰鬥時背景) {
   return s<=0 ? t : "${bgPath}/"+ts+"/"+Math.floor(Math.random()*s)+".webp";
 })(x.mapBgImage)
     `;
-    const replaceString = `r.nativeElement.style.backgroundImage=\`url(\${${action}})\``;
-    // r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
-    // const replaceString = `r.nativeElement.style.backgroundImage=\`url(${bgPath}/${random(bgCount)}.webp)\``;
-    replaceIfFind(mainjs, searchString, replaceString);
+      const replaceString = `r.nativeElement.style.backgroundImage=\`url(\${${action}})\``;
+      // r.nativeElement.style.backgroundImage=`url(themes/bg/${Date.now()%835}.webp)`
+      // const replaceString = `r.nativeElement.style.backgroundImage=\`url(${bgPath}/${random(bgCount)}.webp)\``;
+      replaceIfFind(mainjs, searchString, replaceString);
+    }
   }
 }
 
@@ -368,5 +384,18 @@ if (mainjs.hasModify) {
   await Deno.writeTextFile(cfg.替換檔路徑, mainjs.content);
 }
 
+// app/dist/electron/browser/index.html 檔案中加入
+// <script rel="modulepreload" src="../../../../themes/config.js" type="module"></script>
+// <script src="../../../../themes/mod.js" type="module"></script>
 
+let html = await Deno.readTextFile(cfg.html替換檔路徑);
+const append = `
+<script rel="modulepreload" src="../../../../themes/config.js" type="module"></script>
+<script src="../../../../themes/mod.js" type="module"></script>
+`
+if (html.indexOf(append) < 0) {
+  console.log("html add", append)
+  html += append;
+  await Deno.writeTextFile(cfg.html替換檔路徑, html);
+}
 await pressAnyKey();
