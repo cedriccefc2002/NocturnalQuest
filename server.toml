@@ -1,7 +1,97 @@
-sources = [
-    "/media/cefc/Data/Data/Source/AICosplay Animated/00_DyDy_cos",
-]
 exts = [".webp", ".jpg", ".png"]
+[Background]
+sources = ["/media/cefc/Data/Data/Source/AICosplay Animated/00_DyDy_cos"]
+[[Monster.Source]]
+name = "acolyte"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "beast"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "black_giant"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "dark_druid"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "elf_mutant"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "ent_overlord"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "fel_ent"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "fel_sphinx"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "fire_elemental"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "frost_wraith"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "frozen_abomination"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "gargoyle"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "ice_demon"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "ice_golem"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "iron_golem"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "iron_trunk"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "king_of_winter"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "knight"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "living_sands"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "living_thunder"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "lord_of_chaos"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "mega_scorpion"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "sand_titan"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "skeleton_dragon"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "skeleton_ogre"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "skeleton_overlord"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "skeleton_warlock"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "skeleton_warrior"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = "thunder_dragon"
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+[[Monster.Source]]
+name = 'thunderous_beast'
+sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+
 [Server]
 port = 8000
 hostname = "127.0.0.1"

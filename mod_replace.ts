@@ -1,7 +1,7 @@
 import { basename, join } from "node:path";
 import { pressAnyKey, dirCount, dirSubCount, replaceIfFind, source, dirFiles } from "./common.ts";
 
-const cfg = (await import("./mod_replace.config.ts")).config;
+const { config: cfg, 怪物 } = (await import("./mod_replace.config.ts"));
 console.log("config:", cfg);
 
 const mainjs: source =
@@ -161,27 +161,43 @@ s=((t)=>{
 }
 
 if (cfg.替換.怪物卡片) {
-  const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.怪物卡片}`;
-  const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.怪物卡片}`, cfg.模組.圖片副檔名);
-  console.log("怪物卡片 Path", bgPath);
-  console.log("怪物卡片 Settings", settings);
+  if (cfg.loadfromserver.enable) {
+    for (const name of 怪物) {
+      // ",image:"skeleton_warrior.jpg",ranks:["
+      const searchString1 = `",image:"${name}.jpg",ranks:["`;
+      // ",image:`themes/monster/skeleton_warrior/0.webp`,ranks:["
+      const replaceString1 = `",image:\`${cfg.loadfromserver.mosterurl_base}/${name}/0\`,ranks:["`;
+      replaceIfFind(mainjs, searchString1, replaceString1);
+      // this.unit.unit.image="skeleton_warrior.jpg"
+      // this.unit.unit.image="skeleton_warrior.jpg" beta
+      const searchString2 = `this.unit.unit.image="${name}.jpg"`;
+      // this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.webp`
+      const replaceString2 = `this.unit.unit.image=\`${cfg.loadfromserver.mosterurl_base}/${name}/\${crypto.randomUUID()}\``;
+      replaceIfFind(mainjs, searchString2, replaceString2);
+    }
+  } else {
+    const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.怪物卡片}`;
+    const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.怪物卡片}`, cfg.模組.圖片副檔名);
+    console.log("怪物卡片 Path", bgPath);
+    console.log("怪物卡片 Settings", settings);
 
-  // 有子目錄且圖檔總數大於0
-  if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
-    for (const [name, count] of settings) {
-      console.log(name, count);
-      if (count > 0) {
-        // ",image:"skeleton_warrior.jpg",ranks:["
-        const searchString1 = `",image:"${name}.jpg",ranks:["`;
-        // ",image:`themes/monster/skeleton_warrior/0.webp`,ranks:["
-        const replaceString1 = `",image:\`${bgPath}/${name}/0.webp\`,ranks:["`;
-        replaceIfFind(mainjs, searchString1, replaceString1);
-        // this.unit.unit.image="skeleton_warrior.jpg"
-        // this.unit.unit.image="skeleton_warrior.jpg" beta
-        const searchString2 = `this.unit.unit.image="${name}.jpg"`;
-        // this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.webp`
-        const replaceString2 = `this.unit.unit.image=\`${bgPath}/${name}/${random(count)}.webp\``;
-        replaceIfFind(mainjs, searchString2, replaceString2);
+    // 有子目錄且圖檔總數大於0
+    if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
+      for (const [name, count] of settings) {
+        console.log(name, count);
+        if (count > 0) {
+          // ",image:"skeleton_warrior.jpg",ranks:["
+          const searchString1 = `",image:"${name}.jpg",ranks:["`;
+          // ",image:`themes/monster/skeleton_warrior/0.webp`,ranks:["
+          const replaceString1 = `",image:\`${bgPath}/${name}/0.webp\`,ranks:["`;
+          replaceIfFind(mainjs, searchString1, replaceString1);
+          // this.unit.unit.image="skeleton_warrior.jpg"
+          // this.unit.unit.image="skeleton_warrior.jpg" beta
+          const searchString2 = `this.unit.unit.image="${name}.jpg"`;
+          // this.unit.unit.image=`themes/monster/skeleton_warrior/${Math.floor(Math.random() * 73)}.webp`
+          const replaceString2 = `this.unit.unit.image=\`${bgPath}/${name}/${random(count)}.webp\``;
+          replaceIfFind(mainjs, searchString2, replaceString2);
+        }
       }
     }
   }
