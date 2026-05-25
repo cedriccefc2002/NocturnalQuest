@@ -85,7 +85,7 @@ if (cfg.替換.戰鬥時背景) {
     // a.nativeElement.style.backgroundImage=`url(${m.mapBgImage})` beta
     const searchString = `r.nativeElement.style.backgroundImage=\`url(\${x.mapBgImage})\``;
     // r.nativeElement.style.backgroundImage=`url(http://127.0.0.1:8000/image/rand/${Date.now()})`
-    const url = `${cfg.loadfromserver.bgurl_base}/\${m.mapBgImage}/\${crypto.randomUUID()}`
+    const url = `${cfg.loadfromserver.bgurl_base}/\${x.mapBgImage}/\${crypto.randomUUID()}`
     const replaceString = `r.nativeElement.style.backgroundImage=\`url(${url})\``;
     replaceIfFind(mainjs, searchString, replaceString);
   } else {
