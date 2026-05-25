@@ -1,7 +1,7 @@
 import { basename, join } from "node:path";
 import { pressAnyKey, dirCount, dirSubCount, replaceIfFind, source, dirFiles } from "./common.ts";
 
-const { config: cfg, 怪物 } = (await import("./mod_replace.config.ts"));
+const { config: cfg, 怪物, 職業 } = (await import("./mod_replace.config.ts"));
 console.log("config:", cfg);
 
 const mainjs: source =
@@ -114,41 +114,46 @@ if (cfg.替換.戰鬥時背景) {
 }
 
 if (cfg.替換.職業卡片) {
-  const classPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.職業卡片}`;
-  const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.職業卡片}`, cfg.模組.圖片副檔名);
-  console.log("職業卡片 Path", classPath);
-  console.log("職業卡片 Settings", settings);
-
-  // 有子目錄且圖檔總數大於0
-  if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
-    // s=n.avatars[r];
-    // u=e.avatars[a]; beta
+  if (cfg.loadfromserver.enable) {
     const searchString = `s=n.avatars[r];`;
-    let classKind = `n.avatars[r]`;
+    const replaceString = `s=\`${cfg.loadfromserver.classurl_base}/\${n.avatars[r]}/\${crypto.randomUUID()}\`;`
+    replaceIfFind(mainjs, searchString, replaceString);
+  } else {
+    const classPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.職業卡片}`;
+    const settings = await dirSubCount(`${basePath}/${cfg.模組.佈景主題各子目錄.職業卡片}`, cfg.模組.圖片副檔名);
+    console.log("職業卡片 Path", classPath);
+    console.log("職業卡片 Settings", settings);
 
-    if (cfg.模組.職業模式 == 1) {
-      // s=`themes/class/${n.avatars["default"].split(".")[0]}/${Math.floor(Math.random() * 30)}.webp`;
-      classKind = `n.avatars["default"]`;
-    } else {
-      // s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.webp`;
-      classKind = `n.avatars[r]`;
-    }
-    /*
-    s=((t)=>{
-      t = t.split(".")[0];
-      let s = 0;
-      if(t==="lycan") s=31;
-    if(t==="priest") s=50;
-    if(t==="rogue") s=50;
-    if(t==="shaman") s=30;
-    if(t==="warlock") s=50;
-    if(t==="warrior") s=46;
-    if(t==="wizard") s=48;
-      return "themes/class/"+t+"/"+Math.floor(Math.random()*s)+".webp";
-    })(n.avatars["default"]);
-    */
-    const replaceString =
-      `
+    // 有子目錄且圖檔總數大於0
+    if (settings.length > 0 && settings.reduce((p, c) => p + c[1], 0) > 0) {
+      // s=n.avatars[r];
+      // u=e.avatars[a]; beta
+      const searchString = `s=n.avatars[r];`;
+      let classKind = `n.avatars[r]`;
+
+      if (cfg.模組.職業模式 == 1) {
+        // s=`themes/class/${n.avatars["default"].split(".")[0]}/${Math.floor(Math.random() * 30)}.webp`;
+        classKind = `n.avatars["default"]`;
+      } else {
+        // s=`themes/class/${n.avatars[r].split(".")[0]}/${Math.floor(Math.random() * 40)}.webp`;
+        classKind = `n.avatars[r]`;
+      }
+      /*
+      s=((t)=>{
+        t = t.split(".")[0];
+        let s = 0;
+        if(t==="lycan") s=31;
+      if(t==="priest") s=50;
+      if(t==="rogue") s=50;
+      if(t==="shaman") s=30;
+      if(t==="warlock") s=50;
+      if(t==="warrior") s=46;
+      if(t==="wizard") s=48;
+        return "themes/class/"+t+"/"+Math.floor(Math.random()*s)+".webp";
+      })(n.avatars["default"]);
+      */
+      const replaceString =
+        `
 s=((t)=>{
   let ts = t.split(".")[0];
   let s = 0;
@@ -156,7 +161,8 @@ s=((t)=>{
   return s<=0 ? t : "${classPath}/"+ts+"/"+Math.floor(Math.random()*s)+".webp";
 })(${classKind});
   `;
-    replaceIfFind(mainjs, searchString, replaceString);
+      replaceIfFind(mainjs, searchString, replaceString);
+    }
   }
 }
 

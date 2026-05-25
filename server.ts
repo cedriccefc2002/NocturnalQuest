@@ -8,10 +8,12 @@ const currentDir = Deno.cwd(); // 取得目前的工作目錄路徑
 console.log("cwd", currentDir);
 const ImageState: {
   Background: string[],
-  Monster: Map<string, string[]>
+  Monster: Map<string, string[]>,
+  Class: Map<string, string[]>
 } = {
   Background: [],
   Monster: new Map(),
+  Class: new Map(),
 };
 const RouteMap = new Map<URLPattern, (req: Request, match: URLPatternResult) => Promise<Response>>();
 const cfg = parse(Deno.readTextFileSync("server.toml")) as {
@@ -19,6 +21,12 @@ const cfg = parse(Deno.readTextFileSync("server.toml")) as {
     sources: string[];
   },
   Monster: {
+    Source: Array<{
+      name: string,
+      sources: string[]
+    }>
+  };
+  Class: {
     Source: Array<{
       name: string,
       sources: string[]
@@ -38,9 +46,17 @@ async function LoadAllFiles() {
     monster[element.name] = files.length;
     ImageState.Monster.set(element.name, files)
   }
+  const classResult: { [k: string]: number } = {};
+  for (const element of cfg.Class.Source) {
+    const files = await loadFrom(element.sources);
+    classResult[element.name] = files.length;
+    ImageState.Class.set(element.name, files)
+  }
+
   return {
     Background: ImageState.Background.length,
-    Monster: monster
+    Monster: monster,
+    Class: classResult
   }
 }
 async function loadFrom(dirs: string[]) {
@@ -58,6 +74,34 @@ RouteMap.set(new URLPattern({ pathname: "/" }), () => {
   return new Promise((resolve) => {
     const body = JSON.stringify([...RouteMap.keys().map(x => x.pathname)])
     resolve(new Response(body))
+  });
+});
+
+/**
+ * const url = `http://127.0.0.1:8000/image/class/wizard_frost.jpg/${Date.now()}`;
+ */
+RouteMap.set(new URLPattern({ pathname: "/image/class/:type.:ext/:id" }), async (req, match) => {
+  // Open the file for reading
+  const type = match.pathname.groups.type;
+  if (type !== undefined) {
+    const images = ImageState.Class.get(type);
+    if (images !== undefined) {
+      const randomNum = Math.floor(Math.random() * images.length);
+      const filename = images[randomNum];
+      const ext = contentType(extname(filename)) ?? "binary/octet-stream";
+      console.log(`"${filename}","${ext}"`);
+      const file = await Deno.open(filename, { read: true });
+      return new Response(file.readable, {
+        headers: {
+          "content-type": ext,
+          // Cache-Control: public, max-age=604800, immutable
+          "cache-control": "public, max-age=60, immutable" // 讓遊戲可以預載資源後減少切換閃爍
+        }
+      });
+    }
+  }
+  return new Response(`Not found ${req.url}`, {
+    status: 404,
   });
 });
 

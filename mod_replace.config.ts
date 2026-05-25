@@ -167,6 +167,7 @@ export const config = {
         enable: true,
         url: "http://127.0.0.1:8000/image/rand/${parseInt(Date.now()/1000/10)}",
         mosterurl_base: "http://127.0.0.1:8000/image/monster",
+        classurl_base: "http://127.0.0.1:8000/image/class",
     },
     "模組": {
         "基礎路徑": "./themes",

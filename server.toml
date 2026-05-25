@@ -1,6 +1,7 @@
 exts = [".webp", ".jpg", ".png"]
 [Background]
 sources = ["/media/cefc/Data/Data/Source/AICosplay Animated/00_DyDy_cos"]
+# Monster
 [[Monster.Source]]
 name = "acolyte"
 sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
@@ -92,6 +93,78 @@ sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
 name = 'thunderous_beast'
 sources = ["/media/cefc/Data/Data/Source/AICosplay/"]
 
+# Class
+[[Class.Source]]
+name = 'lycan'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'lycan_dark'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'lycan_wild'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+
+[[Class.Source]]
+name = 'priest'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'priest_holy'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'priest_shadow'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+
+[[Class.Source]]
+name = 'rogue'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'rogue_poison'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'rogue_shadow'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+
+[[Class.Source]]
+name = 'shaman'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'shaman_genie'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'shaman_lightning'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+
+[[Class.Source]]
+name = 'warlock'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'warlock_demon'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'warlock_shadow'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+
+[[Class.Source]]
+name = 'warrior'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'warrior_blood'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'warrior_protection'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+
+[[Class.Source]]
+name = 'wizard'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'wizard_fire'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+[[Class.Source]]
+name = 'wizard_frost'
+sources = ["/media/cefc/Data/Data/Source/荤素/"]
+
+# Server
 [Server]
 port = 8000
 hostname = "127.0.0.1"
