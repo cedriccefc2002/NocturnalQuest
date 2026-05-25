@@ -1,7 +1,7 @@
-exts = [".webp", ".jpg", ".png"]
+exts = [".webp", ".jpg", ".png", ".gif"]
 # BaseSources
 [Background]
-BaseSources = ["/media/cefc/Data/Data/Source/AICosplay Animated/00_DyDy_cos"]
+BaseSources = ["/home/cefc/下載/Grabit/ai [AI Generated]"]
 
 # 地圖
 [[Background.Source]] 
@@ -54,7 +54,7 @@ sources = []
 
 # Monster
 [Monster]
-BaseSources = ["/media/cefc/Data/Data/Source/AICosplay/"]
+BaseSources = ["/home/cefc/下載/Grabit/AI PHOTO/"]
 [[Monster.Source]]
 name = "acolyte"
 sources = []
@@ -148,7 +148,7 @@ sources = []
 
 # Class
 [Class]
-BaseSources = ["/media/cefc/Data/Data/Source/荤素/"]
+BaseSources = ["/home/cefc/下載/Grabit/AI PHOTO/"]
 
 [[Class.Source]]
 name = 'lycan'
