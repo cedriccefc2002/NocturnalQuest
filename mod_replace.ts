@@ -1,7 +1,7 @@
 import { basename, join } from "node:path";
 import { pressAnyKey, dirCount, dirSubCount, replaceIfFind, source, dirFiles } from "./common.ts";
 
-const { config: cfg, 怪物, 職業 } = (await import("./mod_replace.config.ts"));
+const { config: cfg, 怪物 } = (await import("./mod_replace.config.ts"));
 console.log("config:", cfg);
 
 const mainjs: source =
@@ -22,7 +22,8 @@ if (cfg.替換.職業技能背景) {
     // background-image: url('`,e.classesDict[t.unit.class].talentsImage,`');
     // w("bgImg",e.classesDict[t.unit.class].talentsImage) beta
     const searchString = `background-image: url('\`,e.classesDict[t.unit.class].talentsImage,\`');`;
-    const replaceString = `background-image: url('\`,\`${cfg.loadfromserver.url}\`,\`');`;
+    const url = `${cfg.loadfromserver.bgurl_base}/\${e.classesDict[t.unit.class].talentsImage}/\${parseInt(Date.now()/1000/10)}`
+    const replaceString = `background-image: url('\`,\`${url}\`,\`');`;
     replaceIfFind(mainjs, searchString, replaceString);
   } else {
     const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.職業技能背景}`;
@@ -84,7 +85,8 @@ if (cfg.替換.戰鬥時背景) {
     // a.nativeElement.style.backgroundImage=`url(${m.mapBgImage})` beta
     const searchString = `r.nativeElement.style.backgroundImage=\`url(\${x.mapBgImage})\``;
     // r.nativeElement.style.backgroundImage=`url(http://127.0.0.1:8000/image/rand/${Date.now()})`
-    const replaceString = `r.nativeElement.style.backgroundImage=\`url(${cfg.loadfromserver.url})\``;
+    const url = `${cfg.loadfromserver.bgurl_base}/\${m.mapBgImage}/\${crypto.randomUUID()}`
+    const replaceString = `r.nativeElement.style.backgroundImage=\`url(${url})\``;
     replaceIfFind(mainjs, searchString, replaceString);
   } else {
     const bgPath = `${baseWebPath}/${cfg.模組.佈景主題各子目錄.戰鬥時背景}`;

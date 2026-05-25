@@ -165,7 +165,8 @@ export const config = {
     loadfromserver:
     {
         enable: true,
-        url: "http://127.0.0.1:8000/image/rand/${parseInt(Date.now()/1000/10)}",
+        // url: "http://127.0.0.1:8000/image/rand/${parseInt(Date.now()/1000/10)}",
+        bgurl_base: "http://127.0.0.1:8000/image/bg",
         mosterurl_base: "http://127.0.0.1:8000/image/monster",
         classurl_base: "http://127.0.0.1:8000/image/class",
     },

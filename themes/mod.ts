@@ -98,7 +98,7 @@ function ChangeBgInitTempl(config: ChangeBgInitTemplConfig) {
         if (i >= config.change.count) { i = 0 };
         let url: string = ""
         if (cfg.loadfromserver.enable) {
-            url = cfg.loadfromserver.url();
+            url = cfg.loadfromserver.url(config.change.subdirname);
         } else {
             url = `../../../../themes/${cfg.theme}/${config.change.subdirname}/${i}.webp`;
         }
@@ -176,7 +176,7 @@ async function ChangeTownBg(elem: HTMLElement, i: number) {
     // elem.style.backgroundImage = `url(../../../../themes/${cfg.theme}/town_bg/${Math.floor(Math.random() * cfg.town_bg_count)}.webp)`;
     let url: string = "";
     if (cfg.loadfromserver.enable) {
-        url = cfg.loadfromserver.url();
+        url = cfg.loadfromserver.url(cfg.town_bg.subdirname);
     } else {
         const url = `../../../../themes/${cfg.theme}/${cfg.town_bg.subdirname}/${i}.webp`;
     }

@@ -2,7 +2,7 @@ export const config = {
     loadfromserver:
     {
         enable: true,
-        url: () => `http://127.0.0.1:8000/image/rand/${Date.now()}`
+        url: (type: string) => `http://127.0.0.1:8000/image/bg/${type}.webp/${crypto.randomUUID()}`
     },
     theme: "aldult",
     clock: {
