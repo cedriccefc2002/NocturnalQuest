@@ -2,32 +2,52 @@ import { DOMParser } from "@b-fuze/deno-dom";
 import { basename } from "node:path";
 import { exists } from "@std/fs/exists";
 
-// const resp = await fetch("https://e-hentai.org/?f_search=%E7%8A%AC%E5%A4%9C%E5%8F%89", {
-//     "headers": {
-//         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-//         "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-//         "cache-control": "max-age=0",
-//         "priority": "u=0, i",
-//         "sec-ch-ua": "\"Chromium\";v=\"148\", \"Google Chrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
-//         "sec-ch-ua-mobile": "?0",
-//         "sec-ch-ua-platform": "\"Linux\"",
-//         "sec-fetch-dest": "document",
-//         "sec-fetch-mode": "navigate",
-//         "sec-fetch-site": "same-origin",
-//         "sec-fetch-user": "?1",
-//         "upgrade-insecure-requests": "1"
-//     },
-//     "referrer": "https://e-hentai.org/",
-//     "body": null,
-//     "method": "GET",
-//     "mode": "cors",
-//     "credentials": "include"
-// });
+async function BookList(url: string) {
+    try {
+        const resp = await fetch(encodeURI(url), {
+            "headers": {
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+                "cache-control": "max-age=0",
+                "priority": "u=0, i",
+                "sec-ch-ua": "\"Chromium\";v=\"148\", \"Google Chrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": "\"Linux\"",
+                "sec-fetch-dest": "document",
+                "sec-fetch-mode": "navigate",
+                "sec-fetch-site": "same-origin",
+                "sec-fetch-user": "?1",
+                "upgrade-insecure-requests": "1"
+            },
+            "referrer": "https://e-hentai.org/",
+            "body": null,
+            "method": "GET",
+            "mode": "cors",
+            "credentials": "include"
+        });
 
-// if (resp.ok) {
-//     const html = await resp.text();
-//     await Deno.writeTextFile("e-hentai.org.html", html);
-// }
+        if (resp.ok) {
+            const html = await resp.text();
+            // const html = await Deno.readTextFile("e-hentai.org.html");
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            const links = doc.querySelectorAll("a")!;
+            const books: string[] = [];
+            for (const element of links) {
+                const href = element.getAttribute("href");
+                if (href?.startsWith("https://e-hentai.org/g/")) {
+                    books.push(href)
+                }
+            }
+            return books;
+        } else {
+            console.log(resp.statusText, url);
+        }
+    } catch (error) {
+        console.error(error, url);
+    }
+    return [];
+}
+
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 async function imageDownload(outpath: string, imageUrl: string) {
     try {
@@ -38,6 +58,8 @@ async function imageDownload(outpath: string, imageUrl: string) {
         if (await exists(save)) {
             console.log("Exists", save);
         } else {
+            const c = new AbortController();
+            const id = setTimeout(() => c.abort(), 10000);
             const response = await fetch(url, {
                 "headers": {
                     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -57,8 +79,10 @@ async function imageDownload(outpath: string, imageUrl: string) {
                 "body": null,
                 "method": "GET",
                 "mode": "cors",
-                "credentials": "include"
+                "credentials": "include",
+                "signal": c.signal,
             });
+            clearTimeout(id);
             if (response.ok) {
                 console.log("ok", save);
                 // Open (or create) the file for writing
@@ -163,18 +187,7 @@ async function book(url: string): Promise<[string[], string[], string | undefine
     return [[], [], undefined];
 }
 
-// const html = await Deno.readTextFile("e-hentai.org.html");
 
-// const doc = new DOMParser().parseFromString(html, "text/html");
-// const links = doc.querySelectorAll("a")!;
-// const books: string[] = [];
-// for (const element of links) {
-//     const href = element.getAttribute("href");
-//     if (href?.startsWith("https://e-hentai.org/g/")) {
-//         books.push(href)
-//     }
-// }
-// console.log(books[0]);
 
 // https://e-hentai.org/g/3875959/7a3d9d9ee3/
 async function readBoof(url: string) {
@@ -204,6 +217,16 @@ async function readBoof(url: string) {
 }
 console.log(Deno.args);
 if (Deno.args.length >= 1) {
-    await readBoof(Deno.args[0]);
+    if (Deno.args[0].startsWith("https://e-hentai.org/g/")) {
+        await readBoof(Deno.args[0]);
+    } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search")) {
+        const books = await BookList(Deno.args[0]);
+        for (const element of books) {
+            console.log(element);
+            await readBoof(element);
+        }
+    }
 }
 // deno task hentai "https://e-hentai.org/g/3689578/aa71e08e7b/"
+// deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=1"
+// "https://e-hentai.org/?f_search=DyDy_cos&prev=3694414"
