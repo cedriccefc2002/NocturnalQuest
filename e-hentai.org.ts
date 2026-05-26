@@ -2,6 +2,13 @@ import { DOMParser } from "@b-fuze/deno-dom";
 import { basename } from "node:path";
 import { exists } from "@std/fs/exists";
 
+// https://proxylist.geonode.com/api/proxy-list?country=TW&limit=500&page=1&sort_by=lastChecked&sort_type=desc
+const client = Deno.createHttpClient({
+    proxy: {
+        url: 'http://187.251.224.167:80'
+    }
+});
+
 async function BookList(url: string) {
     try {
         const resp = await fetch(encodeURI(url), {
@@ -23,7 +30,8 @@ async function BookList(url: string) {
             "body": null,
             "method": "GET",
             "mode": "cors",
-            "credentials": "include"
+            "credentials": "include",
+            client,
         });
 
         if (resp.ok) {
@@ -84,6 +92,7 @@ async function imageDownload(outpath: string, imageUrl: string) {
                         "mode": "cors",
                         "credentials": "include",
                         "signal": c.signal,
+                        client,
                     });
                     clearTimeout(id);
                     break;
@@ -130,7 +139,8 @@ async function page(url: string) {
             "body": null,
             "method": "GET",
             "mode": "cors",
-            "credentials": "include"
+            "credentials": "include",
+            client,
         });
 
         if (resp.ok) {
@@ -169,7 +179,8 @@ async function book(url: string): Promise<[string[], maxPage: number, title: str
             "body": null,
             "method": "GET",
             "mode": "cors",
-            "credentials": "include"
+            "credentials": "include",
+            client,
         });
 
         if (resp.ok) {
