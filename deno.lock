@@ -5,7 +5,8 @@
     "jsr:@std/collections@^1.1.3": "1.1.7",
     "jsr:@std/internal@^1.0.12": "1.0.13",
     "jsr:@std/media-types@^1.1.0": "1.1.0",
-    "jsr:@std/toml@*": "1.0.11"
+    "jsr:@std/toml@*": "1.0.11",
+    "npm:@imagemagick/magick-wasm@0.0.31": "0.0.31"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -29,6 +30,14 @@
         "jsr:@std/collections"
       ]
     }
+  },
+  "npm": {
+    "@imagemagick/magick-wasm@0.0.31": {
+      "integrity": "sha512-QNivAUxSaItuiY8ziI/vRy6TtoecD7TOsD1LGZCG3wv8lfbdGbIj2QiJk0FlGkGwAVR966NlD3mkxPNvQrvq0w=="
+    }
+  },
+  "remote": {
+    "https://deno.land/x/imagemagick_deno@0.0.31/mod.ts": "124d7f045429f6e6c486b86e72d025410d09576bc0d8075e69f97118a1a33413"
   },
   "workspace": {
     "dependencies": [

@@ -1,12 +1,12 @@
 exts = [".webp", ".jpg", ".png", ".gif"]
 # BaseSources
 [Background]
-BaseSources = ["/home/cefc/下載/Grabit/ai [AI Generated]"]
+BaseSources = ["/media/cefc/Data/Data/Source/Wallpaper/"]
 
 # 地圖
 [[Background.Source]] 
 name = "bastion_of_storms"
-sources = []
+sources = ["/media/cefc/Data/Data/Source/AI Cosplay Animated/00_DyDy_cos/[DyDy_cos] 2026-05 X Animated (WEBP) [AI Generated] (副本 3)/"]
 [[Background.Source]] 
 name = "citadel"
 sources = []
@@ -34,7 +34,7 @@ sources = []
 # 植物學家背景
 [[Background.Source]] 
 name = "botanist_bg"
-sources = []
+sources = ["/media/cefc/Data/Data/Source/Art Animated/[UnrealBeautyAIMIX] Collection [🎥Animated WEBP] [AI Generated]/"]
 # 商店背景
 [[Background.Source]] 
 name = "shop_bg"
@@ -54,7 +54,8 @@ sources = []
 
 # Monster
 [Monster]
-BaseSources = ["/home/cefc/下載/Grabit/AI PHOTO/"]
+ResizeImage = true
+BaseSources = ["/media/cefc/Data/Data/Source/AI 真人/AI PHOTO","/media/cefc/Data/Data/Source/荤素"]
 [[Monster.Source]]
 name = "acolyte"
 sources = []
@@ -148,7 +149,8 @@ sources = []
 
 # Class
 [Class]
-BaseSources = ["/home/cefc/下載/Grabit/AI PHOTO/"]
+ResizeImage = true
+BaseSources = ["/media/cefc/Data/Data/Source/AI 真人/AI PHOTO","/media/cefc/Data/Data/Source/荤素"]
 
 [[Class.Source]]
 name = 'lycan'

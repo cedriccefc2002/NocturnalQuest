@@ -1,13 +1,30 @@
 import { parse } from "@std/toml";
 import { contentType } from "@std/media-types";
 import { extname } from "node:path";
+import { ImageMagick, IMagickImage, initialize, MagickFormat } from "imagemagick";
 
 import { dirAllFiles } from "./common.ts"
+
+// ImageMagick initialize
+await initialize();
+
+function resizeImage(data: Uint8Array<ArrayBuffer>): Uint8Array<ArrayBuffer> {
+  // const data: Uint8Array = await Deno.readFile("image.jpg");
+  let resp = data;
+  ImageMagick.read(data, (img: IMagickImage) => {
+    // 395x564
+    img.resize(395, 564);
+    // img.blur(20, 6);
+    img.write(MagickFormat.Jpeg, (x) => { resp = x as Uint8Array<ArrayBuffer> });
+  });
+  return resp;
+}
 
 const currentDir = Deno.cwd(); // 取得目前的工作目錄路徑
 console.log("cwd", currentDir);
 
 interface IConfigItem {
+  ResizeImage?: boolean;
   BaseSources: string[];
   Source: Array<{
     name: string,
@@ -102,8 +119,20 @@ async function StreamRandImage(images: string[]) {
   return new Response(file.readable, {
     headers: {
       "content-type": ext,
-      // Cache-Control: public, max-age=604800, immutable
       "cache-control": "public, max-age=60, immutable" // 讓遊戲可以預載資源後減少切換閃爍
+    }
+  });
+}
+
+async function RandImageAndResize(images: string[]) {
+  const randomNum = Math.floor(Math.random() * images.length);
+  const filename = images[randomNum];
+  console.log(`"${filename}"`);
+  const data = await Deno.readFile(filename);
+  return new Response(resizeImage(data), {
+    headers: {
+      "content-type": "image/Jpeg",
+      "cache-control": "public, max-age=604800, immutable" // 讓遊戲可以預載資源後減少切換閃爍
     }
   });
 }
@@ -146,7 +175,11 @@ RouteMap.set(new URLPattern({ pathname: "/image/class/:type.:ext/:id" }), async 
     if (images === undefined) {
       images = ImageState.Class.BaseSources;
     }
-    return StreamRandImage(images);
+    if (cfg.Class.ResizeImage) {
+      return RandImageAndResize(images);
+    } else {
+      return StreamRandImage(images);
+    }
   }
 
   return new Response(`Not found ${req.url}`, {
@@ -165,7 +198,11 @@ RouteMap.set(new URLPattern({ pathname: "/image/monster/:type/:id" }), async (re
     if (images === undefined) {
       images = ImageState.Monster.BaseSources;
     }
-    return StreamRandImage(images);
+    if (cfg.Monster.ResizeImage) {
+      return RandImageAndResize(images);
+    } else {
+      return StreamRandImage(images);
+    }
   }
 
   return new Response(`Not found ${req.url}`, {
@@ -203,3 +240,5 @@ Deno.serve({ port: cfg.Server.port, hostname: cfg.Server.hostname }, async (req)
     status: 404,
   });
 });
+
+
