@@ -177,12 +177,12 @@ async function book(url: string) {
 
 // https://e-hentai.org/g/3875959/7a3d9d9ee3/
 async function readBoof(name: string, url: string) {
-    await sleep(1000);
+    await sleep(50);
     const [pages, bookPages] = await book(url);
     for (const element of pages) {
         console.log(element);
         const image = await page(element);
-        await sleep(1000);
+        await sleep(50);
         await imageDownload(`themes/private/e-hentai/${name}`, image);
     }
     for (const bookPage of bookPages) {
@@ -191,7 +191,7 @@ async function readBoof(name: string, url: string) {
         for (const element of pages) {
             console.log(element);
             const image = await page(element);
-            await sleep(1000);
+            await sleep(50);
             await imageDownload(`themes/private/e-hentai/${name}`, image);
         }
     }
