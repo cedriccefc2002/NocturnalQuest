@@ -4,7 +4,8 @@
     "mod_replace": "deno run --allow-read --allow-write mod_replace.ts",
     "build": "deno compile --allow-read --allow-write mod_replace.ts",
     "build-win": "deno compile --allow-read --allow-write --target=x86_64-pc-windows-msvc mod_replace.ts",
-    "server": "deno run --allow-net --allow-read server.ts"
+    "server": "deno run --allow-net --allow-read server.ts",
+    "download": "deno run --allow-net --allow-read --allow-write download.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",

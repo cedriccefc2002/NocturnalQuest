@@ -1,7 +1,7 @@
 exts = [".webp", ".jpg", ".png", ".gif"]
 # BaseSources
 [Background]
-BaseSources = ["/media/cefc/Data/Data/Source/Wallpaper/"]
+BaseSources = ["/media/cefc/Data/Data/Source/Wallpaper/Blade and soul Wallpapers/"]
 
 # 地圖
 [[Background.Source]] 
