@@ -224,7 +224,7 @@ async function readBoof(url: string) {
         for (let i = 0; i < bookPages; i++) {
             const bookPage = `${url}?p=${i + 1}`
             console.log(bookPage);
-            const [pages, _] = await book(bookPage);
+            const [pages] = await book(bookPage);
             for (const element of pages) {
                 console.log(element);
                 const image = await page(element);
