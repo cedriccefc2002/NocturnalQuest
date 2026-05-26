@@ -112,7 +112,7 @@ async function page(url: string) {
     return "";
 }
 
-async function book(url: string) {
+async function book(url: string): Promise<[string[], string[], string | undefined]> {
     try {
         const resp = await fetch(url, {
             "headers": {
@@ -140,6 +140,7 @@ async function book(url: string) {
             console.log("ok", url);
             const html = await resp.text();
             const doc = new DOMParser().parseFromString(html, "text/html");
+            const title = doc.querySelector("H1#gn")?.textContent;
             const links = doc.querySelectorAll("a")!;
             const pages: string[] = [];
             const bookPages: string[] = [];
@@ -148,18 +149,18 @@ async function book(url: string) {
                 if (href?.startsWith("https://e-hentai.org/s/")) {
                     pages.push(href)
                 }
-                if (href?.startsWith(`${url}?`)) {
+                if (href?.startsWith(`${url}??p=`)) {
                     bookPages.push(href)
                 }
             }
-            return [pages, bookPages];
+            return [pages, bookPages, title];
         } else {
             console.log(resp.statusText, url);
         }
     } catch (error) {
         console.error(error, url);
     }
-    return [];
+    return [[], [], undefined];
 }
 
 // const html = await Deno.readTextFile("e-hentai.org.html");
@@ -176,25 +177,33 @@ async function book(url: string) {
 // console.log(books[0]);
 
 // https://e-hentai.org/g/3875959/7a3d9d9ee3/
-async function readBoof(name: string, url: string) {
+async function readBoof(url: string) {
     await sleep(50);
-    const [pages, bookPages] = await book(url);
-    for (const element of pages) {
-        console.log(element);
-        const image = await page(element);
-        await sleep(50);
-        await imageDownload(`themes/private/e-hentai/${name}`, image);
-    }
-    for (const bookPage of bookPages) {
-        console.log(bookPage);
-        const [pages, _] = await book(bookPage);
+    const [pages, bookPages, title] = await book(url);
+    if (title === undefined) {
+        console.log("no title", url);
+    } else {
+        const name = `${(new URL(url)).pathname}/${title}`;
         for (const element of pages) {
             console.log(element);
             const image = await page(element);
             await sleep(50);
             await imageDownload(`themes/private/e-hentai/${name}`, image);
         }
+        for (const bookPage of bookPages) {
+            console.log(bookPage);
+            const [pages, _] = await book(bookPage);
+            for (const element of pages) {
+                console.log(element);
+                const image = await page(element);
+                await sleep(50);
+                await imageDownload(`themes/private/e-hentai/${name}`, image);
+            }
+        }
     }
 }
-
-await readBoof("[HYC]ai animated (webp) [AI Generated]","https://e-hentai.org/g/3957541/fe85fdff87/")
+console.log(Deno.args);
+if (Deno.args.length >= 1) {
+    await readBoof(Deno.args[0]);
+}
+// deno task hentai "https://e-hentai.org/g/3689578/aa71e08e7b/"
