@@ -1,12 +1,15 @@
 exts = [".webp", ".jpg", ".png", ".gif"]
 # BaseSources
 [Background]
-BaseSources = ["/media/cefc/Data/Data/Source/Wallpaper/Blade and soul Wallpapers/"]
+BaseSources = [
+    "/media/cefc/Data/Data/Source/Wallpaper/Blade and soul Wallpapers/",
+    "/media/cefc/Data/Data/tuoyiku/webp/i2v/"
+]
 
 # 地圖
 [[Background.Source]] 
 name = "bastion_of_storms"
-sources = ["/media/cefc/Data/Data/Source/AI Cosplay Animated/00_DyDy_cos/[DyDy_cos] 2026-05 X Animated (WEBP) [AI Generated] (副本 3)/"]
+sources = []
 [[Background.Source]] 
 name = "citadel"
 sources = []
@@ -54,8 +57,8 @@ sources = []
 
 # Monster
 [Monster]
-ResizeImage = true
-BaseSources = ["/media/cefc/Data/Data/Source/AI 真人/AI PHOTO","/media/cefc/Data/Data/Source/荤素"]
+ResizeImage = false
+BaseSources = ["/media/cefc/Data/Data/tuoyiku/image"]
 [[Monster.Source]]
 name = "acolyte"
 sources = []

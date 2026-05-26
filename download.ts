@@ -1,28 +1,58 @@
 import { basename } from "node:path";
-import { exists } from "jsr:@std/fs/exists";
+import { exists } from "@std/fs/exists";
 
-import files from "./tuoyiku_20260526_vface.json" with { type: "json" }
+// import files from "./tuoyiku_20260526_cdress.json" with { type: "json" }
+// const outpath = "/media/cefc/Data/Data/tuoyiku/cdress";
 
-const outpath = "./themes/private/tuoyiku_vface";
+// import files from "./tuoyiku_20260526_i2v.json" with { type: "json" }
+// const outpath = "/media/cefc/Data/Data/tuoyiku/i2v";
+
+// import files from "./tuoyiku_20260526_iface.json" with { type: "json" }
+// const outpath = "/media/cefc/Data/Data/tuoyiku/iface";
+
+// import files from "./tuoyiku_20260526_image.json" with { type: "json" }
+// const outpath = "/media/cefc/Data/Data/tuoyiku/image";
+
+// import files from "./tuoyiku_20260526_mdress.json" with { type: "json" }
+// const outpath = "/media/cefc/Data/Data/tuoyiku/mdress";
+
+// import files from "./tuoyiku_20260526_udress.json" with { type: "json" }
+// const outpath = "/media/cefc/Data/Data/tuoyiku/udress";
+
+// import files from "./tuoyiku_20260526_vface.json" with { type: "json" }
+// const outpath = "/media/cefc/Data/Data/tuoyiku/vface";
+
+import files from "./tuoyiku_20260526_video.json" with { type: "json" }
+const outpath = "/media/cefc/Data/Data/tuoyiku/video";
+
+// const outpath = "/media/cefc/Data/Data/tuoyiku/all";
+// const outpath = "/media/cefc/Data/Data/tuoyiku/vface";
+
+console.log("create dir", outpath);
+await Deno.mkdir(outpath, { recursive: true });
+const total = files.length;
+let i = 0;
 for (const f of files) {
-    const url = new URL(f);
-
-    const downloadname = basename(url.pathname);
-    const save = `${outpath}/${downloadname}`;
-    if (await exists(save)) {
-        console.log("File exists", save);
-    } else {
-        const response = await fetch(url);
-
-        if (response.ok) {
-            // Open (or create) the file for writing
-            const file = await Deno.open(`${outpath}/${downloadname}`, { create: true, write: true });
-
-            // Pipe the response body stream directly to the file
-            await response.body?.pipeTo(file.writable);
-            console.log("File downloaded successfully!", save);
+    i++;
+    try {
+        const url = new URL(f);
+        const downloadname = basename(url.pathname);
+        const save = `${outpath}/${downloadname}`;
+        if (await exists(save)) {
+            console.log("Exists", save, total, i);
         } else {
-            console.error(`Failed to fetch: ${response.statusText}`, f);
+            const response = await fetch(url);
+            if (response.ok) {
+                // Open (or create) the file for writing
+                const file = await Deno.open(`${outpath}/${downloadname}`, { create: true, write: true });
+                // Pipe the response body stream directly to the file
+                await response.body?.pipeTo(file.writable);
+                console.log("Success", save, total, i);
+            } else {
+                console.error(`Fail(1)`, response.statusText, f, total, i);
+            }
         }
+    } catch (error) {
+        console.error(`Fail(0)`, f, error, total, i);
     }
 }

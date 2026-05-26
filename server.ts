@@ -156,7 +156,7 @@ RouteMap.set(new URLPattern({ pathname: "/image/bg/:type.:ext/:id" }), async (re
     if (images === undefined) {
       images = ImageState.Background.BaseSources;
     }
-    return StreamRandImage(images);
+    return await StreamRandImage(images);
   }
 
   return new Response(`Not found ${req.url}`, {
@@ -176,9 +176,9 @@ RouteMap.set(new URLPattern({ pathname: "/image/class/:type.:ext/:id" }), async 
       images = ImageState.Class.BaseSources;
     }
     if (cfg.Class.ResizeImage) {
-      return RandImageAndResize(images);
+      return await RandImageAndResize(images);
     } else {
-      return StreamRandImage(images);
+      return await StreamRandImage(images);
     }
   }
 
@@ -199,9 +199,9 @@ RouteMap.set(new URLPattern({ pathname: "/image/monster/:type/:id" }), async (re
       images = ImageState.Monster.BaseSources;
     }
     if (cfg.Monster.ResizeImage) {
-      return RandImageAndResize(images);
+      return await RandImageAndResize(images);
     } else {
-      return StreamRandImage(images);
+      return await StreamRandImage(images);
     }
   }
 
