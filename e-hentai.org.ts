@@ -58,32 +58,43 @@ async function imageDownload(outpath: string, imageUrl: string) {
         if (await exists(save)) {
             console.log("Exists", save);
         } else {
-            // const c = new AbortController();
-            // const id = setTimeout(() => c.abort(), 60000);
-            const response = await fetch(url, {
-                "headers": {
-                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-                    "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-                    "cache-control": "max-age=0",
-                    "priority": "u=0, i",
-                    "sec-ch-ua": "\"Chromium\";v=\"148\", \"Google Chrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
-                    "sec-ch-ua-mobile": "?0",
-                    "sec-ch-ua-platform": "\"Linux\"",
-                    "sec-fetch-dest": "document",
-                    "sec-fetch-mode": "navigate",
-                    "sec-fetch-site": "same-origin",
-                    "sec-fetch-user": "?1",
-                    "upgrade-insecure-requests": "1"
-                },
-                "referrer": "https://e-hentai.org/",
-                "body": null,
-                "method": "GET",
-                "mode": "cors",
-                "credentials": "include",
-                // "signal": c.signal,
-            });
-            // clearTimeout(id);
-            if (response.ok) {
+            let response: Response | undefined = undefined;
+            for (let index = 0; index < 10; index++) {
+                try {
+                    const c = new AbortController();
+                    const id = setTimeout(() => c.abort(), 10000);
+                    response = await fetch(url, {
+                        "headers": {
+                            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                            "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+                            "cache-control": "max-age=0",
+                            "priority": "u=0, i",
+                            "sec-ch-ua": "\"Chromium\";v=\"148\", \"Google Chrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+                            "sec-ch-ua-mobile": "?0",
+                            "sec-ch-ua-platform": "\"Linux\"",
+                            "sec-fetch-dest": "document",
+                            "sec-fetch-mode": "navigate",
+                            "sec-fetch-site": "same-origin",
+                            "sec-fetch-user": "?1",
+                            "upgrade-insecure-requests": "1"
+                        },
+                        "referrer": "https://e-hentai.org/",
+                        "body": null,
+                        "method": "GET",
+                        "mode": "cors",
+                        "credentials": "include",
+                        "signal": c.signal,
+                    });
+                    clearTimeout(id);
+                    break;
+                } catch (error) {
+                    console.error(`Fail(2)`, error, imageUrl, index);
+                    sleep(5000);
+                    continue;
+                }
+            }
+
+            if (response?.ok) {
                 console.log("ok", save);
                 // Open (or create) the file for writing
                 const file = await Deno.open(`${outpath}/${downloadname}`, { create: true, write: true });
@@ -91,7 +102,7 @@ async function imageDownload(outpath: string, imageUrl: string) {
                 await response.body?.pipeTo(file.writable);
                 console.log("Success", save);
             } else {
-                console.error(`Fail(1)`, response.statusText, imageUrl);
+                console.error(`Fail(1)`, response?.statusText, imageUrl);
             }
         }
     } catch (error) {
@@ -136,8 +147,9 @@ async function page(url: string) {
     return "";
 }
 
-async function book(url: string): Promise<[string[], string[], string | undefined]> {
+async function book(url: string): Promise<[string[], maxPage: number, title: string | undefined]> {
     try {
+        let maxPage: number = 0
         const resp = await fetch(url, {
             "headers": {
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -167,7 +179,6 @@ async function book(url: string): Promise<[string[], string[], string | undefine
             const title = doc.querySelector("H1#gn")?.textContent;
             const links = doc.querySelectorAll("a")!;
             const pages: string[] = [];
-            const bookPages: string[] = [];
             for (const element of links) {
                 const href = element.getAttribute("href");
                 if (href?.startsWith("https://e-hentai.org/s/")) {
@@ -175,17 +186,21 @@ async function book(url: string): Promise<[string[], string[], string | undefine
                 }
                 // https://e-hentai.org/g/3694533/60a824aaa1/?p=1
                 if (href?.startsWith(`${url}?p=`)) {
-                    bookPages.push(href)
+                    const p = new URL(href);
+                    const m = parseInt(p.searchParams.get("p") ?? "0");
+                    if (m > maxPage) {
+                        maxPage = m;
+                    }
                 }
             }
-            return [pages, bookPages, title];
+            return [pages, maxPage, title];
         } else {
             console.log(resp.statusText, url);
         }
     } catch (error) {
         console.error(error, url);
     }
-    return [[], [], undefined];
+    return [[], 0, undefined];
 }
 
 
@@ -194,6 +209,8 @@ async function book(url: string): Promise<[string[], string[], string | undefine
 async function readBoof(url: string) {
     await sleep(50);
     const [pages, bookPages, title] = await book(url);
+    console.log(bookPages);
+    // Deno.exit();
     if (title === undefined) {
         console.log("no title", url);
     } else {
@@ -201,16 +218,17 @@ async function readBoof(url: string) {
         for (const element of pages) {
             console.log(element);
             const image = await page(element);
-            await sleep(50);
+            await sleep(1000);
             await imageDownload(`themes/private/e-hentai/${name}`, image);
         }
-        for (const bookPage of bookPages) {
+        for (let i = 0; i < bookPages; i++) {
+            const bookPage = `url?p=${i + 1}`
             console.log(bookPage);
             const [pages, _] = await book(bookPage);
             for (const element of pages) {
                 console.log(element);
                 const image = await page(element);
-                await sleep(50);
+                await sleep(1000);
                 await imageDownload(`themes/private/e-hentai/${name}`, image);
             }
         }
@@ -230,4 +248,4 @@ if (Deno.args.length >= 1) {
 }
 // deno task hentai "https://e-hentai.org/g/3689578/aa71e08e7b/"
 // deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=1"
-// "https://e-hentai.org/?f_search=DyDy_cos&prev=3694414"
+// deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=3694414"
