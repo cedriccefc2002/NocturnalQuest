@@ -221,8 +221,8 @@ async function readBoof(url: string) {
             await sleep(1000);
             await imageDownload(`themes/private/e-hentai/${name}`, image);
         }
-        for (let i = 0; i < bookPages; i++) {
-            const bookPage = `${url}?p=${i + 1}`
+        for (let i = 1; i <= bookPages; i++) {
+            const bookPage = `${url}?p=${i}`
             console.log(bookPage);
             const [pages] = await book(bookPage);
             for (const element of pages) {
