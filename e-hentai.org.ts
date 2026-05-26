@@ -58,8 +58,8 @@ async function imageDownload(outpath: string, imageUrl: string) {
         if (await exists(save)) {
             console.log("Exists", save);
         } else {
-            const c = new AbortController();
-            const id = setTimeout(() => c.abort(), 60000);
+            // const c = new AbortController();
+            // const id = setTimeout(() => c.abort(), 60000);
             const response = await fetch(url, {
                 "headers": {
                     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -80,9 +80,9 @@ async function imageDownload(outpath: string, imageUrl: string) {
                 "method": "GET",
                 "mode": "cors",
                 "credentials": "include",
-                "signal": c.signal,
+                // "signal": c.signal,
             });
-            clearTimeout(id);
+            // clearTimeout(id);
             if (response.ok) {
                 console.log("ok", save);
                 // Open (or create) the file for writing
