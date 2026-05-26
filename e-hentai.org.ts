@@ -173,7 +173,8 @@ async function book(url: string): Promise<[string[], string[], string | undefine
                 if (href?.startsWith("https://e-hentai.org/s/")) {
                     pages.push(href)
                 }
-                if (href?.startsWith(`${url}??p=`)) {
+                // https://e-hentai.org/g/3694533/60a824aaa1/?p=1
+                if (href?.startsWith(`${url}?p=`)) {
                     bookPages.push(href)
                 }
             }
