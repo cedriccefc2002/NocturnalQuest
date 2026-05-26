@@ -5,13 +5,15 @@
     "build": "deno compile --allow-read --allow-write mod_replace.ts",
     "build-win": "deno compile --allow-read --allow-write --target=x86_64-pc-windows-msvc mod_replace.ts",
     "server": "deno run --allow-net --allow-read server.ts",
-    "download": "deno run --allow-net --allow-read --allow-write download.ts"
+    "download": "deno run --allow-net --allow-read --allow-write download.ts",
+    "hentai": "deno run --allow-net --allow-read --allow-write e-hentai.org.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
     "@std/media-types": "jsr:@std/media-types@^1.1.0",
     "@std/toml": "jsr:@std/toml",
     "@std/fs/exists": "jsr:@std/fs/exists",
+    "@b-fuze/deno-dom":"jsr:@b-fuze/deno-dom",
     "imagemagick": "https://deno.land/x/imagemagick_deno@0.0.31/mod.ts"
   }
 }
