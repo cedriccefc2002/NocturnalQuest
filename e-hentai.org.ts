@@ -59,7 +59,7 @@ async function imageDownload(outpath: string, imageUrl: string) {
             console.log("Exists", save);
         } else {
             const c = new AbortController();
-            const id = setTimeout(() => c.abort(), 10000);
+            const id = setTimeout(() => c.abort(), 60000);
             const response = await fetch(url, {
                 "headers": {
                     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
