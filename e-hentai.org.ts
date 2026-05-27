@@ -1,13 +1,11 @@
 import { DOMParser } from "@b-fuze/deno-dom";
-import { basename } from "node:path";
+import { basename, join as pathJoin } from "node:path";
 import { exists } from "@std/fs/exists";
+import { getRandomPxoxy } from "./proxy.ts";
 
+const basedir = "themes/private/e-hentai";
 // https://proxylist.geonode.com/api/proxy-list?country=TW&limit=500&page=1&sort_by=lastChecked&sort_type=desc
-const client = Deno.createHttpClient({
-    proxy: {
-        url: 'http://187.251.224.167:80'
-    }
-});
+let client = getRandomPxoxy();
 
 async function BookList(url: string) {
     try {
@@ -57,14 +55,16 @@ async function BookList(url: string) {
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-async function imageDownload(outpath: string, imageUrl: string) {
+
+async function imageDownload(outpath: string, imageUrl: string): Promise<boolean> {
     try {
         await Deno.mkdir(outpath, { recursive: true });
         const url = new URL(imageUrl);
         const downloadname = basename(url.pathname);
-        const save = `${outpath}/${downloadname}`;
+        const save = pathJoin(outpath, downloadname);
         if (await exists(save)) {
-            console.log("Exists", save);
+            console.log("exists", save);
+            return true;
         } else {
             let response: Response | undefined = undefined;
             for (let index = 0; index < 10; index++) {
@@ -97,25 +97,28 @@ async function imageDownload(outpath: string, imageUrl: string) {
                     clearTimeout(id);
                     break;
                 } catch (error) {
-                    console.error(`Fail(2)`, error, imageUrl, index);
-                    sleep(5000);
+                    console.error(`retry`, error, imageUrl, index);
+                    client = getRandomPxoxy();
+                    await sleep(10000);
                     continue;
                 }
             }
-
             if (response?.ok) {
                 console.log("ok", save);
                 // Open (or create) the file for writing
-                const file = await Deno.open(`${outpath}/${downloadname}`, { create: true, write: true });
+                const file = await Deno.open(save, { create: true, write: true });
                 // Pipe the response body stream directly to the file
                 await response.body?.pipeTo(file.writable);
-                console.log("Success", save);
+                console.log("finish", save);
+                return true;
             } else {
-                console.error(`Fail(1)`, response?.statusText, imageUrl);
+                console.error(`fail(1)`, response?.statusText, imageUrl);
+                return false;
             }
         }
     } catch (error) {
-        console.error(`Fail(0)`, error, imageUrl);
+        console.error(`fail(0)`, error, imageUrl);
+        return false;
     }
 }
 async function page(url: string) {
@@ -220,17 +223,20 @@ async function book(url: string): Promise<[string[], maxPage: number, title: str
 async function readBoof(url: string) {
     await sleep(50);
     const [pages, bookPages, title] = await book(url);
+    const failimages: [dir: string, image: string][] = [];
     console.log(bookPages);
     // Deno.exit();
     if (title === undefined) {
         console.log("no title", url);
     } else {
-        const name = `${(new URL(url)).pathname}/${title}`;
+        const dir = pathJoin(basedir, (new URL(url)).pathname, title);
         for (const element of pages) {
             console.log(element);
             const image = await page(element);
             await sleep(1000);
-            await imageDownload(`themes/private/e-hentai/${name}`, image);
+            if (!await imageDownload(dir, image)) {
+                failimages.push([dir, image])
+            }
         }
         for (let i = 1; i <= bookPages; i++) {
             const bookPage = `${url}?p=${i}`
@@ -240,23 +246,40 @@ async function readBoof(url: string) {
                 console.log(element);
                 const image = await page(element);
                 await sleep(1000);
-                await imageDownload(`themes/private/e-hentai/${name}`, image);
+                if (!await imageDownload(dir, image)) {
+                    failimages.push([dir, image])
+                }
             }
         }
     }
+    return failimages;
 }
 console.log(Deno.args);
+const failimages: [dir: string, image: string][] = [];
 if (Deno.args.length >= 1) {
     if (Deno.args[0].startsWith("https://e-hentai.org/g/")) {
-        await readBoof(Deno.args[0]);
+        failimages.push(...await readBoof(Deno.args[0]));
     } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search")) {
         const books = await BookList(Deno.args[0]);
         for (const element of books) {
             console.log(element);
-            await readBoof(element);
+            failimages.push(...await readBoof(element));
         }
+    }
+}
+if (failimages.length > 0) {
+    console.time("fail retry");
+    while (failimages.length > 0) {
+        const item = failimages.pop();
+        if (item != undefined && !await imageDownload(item[0], item[1])) {
+            failimages.push(item)
+        }
+        console.time("fail retry");
+        await sleep(5000);
     }
 }
 // deno task hentai "https://e-hentai.org/g/3689578/aa71e08e7b/"
 // deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=1"
 // deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=3694414"
+// 
+// https://e-hentai.org/g/3957659/2de8979d61/
