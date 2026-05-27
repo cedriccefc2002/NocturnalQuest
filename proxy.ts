@@ -1,5 +1,6 @@
 // import { parse } from "@std/jsonc";
 // https://github.com/iplocate/free-proxy-list
+import { logger } from "./logger.ts";
 let lastUpdate = 0;
 let proxys: {
     "proxy": string,
@@ -16,7 +17,6 @@ let proxys: {
 }[] = [];
 async function _loadConfig() {
     if ((Date.now() - lastUpdate) > 1000 * 60 * 5) {
-        // https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/https/data.json
         // https://github.com/proxifly/free-proxy-list
         // https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/http/data.json
         const response = await fetch("https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/https/data.json");
@@ -35,7 +35,7 @@ async function _loadConfig() {
             }
         }[]).filter(x => x.protocol != "socks4" && x.protocol != "socks5");
         lastUpdate = Date.now();
-        console.log(`load pxoxy`, proxys.length);
+        logger.log(`load pxoxy ${proxys.length}`);
     }
 }
 
@@ -43,7 +43,7 @@ export async function getRandomPxoxy() {
     await _loadConfig();
     const random = Math.floor(Math.random() * proxys.length);
     const urlproxy = proxys[random];
-    console.log(`getRandomPxoxy pxoxy`, urlproxy);
+    logger.log(`getRandomPxoxy pxoxy ${urlproxy.proxy}`);
     // const transport: "https" | "socks5" | "http" =
     //     proxys[random].protocol == "socks5" ? "socks5" : (
     //         proxys[random].protocol == "http" ? (

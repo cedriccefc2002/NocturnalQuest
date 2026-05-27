@@ -1,6 +1,8 @@
 import { DOMParser } from "@b-fuze/deno-dom";
 import { basename, join as pathJoin } from "node:path";
 import { exists } from "@std/fs/exists";
+import { logger } from "./logger.ts";
+
 import { getRandomPxoxy } from "./proxy.ts";
 
 const basedir = "themes/private/e-hentai";
@@ -9,6 +11,7 @@ let client = await getRandomPxoxy();
 
 // 每5分鐘切換一次proxy
 setInterval(async () => {
+    logger.log(`切換一次proxy`);
     client = await getRandomPxoxy();
 }, 1000 * 60 * 5);
 async function BookList(url: string) {
@@ -50,10 +53,10 @@ async function BookList(url: string) {
             }
             return books;
         } else {
-            console.log(resp.statusText, url);
+            logger.log(`${resp.statusText},${url}`);
         }
     } catch (error) {
-        console.error(error, url);
+        logger.log(`${error},${url}`);
     }
     return [];
 }
@@ -67,7 +70,7 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<boolean
         const downloadname = basename(url.pathname);
         const save = pathJoin(outpath, downloadname);
         if (await exists(save)) {
-            console.log("exists", save);
+            logger.log(`exists,${save}`);
             return true;
         } else {
             let response: Response | undefined = undefined;
@@ -101,29 +104,29 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<boolean
                     clearTimeout(id);
                     break;
                 } catch (error) {
-                    console.error(`retry`, error, imageUrl, index);
+                    logger.log(`retry, ${error},${imageUrl},${index}`);
                     client = await getRandomPxoxy();
                     await sleep(10000);
                     continue;
                 }
             }
             if (response?.ok) {
-                console.log("ok", save);
+                logger.log(`ok,${save}`);
                 // Open (or create) the file for writing
                 const saveTemp = `${save}.download`;
                 const file = await Deno.open(saveTemp, { create: true, write: true });
                 // Pipe the response body stream directly to the file
                 await response.body?.pipeTo(file.writable);
                 await Deno.rename(saveTemp, save)
-                console.log("finish", save);
+                logger.log(`finish,${save}`);
                 return true;
             } else {
-                console.error(`fail(1)`, response?.statusText, imageUrl);
+                logger.log(`fail, ${response?.statusText},${imageUrl}`);
                 return false;
             }
         }
     } catch (error) {
-        console.error(`fail(0)`, error, imageUrl);
+        logger.log(`fail, ${error},${imageUrl}`);
         return false;
     }
 }
@@ -153,15 +156,15 @@ async function page(url: string) {
         });
 
         if (resp.ok) {
-            console.log("ok", url);
+            logger.log(`ok, ${url}`);
             const html = await resp.text();
             const doc = new DOMParser().parseFromString(html, "text/html");
             return doc.querySelector("img#img")?.getAttribute("src") ?? "";
         } else {
-            console.log(resp.statusText, url);
+            logger.log(`fail, ${resp.statusText},${url}`);
         }
     } catch (error) {
-        console.error(error, url);
+        logger.error(`error, ${error},${url}`);
     }
     return "";
 }
@@ -193,7 +196,7 @@ async function book(url: string): Promise<[string[], maxPage: number, title: str
         });
 
         if (resp.ok) {
-            console.log("ok", url);
+            logger.log(`ok, ${url}`);
             const html = await resp.text();
             const doc = new DOMParser().parseFromString(html, "text/html");
             const title = doc.querySelector("H1#gn")?.textContent;
@@ -215,10 +218,10 @@ async function book(url: string): Promise<[string[], maxPage: number, title: str
             }
             return [pages, maxPage, title];
         } else {
-            console.log(resp.statusText, url);
+            logger.log(`fail, ${resp.statusText},${url}`);
         }
     } catch (error) {
-        console.error(error, url);
+        logger.error(`error, ${error},${url}`);
     }
     return [[], 0, undefined];
 }
@@ -231,16 +234,16 @@ async function readBoof(url: string, startPageNo: number = 1): Promise<[[dir: st
     const [pages, bookPages, title] = await book(url);
     const failimages: [dir: string, image: string][] = [];
     const failpages: [dir: string, page: string][] = [];
-    console.log(bookPages, startPageNo);
+    logger.log(`${bookPages},${startPageNo}`);
     // Deno.exit();
     if (title === undefined) {
-        console.log("no title", url);
+        logger.log(`no title ${url}`);
     } else {
         const dir = pathJoin(basedir, (new URL(url)).pathname, title);
         // 跳過
         if (startPageNo <= 1) {
             for (const element of pages) {
-                console.log(element);
+                logger.log(`page, ${element}`);
                 const image = await page(element);
                 if (image === "") {
                     failpages.push([dir, element]);
@@ -254,10 +257,10 @@ async function readBoof(url: string, startPageNo: number = 1): Promise<[[dir: st
         }
         for (let i = startPageNo; i <= bookPages; i++) {
             const bookPage = `${url}?p=${i}`
-            console.log(bookPage);
+            logger.log(`bookPage, ${bookPage}`);
             const [pages] = await book(bookPage);
             for (const element of pages) {
-                console.log(element);
+                logger.log(element);
                 const image = await page(element); if (image === "") {
                     failpages.push([dir, element]);
                 } else {
@@ -271,7 +274,7 @@ async function readBoof(url: string, startPageNo: number = 1): Promise<[[dir: st
     }
     return [failimages, failpages];
 }
-console.log(Deno.args);
+logger.log(JSON.stringify(Deno.args));
 const failimages: [dir: string, image: string][] = [];
 const failpages: [dir: string, image: string][] = [];
 if (Deno.args.length >= 1) {
@@ -286,9 +289,9 @@ if (Deno.args.length >= 1) {
         for (const element of books) {
             if (skip > 0) {
                 skip--;
-                console.log("skip", element);
+                logger.log(`skip, ${element}, ${skip}`);
             } else {
-                console.log("read", element);
+                logger.log(`read, ${element}`);
                 const [t1, t2] = await readBoof(element)
                 failimages.push(...t1);
                 failpages.push(...t2);
@@ -298,10 +301,10 @@ if (Deno.args.length >= 1) {
 }
 
 if (failpages.length > 0) {
-    console.log("fail retry", failpages.length);
+    logger.log(`fail retry, ${failpages.length}`);
     const finalfailpages: [dir: string, image: string][] = [];
     for (const element of failpages) {
-        console.log(element);
+        logger.log(JSON.stringify(element));
         const image = await page(element[1]);
         if (image === "") {
             finalfailpages.push(element);
@@ -313,11 +316,11 @@ if (failpages.length > 0) {
         }
         await sleep(5000);
     }
-    console.log("finalfailpages", JSON.stringify(finalfailpages));
+    logger.log(JSON.stringify(finalfailpages));
 }
 
 if (failimages.length > 0) {
-    console.log("fail retry", failimages.length);
+    logger.log(`fail retry, ${failimages.length}`);
     const finalimageFinal: [dir: string, image: string][] = [];
     for (const item of failimages) {
         if (!await imageDownload(item[0], item[1])) {
@@ -325,7 +328,7 @@ if (failimages.length > 0) {
         }
         await sleep(5000);
     }
-    console.log("failimageFinal", JSON.stringify(finalimageFinal));
+    logger.log(JSON.stringify(finalimageFinal));
 }
 
 Deno.exit();
