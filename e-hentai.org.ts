@@ -351,7 +351,8 @@ if (Deno.args.length >= 1) {
                 logger.warn(`${page.url} , fail`);
             }
         }
-    } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search")) {
+        // https://e-hentai.org/uploader/Coqiaku?prev=1
+    } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search") || Deno.args[0].startsWith("https://e-hentai.org/uploader/")) {
         const bookListData = await BookList(Deno.args[0]);
         // 跳過
         let skip = Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 0;
@@ -375,8 +376,10 @@ if (Deno.args.length >= 1) {
         }
     }
 }
-
-Deno.exit();
+logger.log("exit after 5 sec");
+setTimeout(() => {
+    Deno.exit();
+}, 5000);
 // deno task hentai "https://e-hentai.org/g/3689578/aa71e08e7b/"
 // deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=1"
 // deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=3694414"
