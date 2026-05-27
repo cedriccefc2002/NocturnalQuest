@@ -155,7 +155,6 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<image> 
                 } catch (error) {
                     logger.log(`retry, ${error},${imageUrl},${index}`);
                     client = await getRandomPxoxy();
-                    await sleep(10000);
                     continue;
                 } finally {
                     clearTimeout(id);
