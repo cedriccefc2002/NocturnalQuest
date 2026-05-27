@@ -268,15 +268,15 @@ if (Deno.args.length >= 1) {
     }
 }
 if (failimages.length > 0) {
-    console.time("fail retry");
-    while (failimages.length > 0) {
-        const item = failimages.pop();
-        if (item != undefined && !await imageDownload(item[0], item[1])) {
-            failimages.push(item)
+    const failimageFinal: [dir: string, image: string][] = [];
+    for (const item of failimages) {
+        if (!await imageDownload(item[0], item[1])) {
+            failimageFinal.push(item)
         }
         console.time("fail retry");
         await sleep(5000);
     }
+    console.log("failimageFinal", JSON.stringify(failimageFinal));
 }
 // deno task hentai "https://e-hentai.org/g/3689578/aa71e08e7b/"
 // deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=1"
