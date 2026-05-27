@@ -345,12 +345,12 @@ logger.log(JSON.stringify(Deno.args));
 if (Deno.args.length >= 1) {
     if (Deno.args[0].startsWith("https://e-hentai.org/g/")) {
         const bookData = await readBoof(Deno.args[0], Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 1);
-        await Deno.writeTextFile(pathJoin(basedir, `bookData.${Date.now()}.json`), JSON.stringify(bookData, null, 4));
         for (const page of bookData.pages) {
             if (!(page.image?.isSuccess ?? true)) {
                 logger.warn(`${page.url} , fail`);
             }
         }
+        await Deno.writeTextFile(pathJoin(basedir, `bookData.${Date.now()}.json`), JSON.stringify(bookData, null, 4));
         // https://e-hentai.org/uploader/Coqiaku?prev=1
     } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search") || Deno.args[0].startsWith("https://e-hentai.org/uploader/")) {
         const bookListData = await BookList(Deno.args[0]);
@@ -366,7 +366,6 @@ if (Deno.args.length >= 1) {
                 bookListData.books.push(await readBoof(element));
             }
         }
-        await Deno.writeTextFile(pathJoin(basedir, `bookListData.${Date.now()}.json`), JSON.stringify(bookListData, null, 4));
         for (const bookData of bookListData.books) {
             for (const page of bookData.pages) {
                 if (!(page.image?.isSuccess ?? true)) {
@@ -374,9 +373,10 @@ if (Deno.args.length >= 1) {
                 }
             }
         }
+        await Deno.writeTextFile(pathJoin(basedir, `bookListData.${Date.now()}.json`), JSON.stringify(bookListData, null, 4));
     }
 }
-logger.log("exit after 5 sec");
+logger.log("exit after 5 sec...");
 setTimeout(() => {
     Deno.exit();
 }, 5000);
