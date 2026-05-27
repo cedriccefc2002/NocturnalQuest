@@ -106,9 +106,11 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<boolean
             if (response?.ok) {
                 console.log("ok", save);
                 // Open (or create) the file for writing
-                const file = await Deno.open(save, { create: true, write: true });
+                const saveTemp = `${save}.download`;
+                const file = await Deno.open(saveTemp, { create: true, write: true });
                 // Pipe the response body stream directly to the file
                 await response.body?.pipeTo(file.writable);
+                await Deno.rename(saveTemp, save)
                 console.log("finish", save);
                 return true;
             } else {
