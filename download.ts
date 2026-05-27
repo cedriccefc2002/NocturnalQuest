@@ -1,4 +1,4 @@
-import { basename } from "node:path";
+import { basename, join as pathJoin } from "node:path";
 import { exists } from "@std/fs/exists";
 
 // import files from "./tuoyiku_20260526_cdress.json" with { type: "json" }
@@ -37,16 +37,17 @@ for (const f of files) {
     try {
         const url = new URL(f);
         const downloadname = basename(url.pathname);
-        const save = `${outpath}/${downloadname}`;
+        const save = pathJoin(outpath, downloadname);
         if (await exists(save)) {
             console.log("Exists", save, total, i);
         } else {
             const response = await fetch(url);
             if (response.ok) {
-                // Open (or create) the file for writing
-                const file = await Deno.open(`${outpath}/${downloadname}`, { create: true, write: true });
+                const saveTemp = `${save}.download`;
+                const file = await Deno.open(saveTemp, { create: true, write: true });
                 // Pipe the response body stream directly to the file
                 await response.body?.pipeTo(file.writable);
+                await Deno.rename(saveTemp, save)
                 console.log("Success", save, total, i);
             } else {
                 console.error(`Fail(1)`, response.statusText, f, total, i);
