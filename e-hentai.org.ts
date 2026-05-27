@@ -345,6 +345,11 @@ if (Deno.args.length >= 1) {
     if (Deno.args[0].startsWith("https://e-hentai.org/g/")) {
         const bookData = await readBoof(Deno.args[0], Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 1);
         await Deno.writeTextFile(pathJoin(basedir, `bookData.${Date.now()}.json`), JSON.stringify(bookData, null, 4));
+        for (const page of bookData.pages) {
+            if (!(page.image?.isSuccess ?? true)) {
+                logger.warn(`${page.url} , fail`);
+            }
+        }
     } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search")) {
         const bookListData = await BookList(Deno.args[0]);
         // 跳過
@@ -359,7 +364,14 @@ if (Deno.args.length >= 1) {
                 bookListData.books.push(await readBoof(element));
             }
         }
-        await Deno.writeTextFile(pathJoin(basedir, `bookData.${Date.now()}.json`), JSON.stringify(bookListData, null, 4));
+        await Deno.writeTextFile(pathJoin(basedir, `bookListData.${Date.now()}.json`), JSON.stringify(bookListData, null, 4));
+        for (const bookData of bookListData.books) {
+            for (const page of bookData.pages) {
+                if (!(page.image?.isSuccess ?? true)) {
+                    logger.warn(`${page.url} , fail`);
+                }
+            }
+        }
     }
 }
 
