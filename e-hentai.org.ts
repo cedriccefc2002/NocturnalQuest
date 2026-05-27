@@ -5,16 +5,57 @@ import { logger } from "./logger.ts";
 
 import { getRandomPxoxy } from "./proxy.ts";
 
-const basedir = "themes/private/e-hentai";
+const basedir = "/media/cefc/Data/Data/e-hentai/";
 // https://proxylist.geonode.com/api/proxy-list?country=TW&limit=500&page=1&sort_by=lastChecked&sort_type=desc
 let client = await getRandomPxoxy();
 
-// 每5分鐘切換一次proxy
 setInterval(async () => {
-    logger.log(`切換一次proxy`);
+    logger.log(`切換proxy`);
     client = await getRandomPxoxy();
-}, 1000 * 60 * 5);
-async function BookList(url: string) {
+}, 1000 * 60 * 10);
+
+type image = {
+    imageUrl: string;
+    isExists: boolean;
+    isSuccess: boolean;
+    outpath: string;
+    save: string;
+}
+type imagePage = {
+    pageIndex: number;
+    url: string;
+    isSuccess: boolean;
+    imageUrl: string;
+    image?: image;
+}
+
+type book = {
+    dir: string;
+    maxPage: number;
+    startPageNo: number;
+    title: string;
+    url: string;
+    pageurls: string[];
+    pages: imagePage[];
+    isSuccess: boolean;
+}
+
+type bookList = {
+    startIndex: number;
+    url: string;
+    bookurls: string[];
+    books: book[];
+    isSuccess: boolean;
+}
+
+async function BookList(url: string): Promise<bookList> {
+    const result: bookList = {
+        startIndex: 0,
+        url,
+        bookurls: [],
+        books: [],
+        isSuccess: false,
+    }
     try {
         const resp = await fetch(encodeURI(url), {
             "headers": {
@@ -44,34 +85,42 @@ async function BookList(url: string) {
             // const html = await Deno.readTextFile("e-hentai.org.html");
             const doc = new DOMParser().parseFromString(html, "text/html");
             const links = doc.querySelectorAll("a")!;
-            const books: string[] = [];
             for (const element of links) {
                 const href = element.getAttribute("href");
                 if (href?.startsWith("https://e-hentai.org/g/")) {
-                    books.push(href)
+                    result.bookurls.push(href)
                 }
             }
-            return books;
+            result.isSuccess = true;
+            return result;
         } else {
             logger.log(`${resp.statusText},${url}`);
         }
     } catch (error) {
         logger.log(`${error},${url}`);
     }
-    return [];
+    return result;
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-async function imageDownload(outpath: string, imageUrl: string): Promise<boolean> {
+async function imageDownload(outpath: string, imageUrl: string): Promise<image> {
+    const result: image = {
+        imageUrl,
+        outpath,
+        save: "",
+        isSuccess: false,
+        isExists: false,
+    }
     try {
         await Deno.mkdir(outpath, { recursive: true });
         const url = new URL(imageUrl);
         const downloadname = basename(url.pathname);
-        const save = pathJoin(outpath, downloadname);
-        if (await exists(save)) {
-            logger.log(`exists,${save}`);
-            return true;
+        result.save = pathJoin(outpath, downloadname);
+        if (await exists(result.save)) {
+            logger.log(`exists,${result.save}`);
+            result.isExists = true;
+            return result;
         } else {
             let response: Response | undefined = undefined;
             for (let index = 0; index < 10; index++) {
@@ -111,26 +160,33 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<boolean
                 }
             }
             if (response?.ok) {
-                logger.log(`ok,${save}`);
+                logger.log(`ok,${result.save}`);
                 // Open (or create) the file for writing
-                const saveTemp = `${save}.download`;
+                const saveTemp = `${result.save}.download`;
                 const file = await Deno.open(saveTemp, { create: true, write: true });
                 // Pipe the response body stream directly to the file
                 await response.body?.pipeTo(file.writable);
-                await Deno.rename(saveTemp, save)
-                logger.log(`finish,${save}`);
-                return true;
+                await Deno.rename(saveTemp, result.save)
+                logger.log(`finish,${result.save}`);
+                result.isSuccess = true;
+                return result;
             } else {
                 logger.log(`fail, ${response?.statusText},${imageUrl}`);
-                return false;
+                return result;
             }
         }
     } catch (error) {
         logger.log(`fail, ${error},${imageUrl}`);
-        return false;
+        return result;
     }
 }
-async function page(url: string) {
+async function page(url: string, pageIndex: number): Promise<imagePage> {
+    const result: imagePage = {
+        pageIndex,
+        url,
+        imageUrl: "",
+        isSuccess: false
+    }
     try {
         const resp = await fetch(url, {
             "headers": {
@@ -159,17 +215,28 @@ async function page(url: string) {
             logger.log(`ok, ${url}`);
             const html = await resp.text();
             const doc = new DOMParser().parseFromString(html, "text/html");
-            return doc.querySelector("img#img")?.getAttribute("src") ?? "";
+            result.imageUrl = doc.querySelector("img#img")?.getAttribute("src") ?? "";
+            result.isSuccess = result.imageUrl !== "";
         } else {
             logger.log(`fail, ${resp.statusText},${url}`);
         }
     } catch (error) {
         logger.error(`error, ${error},${url}`);
     }
-    return "";
+    return result;
 }
 
-async function book(url: string): Promise<[string[], maxPage: number, title: string | undefined]> {
+async function book(url: string): Promise<book> {
+    const result: book = {
+        dir: "",
+        maxPage: 0,
+        startPageNo: 0,
+        title: "",
+        url,
+        pages: [],
+        pageurls: [],
+        isSuccess: false,
+    }
     try {
         let maxPage: number = 0
         const resp = await fetch(url, {
@@ -199,13 +266,13 @@ async function book(url: string): Promise<[string[], maxPage: number, title: str
             logger.log(`ok, ${url}`);
             const html = await resp.text();
             const doc = new DOMParser().parseFromString(html, "text/html");
-            const title = doc.querySelector("H1#gn")?.textContent;
+            const title = doc.querySelector("H1#gn")?.textContent ?? "";
             const links = doc.querySelectorAll("a")!;
-            const pages: string[] = [];
+            const pageurls: string[] = [];
             for (const element of links) {
                 const href = element.getAttribute("href");
                 if (href?.startsWith("https://e-hentai.org/s/")) {
-                    pages.push(href)
+                    pageurls.push(href)
                 }
                 // https://e-hentai.org/g/3694533/60a824aaa1/?p=1
                 if (href?.startsWith(`${url}?p=`)) {
@@ -216,119 +283,84 @@ async function book(url: string): Promise<[string[], maxPage: number, title: str
                     }
                 }
             }
-            return [pages, maxPage, title];
+            result.isSuccess = true;
+            result.title = title;
+            result.maxPage = maxPage
+            result.pageurls = pageurls
+            return result;
         } else {
             logger.log(`fail, ${resp.statusText},${url}`);
         }
     } catch (error) {
         logger.error(`error, ${error},${url}`);
     }
-    return [[], 0, undefined];
+    return result;
 }
 
 
 
 // https://e-hentai.org/g/3875959/7a3d9d9ee3/
-async function readBoof(url: string, startPageNo: number = 1): Promise<[[dir: string, image: string][], [dir: string, page: string][]]> {
+// https://e-hentai.org/g/3958189/9b708ed588/
+async function readBoof(url: string, startPageNo: number = 1): Promise<book> {
     await sleep(50);
-    const [pages, bookPages, title] = await book(url);
-    const failimages: [dir: string, image: string][] = [];
-    const failpages: [dir: string, page: string][] = [];
-    logger.log(`${bookPages},${startPageNo}`);
+    const bookData = await book(url);
+    bookData.startPageNo = startPageNo;
+    logger.log(`${bookData.title},${startPageNo}`);
     // Deno.exit();
-    if (title === undefined) {
-        logger.log(`no title ${url}`);
+    if (bookData.title === "") {
+        logger.log(`no title ${bookData.url}`);
     } else {
-        const dir = pathJoin(basedir, (new URL(url)).pathname, title);
+        bookData.dir = pathJoin(basedir, (new URL(url)).pathname.replaceAll("/", "_"), bookData.title);
         // 跳過
-        if (startPageNo <= 1) {
-            for (const element of pages) {
+        if (bookData.startPageNo <= 1) {
+            for (const element of bookData.pageurls) {
                 logger.log(`page, ${element}`);
-                const image = await page(element);
-                if (image === "") {
-                    failpages.push([dir, element]);
-                } else {
+                const imagePage = await page(element, 0);
+                bookData.pages.push(imagePage);
+                if (imagePage.isSuccess && imagePage.imageUrl !== "") {
                     await sleep(1000);
-                    if (!await imageDownload(dir, image)) {
-                        failimages.push([dir, image])
-                    }
+                    imagePage.image = await imageDownload(bookData.dir, imagePage.imageUrl)
                 }
             }
         }
-        for (let i = startPageNo; i <= bookPages; i++) {
+        for (let i = bookData.startPageNo; i <= bookData.maxPage; i++) {
             const bookPage = `${url}?p=${i}`
             logger.log(`bookPage, ${bookPage}`);
-            const [pages] = await book(bookPage);
-            for (const element of pages) {
+            const { pageurls } = await book(bookPage);
+            for (const element of pageurls) {
                 logger.log(element);
-                const image = await page(element); if (image === "") {
-                    failpages.push([dir, element]);
-                } else {
+                const imagePage = await page(element, i);
+                bookData.pages.push(imagePage);
+                if (imagePage.isSuccess && imagePage.imageUrl !== "") {
                     await sleep(1000);
-                    if (!await imageDownload(dir, image)) {
-                        failimages.push([dir, image])
-                    }
+                    imagePage.image = await imageDownload(bookData.dir, imagePage.imageUrl)
                 }
             }
         }
     }
-    return [failimages, failpages];
+    return bookData;
 }
 logger.log(JSON.stringify(Deno.args));
-const failimages: [dir: string, image: string][] = [];
-const failpages: [dir: string, image: string][] = [];
 if (Deno.args.length >= 1) {
     if (Deno.args[0].startsWith("https://e-hentai.org/g/")) {
-        const [t1, t2] = await readBoof(Deno.args[0], Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 1);
-        failimages.push(...t1);
-        failpages.push(...t2);
+        const bookData = await readBoof(Deno.args[0], Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 1);
+        await Deno.writeTextFile(pathJoin(basedir, `bookData.${Date.now()}.json`), JSON.stringify(bookData, null, 4));
     } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search")) {
-        const books = await BookList(Deno.args[0]);
+        const bookListData = await BookList(Deno.args[0]);
         // 跳過
         let skip = Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 0;
-        for (const element of books) {
+        bookListData.startIndex = skip;
+        for (const element of bookListData.bookurls) {
             if (skip > 0) {
                 skip--;
                 logger.log(`skip, ${element}, ${skip}`);
             } else {
                 logger.log(`read, ${element}`);
-                const [t1, t2] = await readBoof(element)
-                failimages.push(...t1);
-                failpages.push(...t2);
+                bookListData.books.push(await readBoof(element));
             }
         }
+        await Deno.writeTextFile(pathJoin(basedir, `bookData.${Date.now()}.json`), JSON.stringify(bookListData, null, 4));
     }
-}
-
-if (failpages.length > 0) {
-    logger.log(`fail retry, ${failpages.length}`);
-    const finalfailpages: [dir: string, image: string][] = [];
-    for (const element of failpages) {
-        logger.log(JSON.stringify(element));
-        const image = await page(element[1]);
-        if (image === "") {
-            finalfailpages.push(element);
-        } else {
-            await sleep(1000);
-            if (!await imageDownload(element[0], image)) {
-                failimages.push([element[0], image])
-            }
-        }
-        await sleep(5000);
-    }
-    logger.log(JSON.stringify(finalfailpages));
-}
-
-if (failimages.length > 0) {
-    logger.log(`fail retry, ${failimages.length}`);
-    const finalimageFinal: [dir: string, image: string][] = [];
-    for (const item of failimages) {
-        if (!await imageDownload(item[0], item[1])) {
-            finalimageFinal.push(item)
-        }
-        await sleep(5000);
-    }
-    logger.log(JSON.stringify(finalimageFinal));
 }
 
 Deno.exit();

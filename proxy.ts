@@ -16,7 +16,7 @@ let proxys: {
     }
 }[] = [];
 async function _loadConfig() {
-    if ((Date.now() - lastUpdate) > 1000 * 60 * 5) {
+    if ((Date.now() - lastUpdate) > 1000 * 60 * 10) {
         // https://github.com/proxifly/free-proxy-list
         // https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/http/data.json
         const response = await fetch("https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/https/data.json");
