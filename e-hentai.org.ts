@@ -5,8 +5,12 @@ import { getRandomPxoxy } from "./proxy.ts";
 
 const basedir = "themes/private/e-hentai";
 // https://proxylist.geonode.com/api/proxy-list?country=TW&limit=500&page=1&sort_by=lastChecked&sort_type=desc
-let client = getRandomPxoxy();
+let client = await getRandomPxoxy();
 
+// 每5分鐘切換一次proxy
+setInterval(async () => {
+    client = await getRandomPxoxy();
+}, 1000 * 60 * 5);
 async function BookList(url: string) {
     try {
         const resp = await fetch(encodeURI(url), {
@@ -98,7 +102,7 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<boolean
                     break;
                 } catch (error) {
                     console.error(`retry`, error, imageUrl, index);
-                    client = getRandomPxoxy();
+                    client = await getRandomPxoxy();
                     await sleep(10000);
                     continue;
                 }
