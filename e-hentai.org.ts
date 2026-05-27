@@ -226,25 +226,28 @@ async function book(url: string): Promise<[string[], maxPage: number, title: str
 
 
 // https://e-hentai.org/g/3875959/7a3d9d9ee3/
-async function readBoof(url: string) {
+async function readBoof(url: string, startPageNo: number = 1) {
     await sleep(50);
     const [pages, bookPages, title] = await book(url);
     const failimages: [dir: string, image: string][] = [];
-    console.log(bookPages);
+    console.log(bookPages, startPageNo);
     // Deno.exit();
     if (title === undefined) {
         console.log("no title", url);
     } else {
         const dir = pathJoin(basedir, (new URL(url)).pathname, title);
-        for (const element of pages) {
-            console.log(element);
-            const image = await page(element);
-            await sleep(1000);
-            if (!await imageDownload(dir, image)) {
-                failimages.push([dir, image])
+        // 跳過
+        if (startPageNo <= 1) {
+            for (const element of pages) {
+                console.log(element);
+                const image = await page(element);
+                await sleep(1000);
+                if (!await imageDownload(dir, image)) {
+                    failimages.push([dir, image])
+                }
             }
         }
-        for (let i = 1; i <= bookPages; i++) {
+        for (let i = startPageNo; i <= bookPages; i++) {
             const bookPage = `${url}?p=${i}`
             console.log(bookPage);
             const [pages] = await book(bookPage);
@@ -264,12 +267,19 @@ console.log(Deno.args);
 const failimages: [dir: string, image: string][] = [];
 if (Deno.args.length >= 1) {
     if (Deno.args[0].startsWith("https://e-hentai.org/g/")) {
-        failimages.push(...await readBoof(Deno.args[0]));
+        failimages.push(...await readBoof(Deno.args[0], Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 1));
     } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search")) {
         const books = await BookList(Deno.args[0]);
+        // 跳過
+        let skip = Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 0;
         for (const element of books) {
-            console.log(element);
-            failimages.push(...await readBoof(element));
+            if (skip > 0) {
+                skip--;
+                console.log("skip", element);
+            } else {
+                console.log("read", element);
+                failimages.push(...await readBoof(element));
+            }
         }
     }
 }
@@ -284,6 +294,8 @@ if (failimages.length > 0) {
     }
     console.log("failimageFinal", JSON.stringify(failimageFinal));
 }
+
+Deno.exit();
 // deno task hentai "https://e-hentai.org/g/3689578/aa71e08e7b/"
 // deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=1"
 // deno task hentai "https://e-hentai.org/?f_search=DyDy_cos&prev=3694414"
