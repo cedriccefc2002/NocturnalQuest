@@ -125,9 +125,9 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<image> 
         } else {
             let response: Response | undefined = undefined;
             for (let index = 0; index < 10; index++) {
+                const c = new AbortController();
+                const id = setTimeout(() => c.abort(), 10000);
                 try {
-                    const c = new AbortController();
-                    const id = setTimeout(() => c.abort(), 10000);
                     response = await fetch(url, {
                         "headers": {
                             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -151,13 +151,14 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<image> 
                         "signal": c.signal,
                         client,
                     });
-                    clearTimeout(id);
                     break;
                 } catch (error) {
                     logger.log(`retry, ${error},${imageUrl},${index}`);
                     client = await getRandomPxoxy();
                     await sleep(10000);
                     continue;
+                } finally {
+                    clearTimeout(id);
                 }
             }
             if (response?.ok) {
