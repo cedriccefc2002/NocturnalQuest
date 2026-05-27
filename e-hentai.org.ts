@@ -119,6 +119,7 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<image> 
         result.save = pathJoin(outpath, downloadname);
         if (await exists(result.save)) {
             logger.log(`exists,${result.save}`);
+            result.isSuccess = true;
             result.isExists = true;
             return result;
         } else {
