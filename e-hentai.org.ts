@@ -226,10 +226,11 @@ async function book(url: string): Promise<[string[], maxPage: number, title: str
 
 
 // https://e-hentai.org/g/3875959/7a3d9d9ee3/
-async function readBoof(url: string, startPageNo: number = 1) {
+async function readBoof(url: string, startPageNo: number = 1): Promise<[[dir: string, image: string][], [dir: string, page: string][]]> {
     await sleep(50);
     const [pages, bookPages, title] = await book(url);
     const failimages: [dir: string, image: string][] = [];
+    const failpages: [dir: string, page: string][] = [];
     console.log(bookPages, startPageNo);
     // Deno.exit();
     if (title === undefined) {
@@ -241,9 +242,13 @@ async function readBoof(url: string, startPageNo: number = 1) {
             for (const element of pages) {
                 console.log(element);
                 const image = await page(element);
-                await sleep(1000);
-                if (!await imageDownload(dir, image)) {
-                    failimages.push([dir, image])
+                if (image === "") {
+                    failpages.push([dir, element]);
+                } else {
+                    await sleep(1000);
+                    if (!await imageDownload(dir, image)) {
+                        failimages.push([dir, image])
+                    }
                 }
             }
         }
@@ -253,21 +258,27 @@ async function readBoof(url: string, startPageNo: number = 1) {
             const [pages] = await book(bookPage);
             for (const element of pages) {
                 console.log(element);
-                const image = await page(element);
-                await sleep(1000);
-                if (!await imageDownload(dir, image)) {
-                    failimages.push([dir, image])
+                const image = await page(element); if (image === "") {
+                    failpages.push([dir, element]);
+                } else {
+                    await sleep(1000);
+                    if (!await imageDownload(dir, image)) {
+                        failimages.push([dir, image])
+                    }
                 }
             }
         }
     }
-    return failimages;
+    return [failimages, failpages];
 }
 console.log(Deno.args);
 const failimages: [dir: string, image: string][] = [];
+const failpages: [dir: string, image: string][] = [];
 if (Deno.args.length >= 1) {
     if (Deno.args[0].startsWith("https://e-hentai.org/g/")) {
-        failimages.push(...await readBoof(Deno.args[0], Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 1));
+        const [t1, t2] = await readBoof(Deno.args[0], Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 1);
+        failimages.push(...t1);
+        failpages.push(...t2);
     } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search")) {
         const books = await BookList(Deno.args[0]);
         // 跳過
@@ -278,21 +289,43 @@ if (Deno.args.length >= 1) {
                 console.log("skip", element);
             } else {
                 console.log("read", element);
-                failimages.push(...await readBoof(element));
+                const [t1, t2] = await readBoof(element)
+                failimages.push(...t1);
+                failpages.push(...t2);
             }
         }
     }
 }
-if (failimages.length > 0) {
-    const failimageFinal: [dir: string, image: string][] = [];
-    for (const item of failimages) {
-        if (!await imageDownload(item[0], item[1])) {
-            failimageFinal.push(item)
+
+if (failpages.length > 0) {
+    console.log("fail retry", failpages.length);
+    const finalfailpages: [dir: string, image: string][] = [];
+    for (const element of failpages) {
+        console.log(element);
+        const image = await page(element[1]);
+        if (image === "") {
+            finalfailpages.push(element);
+        } else {
+            await sleep(1000);
+            if (!await imageDownload(element[0], image)) {
+                failimages.push([element[0], image])
+            }
         }
-        console.time("fail retry");
         await sleep(5000);
     }
-    console.log("failimageFinal", JSON.stringify(failimageFinal));
+    console.log("finalfailpages", JSON.stringify(finalfailpages));
+}
+
+if (failimages.length > 0) {
+    console.log("fail retry", failimages.length);
+    const finalimageFinal: [dir: string, image: string][] = [];
+    for (const item of failimages) {
+        if (!await imageDownload(item[0], item[1])) {
+            finalimageFinal.push(item)
+        }
+        await sleep(5000);
+    }
+    console.log("failimageFinal", JSON.stringify(finalimageFinal));
 }
 
 Deno.exit();

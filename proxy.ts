@@ -16,7 +16,10 @@ let proxys: {
 }[] = [];
 async function _loadConfig() {
     if ((Date.now() - lastUpdate) > 1000 * 60 * 5) {
-        const response = await fetch("https://raw.githubusercontent.com/proxifly/free-proxy-list/refs/heads/main/proxies/countries/TW/data.json");
+        // https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/https/data.json
+        // https://github.com/proxifly/free-proxy-list
+        // https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/http/data.json
+        const response = await fetch("https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/https/data.json");
         // const proxys = parse(await Deno.readTextFile("proxy.jsonc")) as {
         proxys = (await response.json() as {
             "proxy": string,
@@ -30,7 +33,7 @@ async function _loadConfig() {
                 "country": string,
                 "city": string
             }
-        }[]).filter(x => x.protocol != "socks4" && !x.https);
+        }[]).filter(x => x.protocol != "socks4" && x.protocol != "socks5");
         lastUpdate = Date.now();
         console.log(`load pxoxy`, proxys.length);
     }
@@ -39,8 +42,8 @@ async function _loadConfig() {
 export async function getRandomPxoxy() {
     await _loadConfig();
     const random = Math.floor(Math.random() * proxys.length);
-    const url = proxys[random].proxy;
-    console.log(`getRandomPxoxy pxoxy`, url);
+    const urlproxy = proxys[random];
+    console.log(`getRandomPxoxy pxoxy`, urlproxy);
     // const transport: "https" | "socks5" | "http" =
     //     proxys[random].protocol == "socks5" ? "socks5" : (
     //         proxys[random].protocol == "http" ? (
@@ -48,7 +51,7 @@ export async function getRandomPxoxy() {
     //         ) : "http");
     return Deno.createHttpClient({
         proxy: {
-            url: url,
+            url: proxys[random].https ? `https://${urlproxy.ip}:${urlproxy.port}` : urlproxy.proxy,
             // transport,
         }
     });

@@ -6,7 +6,7 @@
     "build-win": "deno compile --allow-read --allow-write --target=x86_64-pc-windows-msvc mod_replace.ts",
     "server": "deno run --allow-net --allow-read server.ts",
     "download": "deno run --allow-net --allow-read --allow-write download.ts",
-    "hentai": "deno run --allow-net --allow-read --allow-write e-hentai.org.ts"
+    "hentai": "deno run --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org.ts"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
