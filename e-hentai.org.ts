@@ -130,7 +130,7 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<image> 
             return result;
         } else {
             let response: Response | undefined = undefined;
-            for (let index = 0; index < 10; index++) {
+            for (let index = 0; index < 5; index++) {
                 const c = new AbortController();
                 const id = setTimeout(() => c.abort(), 10000);
                 try {
@@ -154,13 +154,12 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<image> 
                         "method": "GET",
                         "mode": "cors",
                         "credentials": "include",
-                        "signal": c.signal,
-                        client: (index > 8 ? undefined : client), // 最後一次不使用 proxy
+                        "signal": c.signal
                     });
                     break;
                 } catch (error) {
                     logger.log(`retry, ${error},${imageUrl},${index}`);
-                    await ChangeProxyUpdate(true);
+                    await sleep(10000);
                     continue;
                 } finally {
                     clearTimeout(id);
@@ -176,7 +175,6 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<image> 
                     await response.body?.pipeTo(file.writable);
                 } catch (error) {
                     logger.log(`傳輸中斷,${imageUrl},${error}`);
-                    await ChangeProxyUpdate(true);
                     return result;
                 }
                 await Deno.rename(saveTemp, result.save)
@@ -235,6 +233,7 @@ async function page(url: string, pageIndex: number): Promise<imagePage> {
         }
     } catch (error) {
         logger.error(`error, ${error},${url}`);
+        await ChangeProxyUpdate(true);
     }
     return result;
 }
@@ -305,6 +304,7 @@ async function book(url: string): Promise<book> {
             logger.log(`fail, ${resp.statusText},${url}`);
         }
     } catch (error) {
+        await ChangeProxyUpdate(true);
         logger.error(`error, ${error},${url}`);
     }
     return result;
