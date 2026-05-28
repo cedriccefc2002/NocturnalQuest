@@ -172,7 +172,13 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<image> 
                 const saveTemp = `${result.save}.download`;
                 const file = await Deno.open(saveTemp, { create: true, write: true });
                 // Pipe the response body stream directly to the file
-                await response.body?.pipeTo(file.writable);
+                try {
+                    await response.body?.pipeTo(file.writable);
+                } catch (error) {
+                    logger.log(`傳輸中斷,${imageUrl},${error}`);
+                    await ChangeProxyUpdate(true);
+                    return result;
+                }
                 await Deno.rename(saveTemp, result.save)
                 logger.log(`finish,${result.save}`);
                 result.isSuccess = true;
@@ -373,14 +379,13 @@ if (Deno.args.length >= 1) {
             }
         }
         for (const bookData of bookListData.books) {
+            logger.info(`${bookData.url} , ${bookData.title} , ${bookData.isSuccess}`);
             if (bookData.isSuccess) {
                 for (const page of bookData.pages) {
                     if (!(page.image?.isSuccess ?? false)) {
                         logger.warn(`${page.url} , fail`);
                     }
                 }
-            } else {
-                logger.warn(`${bookData.url} , fail`);
             }
         }
         await Deno.writeTextFile(pathJoin(basedir, `bookListData.${Date.now()}.json`), JSON.stringify(bookListData, null, 4));
