@@ -63,6 +63,7 @@ const cfg = parse(Deno.readTextFileSync("server.toml")) as {
   Server: {
     port: number;
     hostname: string;
+    img_cache_control_max_age: number;
   }
 };
 async function LoadAllFiles() {
@@ -119,7 +120,7 @@ async function StreamRandImage(images: string[]) {
   return new Response(file.readable, {
     headers: {
       "content-type": ext,
-      "cache-control": "public, max-age=300, immutable" // 讓遊戲可以預載資源後減少切換閃爍
+      "cache-control": `public, max-age=${cfg.Server.img_cache_control_max_age}, immutable` // 讓遊戲可以預載資源後減少切換閃爍
     }
   });
 }
@@ -132,7 +133,7 @@ async function RandImageAndResize(images: string[]) {
   return new Response(resizeImage(data), {
     headers: {
       "content-type": "image/Jpeg",
-      "cache-control": "public, max-age=300, immutable" // 讓遊戲可以預載資源後減少切換閃爍
+      "cache-control": `public, max-age=${cfg.Server.img_cache_control_max_age}, immutable` // 讓遊戲可以預載資源後減少切換閃爍
     }
   });
 }

@@ -6,13 +6,19 @@ import { logger } from "./logger.ts";
 import { getRandomPxoxy } from "./proxy.ts";
 
 const basedir = "/media/cefc/Data/Data/e-hentai/";
-// https://proxylist.geonode.com/api/proxy-list?country=TW&limit=500&page=1&sort_by=lastChecked&sort_type=desc
-let client = await getRandomPxoxy();
 
-setInterval(async () => {
-    logger.log(`切換proxy`);
-    client = await getRandomPxoxy();
-}, 1000 * 60 * 10);
+let client = await getRandomPxoxy();
+let lastChangeProxyUpdate = 0;
+async function ChangeProxyUpdate(force: boolean = false) {
+    // 強制或是超過30分鐘
+    if (force || (Date.now() - lastChangeProxyUpdate) > 1000 * 60 * 30) {
+        client = await getRandomPxoxy();
+        logger.log(`切換proxy`);
+        lastChangeProxyUpdate = Date.now();
+    }
+}
+// 每10分鐘檢查一次
+setInterval(ChangeProxyUpdate, 1000 * 60 * 10);
 
 type image = {
     imageUrl: string;
@@ -149,12 +155,12 @@ async function imageDownload(outpath: string, imageUrl: string): Promise<image> 
                         "mode": "cors",
                         "credentials": "include",
                         "signal": c.signal,
-                        client,
+                        client: (index > 8 ? undefined : client), // 最後一次不使用 proxy
                     });
                     break;
                 } catch (error) {
                     logger.log(`retry, ${error},${imageUrl},${index}`);
-                    client = await getRandomPxoxy();
+                    await ChangeProxyUpdate(true);
                     continue;
                 } finally {
                     clearTimeout(id);

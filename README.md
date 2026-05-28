@@ -631,3 +631,19 @@ tiktok.com/@nocturnal.quest
 kosmas.papadatos@gmail.com
 www.youtube.com/@nocturnal_quest
 加入日期：2026年1月30日
+
+```sh
+for dir in *; do
+    # 检查是否为目录，并且名称不以 _ 结尾
+    if [ -d "$dir" ] && [[ "$dir" != *_ ]]; then
+        new_dir="${dir}_"
+        # 检查新目录是否不存在
+        if [ ! -d "$new_dir" ]; then
+            mv -v "$dir" "$new_dir"
+            echo "mv $dir to $new_dir"
+        else
+            echo "跳过: $new_dir 已经存在。"
+        fi
+    fi
+done
+```
