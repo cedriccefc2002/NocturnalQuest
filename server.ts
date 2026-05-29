@@ -83,7 +83,7 @@ async function LoadAllFiles() {
   const monster: { [k: string]: number } = {};
   for (const element of cfg.Monster.Source) {
     console.log("scan", element);
-    const files = element.notIncludeBaseSources ? [] : [...ImageState.Background.BaseSources];
+    const files = element.notIncludeBaseSources ? [] : [...ImageState.Monster.BaseSources];
     files.push(...await loadFrom(element.sources));
     monster[element.name] = files.length;
     ImageState.Monster.ByType.set(element.name, files);
@@ -93,7 +93,7 @@ async function LoadAllFiles() {
   const classResult: { [k: string]: number } = {};
   for (const element of cfg.Class.Source) {
     console.log("scan", element);
-    const files = element.notIncludeBaseSources ? [] : [...ImageState.Background.BaseSources];
+    const files = element.notIncludeBaseSources ? [] : [...ImageState.Class.BaseSources];
     files.push(...await loadFrom(element.sources));
     classResult[element.name] = files.length;
     ImageState.Class.ByType.set(element.name, files)
