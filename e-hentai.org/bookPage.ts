@@ -1,9 +1,9 @@
 import log4js from "log4js";
-import { join as pathJoin } from "node:path";
-const logger = log4js.getLogger(import.meta.filename);
+import { join as pathJoin, basename } from "node:path";
+const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 import { cfg, DB, fetchHtml } from "./common.ts";
 import { DOMParser } from "@b-fuze/deno-dom";
-import { Book } from "./book.ts";
+import { Book, BookRecord } from "./book.ts";
 
 export type BookPageRecord = {
     BookUrl: string,
@@ -49,7 +49,7 @@ export class BookPage {
         };
     };
     public static import(record: BookPageRecord): BookPage {
-        logger.info(JSON.stringify(record));
+        // logger.info(JSON.stringify(record));
         const bookPage = new BookPage(record.BookUrl, record.Url, record.Path);
         if (record.IsSuccess !== undefined) {
             bookPage.IsSuccess = record.IsSuccess;
@@ -59,8 +59,9 @@ export class BookPage {
         }
         return bookPage;
     };
+    public static createUrl(book: Book, index: number) { return `${book.Url}?p=${index}`; }
     public static async createFromBook(book: Book, index: number = 0) {
-        const url = `${book.Url}?p=${index}`;
+        const url = BookPage.createUrl(book, index);
         const bookPage = new BookPage(book.Url, url, pathJoin(cfg.basedir, book.Path, book.Title));
         if (index <= 0) {
             bookPage.Pages = book.BasePages;
@@ -73,6 +74,26 @@ export class BookPage {
         }
         return bookPage;
     };
+}
+async function SingleBookPage(book: Book, index: number = 0) {
+    const item = await DB.get([BookPage.Key, book.Url, BookPage.createUrl(book, index)]);
+    let bookPage: BookPage | undefined;
+    if (item.value == null) {
+        bookPage = await BookPage.createFromBook(book, index);
+        const record = bookPage.export();
+        // logger.info(JSON.stringify(record));
+        const result = await DB.set([BookPage.Key, book.Url, bookPage.Url], record);
+        logger.info(`save ${result.ok},${result.versionstamp}`);
+    } else {
+        bookPage = BookPage.import(item.value as BookPageRecord);
+        if (!bookPage.IsSuccess || bookPage.Pages.length === 0) {
+            await bookPage.refresh();
+            const record = bookPage.export();
+            // logger.info(JSON.stringify(record));
+            const result = await DB.set([BookPage.Key, book.Url, bookPage.Url], record);
+            logger.info(`save ${result.ok},${result.versionstamp}`);
+        }
+    }
 }
 if (import.meta.main) {
     if (Deno.args.length >= 1) {
@@ -87,7 +108,7 @@ if (import.meta.main) {
                 await book.refresh();
             } else {
                 logger.info(`${url},exits`);
-                book = Book.import(item.value as BookPageRecord);
+                book = Book.import(item.value as BookRecord);
             }
             const bookPage = await BookPage.createFromBook(book);
             const record = bookPage.export();
@@ -101,7 +122,28 @@ if (import.meta.main) {
                 const result = await DB.set([BookPage.Key, book.Url, bookPage.Url], record);
                 logger.info(`save ${result.ok},${result.versionstamp}`);
             }
-            DB.close();
+        } else if (url === "clear") {
+            const entries = DB.list({ prefix: [BookPage.Key] });
+            for await (const entry of entries) {
+                await DB.delete(entry.key);
+            }
+        }
+    } else {
+        const entries = DB.list({ prefix: [Book.Key] });
+        const bookList: Book[] = [];
+        for await (const entry of entries) {
+            const record = entry.value as BookRecord;
+            logger.info(`IsSuccess=${record.IsSuccess},${record.Url}`);
+            if (record.IsSuccess) {
+                bookList.push(Book.import(record));
+            }
+        }
+        for (const book of bookList) {
+            await SingleBookPage(book, 0);
+            for (let index = 0; index < book.ExtendPageCount; index++) {
+                await SingleBookPage(book, index + 1);
+            }
         }
     }
+    DB.close();
 }

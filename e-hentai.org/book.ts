@@ -1,9 +1,9 @@
 import log4js from "log4js";
-const logger = log4js.getLogger(import.meta.filename);
+import { basename } from "node:path";
 import { DB, fetchHtml } from "./common.ts";
 import { DOMParser } from "@b-fuze/deno-dom";
-
-type Record = {
+const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
+export type BookRecord = {
     Url: string,
     Path?: string;
     Title?: string;
@@ -11,6 +11,27 @@ type Record = {
     ImagesCount?: number;
     ExtendPageCount?: number;
     BasePages?: string[];
+}
+
+async function BookList(url: string): Promise<string[]> {
+    const result: string[] = [];
+    try {
+        const [isSuccess, html] = await fetchHtml(url, true, 30);
+        if (isSuccess && html !== undefined) {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            const links = doc.querySelectorAll("a")!;
+            for (const element of links) {
+                const href = element.getAttribute("href");
+                if (href?.startsWith("https://e-hentai.org/g/")) {
+                    result.push(href)
+                }
+            }
+            return result;
+        }
+    } catch (error) {
+        logger.log(`${error},${url}`);
+    }
+    return result;
 }
 
 export class Book {
@@ -61,7 +82,7 @@ export class Book {
             this.IsSuccess = true;
         }
     }
-    public export(): Record {
+    public export(): BookRecord {
         return {
             Url: this.Url,
             Path: this.Path,
@@ -72,8 +93,8 @@ export class Book {
             BasePages: this.BasePages,
         };
     };
-    public static import(record: Record): Book {
-        logger.info(JSON.stringify(record));
+    public static import(record: BookRecord): Book {
+        // logger.info(JSON.stringify(record));
         const book = new Book(record.Url);
         if (record.Path !== undefined) {
             book.Path = record.Path;
@@ -96,26 +117,43 @@ export class Book {
         return book;
     };
 }
+async function SingleBook(url: string) {
+    let book: Book | undefined;
+    let needSave = false;
+    const item = await DB.get([Book.Key, url]);
+    if (item.value == null) {
+        logger.info(`${url},not exits renew`);
+        book = new Book(url);
+        await book.refresh();
+        needSave = true;
+    } else {
+        book = Book.import(item.value as BookRecord);
+        if (!book.IsSuccess) {
+            logger.info(`${url},refresh`);
+            await book.refresh();
+            needSave = true;
+        }
+    }
+    if (needSave) {
+        const record = book.export();
+        // logger.info(JSON.stringify(record));
+        const result = await DB.set([Book.Key, url], record);
+        logger.info(`save ${result.ok},${result.versionstamp}`);
+    }
+}
 if (import.meta.main) {
     if (Deno.args.length >= 1) {
         const url = Deno.args[0];
         // deno task e-hentai.book https://e-hentai.org/g/3962355/69690a454f/
         if (url.startsWith("https://e-hentai.org/g/")) {
-            let book: Book | undefined;
-            const item = await DB.get([Book.Key, url]);
-            if (item.value == null) {
-                logger.info(`${url},not exits renew`);
-                book = new Book(url);
-            } else {
-                logger.info(`${url},exits`);
-                book = Book.import(item.value as Record);
+            await SingleBook(url);
+        } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search") || Deno.args[0].startsWith("https://e-hentai.org/uploader/")) {
+            const bookLists = await BookList(Deno.args[0]);
+            logger.info(bookLists.length);
+            for (const url of bookLists) {
+                await SingleBook(url);
             }
-            await book.refresh();
-            const record = book.export();
-            logger.info(JSON.stringify(record));
-            const result = await DB.set([Book.Key, url], record);
-            logger.info(`save ${result.ok},${result.versionstamp}`);
-            DB.close();
         }
+        DB.close();
     }
 }

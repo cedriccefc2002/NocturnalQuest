@@ -1,17 +1,17 @@
 import log4js from "log4js";
-const logger = log4js.getLogger(import.meta.filename);
 import { basename, join as pathJoin } from "node:path";
 import { exists } from "@std/fs/exists";
 import { DB, sleep } from "./common.ts";
 import { ImagePage, ImagePageRecord } from "./imagePage.ts";
 
-
+const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 async function imageDownload(img: ImagePageRecord): Promise<ImagePageRecord> {
     try {
         await Deno.mkdir(img.Path, { recursive: true });
         const url = new URL(img.ImagePageUrl);
         const downloadname = basename(url.pathname);
         const save = pathJoin(img.Path, downloadname);
+        logger.info(`${img.ImagePageUrl} -> ${save}`)
         if (await exists(save)) {
             logger.log(`IsExist,${save}`);
             img.IsDownloadFinish = true;
@@ -108,7 +108,41 @@ if (import.meta.main) {
                     logger.info(`save ${result.ok},${result.versionstamp}`);
                 }
             }
-            DB.close();
+
+        }
+    } else {
+        const entries = DB.list({ prefix: [ImagePage.Key] });
+        const pull: ImagePageRecord[] = [];
+        const finish: ImagePageRecord[] = [];
+        let max = 1000;
+        for await (const entry of entries) {
+            const record = entry.value as ImagePageRecord;
+            if (record.IsSuccess) {
+                if (record.IsDownloadFinish) {
+                    continue;
+                } else {
+                    pull.push(record);
+                    max--;
+                }
+                if (max <= 0) {
+                    break;
+                }
+            }
+        }
+        console.log(pull.length);
+        for (const record of pull) {
+            const newRecord = await imageDownload(record);
+            if (newRecord.IsDownloadFinish) {
+                finish.push(newRecord);
+            }
+        }
+        if (finish.length) {
+            for (const image of finish) {
+                // logger.info(JSON.stringify(image));
+                const result = await DB.set([ImagePage.Key, image.BookUrl, image.BookPageUrl, image.Url], image);
+                logger.info(`save ${result.ok},${result.versionstamp}`);
+            }
         }
     }
+    DB.close();
 }
