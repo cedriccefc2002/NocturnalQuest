@@ -43,6 +43,7 @@ type book = {
     url: string;
     pageurls: string[];
     pages: imagePage[];
+    failbookpageurl: string[];
     isSuccess: boolean;
 }
 
@@ -246,6 +247,7 @@ async function book(url: string): Promise<book> {
         title: "",
         url,
         pages: [],
+        failbookpageurl: [],
         pageurls: [],
         isSuccess: false,
     }
@@ -339,15 +341,19 @@ async function readBoof(url: string, startPageNo: number = 1): Promise<book> {
         for (let i = bookData.startPageNo; i <= bookData.maxPage; i++) {
             const bookPage = `${url}?p=${i}`
             logger.log(`bookPage, ${bookPage}`);
-            const { pageurls } = await book(bookPage);
-            for (const element of pageurls) {
-                logger.log(element);
-                const imagePage = await page(element, i);
-                bookData.pages.push(imagePage);
-                if (imagePage.isSuccess && imagePage.imageUrl !== "") {
-                    await sleep(1000);
-                    imagePage.image = await imageDownload(bookData.dir, imagePage.imageUrl)
+            const { pageurls, isSuccess } = await book(bookPage);
+            if (isSuccess) {
+                for (const element of pageurls) {
+                    logger.log(element);
+                    const imagePage = await page(element, i);
+                    bookData.pages.push(imagePage);
+                    if (imagePage.isSuccess && imagePage.imageUrl !== "") {
+                        await sleep(1000);
+                        imagePage.image = await imageDownload(bookData.dir, imagePage.imageUrl)
+                    }
                 }
+            } else {
+                bookData.failbookpageurl.push(bookPage);
             }
         }
     }
@@ -357,6 +363,9 @@ logger.log(JSON.stringify(Deno.args));
 if (Deno.args.length >= 1) {
     if (Deno.args[0].startsWith("https://e-hentai.org/g/")) {
         const bookData = await readBoof(Deno.args[0], Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 1);
+        for (const page of bookData.failbookpageurl) {
+            logger.warn(`${page} , fail`);
+        }
         for (const page of bookData.pages) {
             if (!(page.image?.isSuccess ?? false)) {
                 logger.warn(`${page.url} , fail`);
@@ -381,6 +390,9 @@ if (Deno.args.length >= 1) {
         for (const bookData of bookListData.books) {
             logger.info(`${bookData.url} , ${bookData.title} , ${bookData.isSuccess}`);
             if (bookData.isSuccess) {
+                for (const page of bookData.failbookpageurl) {
+                    logger.warn(`${page} , fail`);
+                }
                 for (const page of bookData.pages) {
                     if (!(page.image?.isSuccess ?? false)) {
                         logger.warn(`${page.url} , fail`);
