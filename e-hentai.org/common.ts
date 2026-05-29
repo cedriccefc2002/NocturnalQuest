@@ -16,6 +16,7 @@ log4js.configure({
         default: { appenders: ['out', 'everything'], level: 'all' }
     }
 });
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const logger = log4js.getLogger(import.meta.filename);
 export const cfg = {
     baseUrl: "https://e-hentai.org",
