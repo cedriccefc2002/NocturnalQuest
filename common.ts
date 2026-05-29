@@ -25,6 +25,19 @@ export function replaceIfFind(source: source, searchString: string, replaceStrin
   }
 }
 
+export async function dirAllFileCounts(path: string, exts: string[]) {
+  let dirFiles: number = 0;
+  for await (const entry of Deno.readDir(path)) {
+    if (entry.isDirectory) {
+      const fullname = pathJoin(path, entry.name);
+      dirFiles += await dirAllFileCounts(fullname, exts);
+    } else if (entry.isFile && exts.indexOf(extname(entry.name)) >= 0) {
+      dirFiles++;
+    }
+  }
+  return dirFiles;
+}
+
 export async function dirAllFiles(path: string, exts: string[]) {
   const dirFiles: string[] = [];
   for await (const entry of Deno.readDir(path)) {
