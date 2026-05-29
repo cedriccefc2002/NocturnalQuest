@@ -28,7 +28,8 @@ interface IConfigItem {
   BaseSources: string[];
   Source: Array<{
     name: string,
-    sources: string[]
+    sources: string[],
+    notIncludeBaseSources?: boolean
   }>;
 }
 interface IStateItem {
@@ -72,7 +73,8 @@ async function LoadAllFiles() {
   const background: { [k: string]: number } = {};
   for (const element of cfg.Background.Source) {
     console.log("scan", element);
-    const files = [...ImageState.Background.BaseSources, ...await loadFrom(element.sources)];
+    const files = element.notIncludeBaseSources ? [] : [...ImageState.Background.BaseSources];
+    files.push(...await loadFrom(element.sources));
     background[element.name] = files.length;
     ImageState.Background.ByType.set(element.name, files);
   }
@@ -81,7 +83,8 @@ async function LoadAllFiles() {
   const monster: { [k: string]: number } = {};
   for (const element of cfg.Monster.Source) {
     console.log("scan", element);
-    const files = [...ImageState.Monster.BaseSources, ...await loadFrom(element.sources)];
+    const files = element.notIncludeBaseSources ? [] : [...ImageState.Background.BaseSources];
+    files.push(...await loadFrom(element.sources));
     monster[element.name] = files.length;
     ImageState.Monster.ByType.set(element.name, files);
   }
@@ -90,7 +93,8 @@ async function LoadAllFiles() {
   const classResult: { [k: string]: number } = {};
   for (const element of cfg.Class.Source) {
     console.log("scan", element);
-    const files = [...ImageState.Class.BaseSources, ...await loadFrom(element.sources)];
+    const files = element.notIncludeBaseSources ? [] : [...ImageState.Background.BaseSources];
+    files.push(...await loadFrom(element.sources));
     classResult[element.name] = files.length;
     ImageState.Class.ByType.set(element.name, files)
   }

@@ -6,51 +6,51 @@ BaseSources = [
 ]
 
 # 地圖
-[[Background.Source]] 
+[[Background.Source]]
 name = "bastion_of_storms"
 sources = []
-[[Background.Source]] 
+[[Background.Source]]
 name = "citadel"
 sources = []
-[[Background.Source]] 
+[[Background.Source]]
 name = "forest_map_2"
 sources = []
-[[Background.Source]] 
+[[Background.Source]]
 name = "dunes_map"
 sources = []
-[[Background.Source]] 
+[[Background.Source]]
 name = "frostbound_spire"
 sources = []
-[[Background.Source]] 
+[[Background.Source]]
 name = "mines_map"
 sources = []
 
 # 職業技能背景
-[[Background.Source]] 
+[[Background.Source]]
 name = "talentsImage"
 sources = []
 # 鍊金術背景
-[[Background.Source]] 
+[[Background.Source]]
 name = "alchemist_bg"
 sources = []
 # 植物學家背景
-[[Background.Source]] 
+[[Background.Source]]
 name = "botanist_bg"
 sources = []
 # 商店背景
-[[Background.Source]] 
+[[Background.Source]]
 name = "shop_bg"
 sources = []
 # 城鎮背景
-[[Background.Source]] 
+[[Background.Source]]
 name = "town_bg"
 sources = []
 # 鐵匠天賦背景
-[[Background.Source]] 
+[[Background.Source]]
 name = "blacksmith_talents_bg"
 sources = []
 # 總部背景
-[[Background.Source]] 
+[[Background.Source]]
 name = "dunes_map"
 sources = []
 
@@ -152,7 +152,9 @@ sources = []
 # Class
 [Class]
 ResizeImage = true
-BaseSources = ["/media/cefc/Data/Data/Source/Cosplay/Neko_薇薇微博图集20250101-20250631/"]
+BaseSources = [
+    "/media/cefc/Data/Data/Source/Cosplay/Neko_薇薇微博图集20250101-20250631/",
+]
 
 [[Class.Source]]
 name = 'lycan'
@@ -206,13 +208,22 @@ sources = []
 
 [[Class.Source]]
 name = 'warrior'
-sources = []
+notIncludeBaseSources = true
+sources = [
+    "/media/cefc/Data/Data/e-hentai/_g_3961667_ed442c835e_/Female Warriors Volume 62 [AI generated]/",
+]
 [[Class.Source]]
 name = 'warrior_blood'
-sources = []
+sources = [
+    "/media/cefc/Data/Data/e-hentai/_g_3961667_ed442c835e_/Female Warriors Volume 62 [AI generated]/",
+]
+notIncludeBaseSources = true
 [[Class.Source]]
 name = 'warrior_protection'
-sources = []
+sources = [
+    "/media/cefc/Data/Data/e-hentai/_g_3961667_ed442c835e_/Female Warriors Volume 62 [AI generated]/",
+]
+notIncludeBaseSources = true
 
 [[Class.Source]]
 name = 'wizard'
