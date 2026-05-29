@@ -45,6 +45,7 @@ type book = {
     pages: imagePage[];
     failbookpageurl: string[];
     isSuccess: boolean;
+    totalImages: number;
 }
 
 type bookList = {
@@ -239,6 +240,7 @@ async function page(url: string, pageIndex: number): Promise<imagePage> {
     return result;
 }
 
+const p = /Showing [\d]* - [\d]* of ([\d]+) images/;
 async function book(url: string): Promise<book> {
     const result: book = {
         dir: "",
@@ -250,6 +252,7 @@ async function book(url: string): Promise<book> {
         failbookpageurl: [],
         pageurls: [],
         isSuccess: false,
+        totalImages: -1,
     }
     try {
         let maxPage: number = 0
@@ -282,6 +285,13 @@ async function book(url: string): Promise<book> {
             const doc = new DOMParser().parseFromString(html, "text/html");
             const title = doc.querySelector("H1#gn")?.textContent ?? "";
             const links = doc.querySelectorAll("a")!;
+            const totalmsg = doc.querySelector(".gpc");
+            if (totalmsg) {
+                const match = totalmsg.textContent.match(p);
+                if (match) {
+                    result.totalImages = parseInt(match[1]);
+                }
+            }
             const pageurls: string[] = [];
             for (const element of links) {
                 const href = element.getAttribute("href");
@@ -363,6 +373,9 @@ logger.log(JSON.stringify(Deno.args));
 if (Deno.args.length >= 1) {
     if (Deno.args[0].startsWith("https://e-hentai.org/g/")) {
         const bookData = await readBoof(Deno.args[0], Deno.args.length >= 2 ? parseInt(Deno.args[1]) : 1);
+        if (bookData.totalImages != bookData.pages.length) {
+            logger.warn(`totalImages ${bookData.totalImages}!= ${bookData.pages.length}`);
+        }
         for (const page of bookData.failbookpageurl) {
             logger.warn(`${page} , fail`);
         }
@@ -390,6 +403,9 @@ if (Deno.args.length >= 1) {
         for (const bookData of bookListData.books) {
             logger.info(`${bookData.url} , ${bookData.title} , ${bookData.isSuccess}`);
             if (bookData.isSuccess) {
+                if (bookData.totalImages != bookData.pages.length) {
+                    logger.warn(`totalImages ${bookData.totalImages}!= ${bookData.pages.length}`);
+                }
                 for (const page of bookData.failbookpageurl) {
                     logger.warn(`${page} , fail`);
                 }
