@@ -82,16 +82,18 @@ async function SingleBookPage(book: Book, index: number = 0) {
         bookPage = await BookPage.createFromBook(book, index);
         const record = bookPage.export();
         // logger.info(JSON.stringify(record));
-        const result = await DB.set([BookPage.Key, book.Url, bookPage.Url], record);
-        logger.info(`save ${result.ok},${result.versionstamp}`);
+        await DB.set([BookPage.Key, book.Url, bookPage.Url], record);
+        logger.info(`save,${book.Url},${bookPage.Url}`);
     } else {
         bookPage = BookPage.import(item.value as BookPageRecord);
         if (!bookPage.IsSuccess || bookPage.Pages.length === 0) {
             await bookPage.refresh();
-            const record = bookPage.export();
-            // logger.info(JSON.stringify(record));
-            const result = await DB.set([BookPage.Key, book.Url, bookPage.Url], record);
-            logger.info(`save ${result.ok},${result.versionstamp}`);
+            if (bookPage.IsSuccess && bookPage.Pages.length > 0) {
+                const record = bookPage.export();
+                // logger.info(JSON.stringify(record));
+                await DB.set([BookPage.Key, book.Url, bookPage.Url], record);
+                logger.info(`refresh,${book.Url},${bookPage.Url}`);
+            }
         }
     }
 }

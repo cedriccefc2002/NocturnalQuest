@@ -57,7 +57,10 @@ sources = []
 # Monster
 [Monster]
 ResizeImage = false
-BaseSources = ["/media/cefc/Data/Data/Source/Cosplay/Neko_薇薇微博图集2026/"]
+BaseSources = [
+    "/media/cefc/Data/Data/Source/Cosplay/Neko_薇薇微博图集2026/",
+    "/media/cefc/Data/Data/e-hentai/_g_3401944_d5461206dc_/Realistic AI works 仿真AI作品 05 [AI Generated]/"
+]
 [[Monster.Source]]
 name = "acolyte"
 sources = []

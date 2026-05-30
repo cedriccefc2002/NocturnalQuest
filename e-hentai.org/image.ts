@@ -168,13 +168,24 @@ if (import.meta.main) {
                 logger.log(`has finished=${j},process ${pull.length}`);
                 if (pull.length > 0) {
                     let i = 0;
+                    const tasks: Promise<undefined>[] = [];
                     for (const record of pull) {
-                        const newRecord = await imageDownload(record);
-                        if (newRecord.IsDownloadFinish) {
-                            await DB.set([ImagePage.Key, record.BookUrl, record.BookPageUrl, record.Url], record);
-                        }
-                        if (++i % 10 === 0) {
-                            logger.info(`finish,${++i}/${pull.length}`);
+                        tasks.push((async () => {
+                            try {
+                                const newRecord = await imageDownload(record);
+                                if (newRecord.IsDownloadFinish) {
+                                    await DB.set([ImagePage.Key, record.BookUrl, record.BookPageUrl, record.Url], record);
+                                }
+                                if (++i % 10 === 0) {
+                                    logger.info(`finish,${i}/${pull.length}`);
+                                }
+                            } catch (error) {
+                                logger.error(`${error}`)
+                            }
+                        })());
+                        if (tasks.length > 1) {
+                            await Promise.all(tasks);
+                            tasks.length = 0;
                         }
                     }
                 } else { run = false; }
