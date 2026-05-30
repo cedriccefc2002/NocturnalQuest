@@ -2,8 +2,10 @@ import { parse } from "@std/toml";
 import { contentType } from "@std/media-types";
 import { extname } from "node:path";
 import { ImageMagick, IMagickImage, initialize, MagickFormat } from "imagemagick";
+import { renderToString } from "preact-render-to-string";
 
 import { dirAllFiles } from "./common.ts"
+import { App } from "./components/index.tsx"
 
 // ImageMagick initialize
 await initialize();
@@ -37,10 +39,15 @@ interface IStateItem {
   ByType: Map<string, string[]>;
 }
 const ImageState: {
+  IndexImgs: IStateItem,
   Background: IStateItem,
   Monster: IStateItem;
   Class: IStateItem;
 } = {
+  IndexImgs: {
+    BaseSources: [],
+    ByType: new Map()
+  },
   Background: {
     BaseSources: [],
     ByType: new Map()
@@ -57,6 +64,7 @@ const ImageState: {
 
 const RouteMap = new Map<URLPattern, (req: Request, match: URLPatternResult) => Promise<Response>>();
 const cfg = parse(Deno.readTextFileSync("server.toml")) as {
+  IndexImgs: IConfigItem,
   Background: IConfigItem,
   Monster: IConfigItem;
   Class: IConfigItem;
@@ -65,9 +73,11 @@ const cfg = parse(Deno.readTextFileSync("server.toml")) as {
     port: number;
     hostname: string;
     img_cache_control_max_age: number;
+    index_img_refresh_sec: number;
   }
 };
 async function LoadAllFiles() {
+  ImageState.IndexImgs.BaseSources = await loadFrom(cfg.IndexImgs.BaseSources);
   ImageState.Background.BaseSources = await loadFrom(cfg.Background.BaseSources);
   ImageState.Monster.BaseSources = await loadFrom(cfg.Monster.BaseSources);
   const background: { [k: string]: number } = {};
@@ -100,6 +110,7 @@ async function LoadAllFiles() {
   }
 
   return {
+    IndexImgs: ImageState.IndexImgs.BaseSources.length,
     Background: background,
     Monster: monster,
     Class: classResult
@@ -145,8 +156,10 @@ async function RandImageAndResize(images: string[]) {
 
 RouteMap.set(new URLPattern({ pathname: "/" }), () => {
   return new Promise((resolve) => {
-    const body = JSON.stringify([...RouteMap.keys().map(x => x.pathname)])
-    resolve(new Response(body))
+    const html = `<!DOCTYPE html>${renderToString(App(cfg.Server.index_img_refresh_sec))}`;
+    resolve(new Response(html, {
+      headers: { "Content-Type": "text/html; charset=utf-8" },
+    }))
   });
 });
 
@@ -216,6 +229,21 @@ RouteMap.set(new URLPattern({ pathname: "/image/monster/:type/:id" }), async (re
 });
 
 /**
+ * const url = `http://127.0.0.1:8000/image/IndexImgs/0/${Date.now()}`;
+ */
+RouteMap.set(new URLPattern({ pathname: "/image/IndexImgs/:type/:id" }), () => {
+  return StreamRandImage(ImageState.IndexImgs.BaseSources);
+});
+
+
+/**
+ * const url = `http://127.0.0.1:8000/image/rand/${Date.now()}`;
+ */
+RouteMap.set(new URLPattern({ pathname: "/image/rand/:id" }), () => {
+  return StreamRandImage(ImageState.Background.BaseSources);
+});
+
+/**
  * const url = `http://127.0.0.1:8000/image/rand/${Date.now()}`;
  */
 RouteMap.set(new URLPattern({ pathname: "/image/rand/:id" }), () => {
@@ -245,5 +273,3 @@ Deno.serve({ port: cfg.Server.port, hostname: cfg.Server.hostname }, async (req)
     status: 404,
   });
 });
-
-

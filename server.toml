@@ -1,4 +1,13 @@
 exts = [".webp", ".jpg", ".png", ".gif"]
+
+# IndexImgs
+[IndexImgs]
+BaseSources = [
+    "/media/cefc/Data/Data/Source/",
+    "/media/cefc/Data/Data/tuoyiku/",
+    "/media/cefc/Data/Data/e-hentai/"
+]
+
 # BaseSources
 [Background]
 BaseSources = [
@@ -59,7 +68,7 @@ sources = []
 ResizeImage = false
 BaseSources = [
     "/media/cefc/Data/Data/Source/Cosplay/Neko_薇薇微博图集2026/",
-    "/media/cefc/Data/Data/e-hentai/_g_3401944_d5461206dc_/Realistic AI works 仿真AI作品 05 [AI Generated]/"
+    "/media/cefc/Data/Data/e-hentai/_g_3401944_d5461206dc_/Realistic AI works 仿真AI作品 05 [AI Generated]/",
 ]
 [[Monster.Source]]
 name = "acolyte"
@@ -243,3 +252,4 @@ sources = []
 port = 8000
 hostname = "127.0.0.1"
 img_cache_control_max_age = 600
+index_img_refresh_sec = 10
