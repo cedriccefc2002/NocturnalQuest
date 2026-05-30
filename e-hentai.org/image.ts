@@ -135,7 +135,6 @@ if (import.meta.main) {
             do {
                 const entries = DB.list({ prefix: [ImagePage.Key] });
                 const pull: ImageRecord[] = [];
-                const finish: ImageRecord[] = [];
                 let max = 100;
                 let j = 0;
                 for await (const entry of entries) {
@@ -151,7 +150,7 @@ if (import.meta.main) {
                         break;
                     }
                 }
-                console.log(`finish ${j}`);
+                console.log(`has finished=${j},process ${pull.length}`);
                 if (pull.length > 0) {
                     let i = 0;
                     for (const record of pull) {
@@ -160,7 +159,7 @@ if (import.meta.main) {
                             await DB.set([ImagePage.Key, record.BookUrl, record.BookPageUrl, record.Url], record);
                         }
                         if (++i % 10 === 0) {
-                            logger.info(`finish,${++i}/${finish.length}`);
+                            logger.info(`finish,${++i}/${pull.length}`);
                         }
                     }
                 } else { run = false; }
