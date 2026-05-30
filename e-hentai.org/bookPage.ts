@@ -98,29 +98,16 @@ async function SingleBookPage(book: Book, index: number = 0) {
 if (import.meta.main) {
     if (Deno.args.length >= 1) {
         const url = Deno.args[0];
-        // deno task e-hentai.bookPage https://e-hentai.org/g/3962355/69690a454f/
         if (url.startsWith("https://e-hentai.org/g/")) {
-            let book: Book | undefined;
-            const item = await DB.get([Book.Key, url]);
-            if (item.value == null) {
-                logger.info(`${url},not exits renew`);
-                book = new Book(url);
-                await book.refresh();
-            } else {
-                logger.info(`${url},exits`);
-                book = Book.import(item.value as BookRecord);
-            }
-            const bookPage = await BookPage.createFromBook(book);
-            const record = bookPage.export();
-            logger.info(JSON.stringify(record));
-            const result = await DB.set([BookPage.Key, book.Url, bookPage.Url], record);
-            logger.info(`save ${result.ok},${result.versionstamp}`);
-            for (let index = 0; index < book.ExtendPageCount; index++) {
-                const bookPage = await BookPage.createFromBook(book, index + 1);
-                const record = bookPage.export();
-                logger.info(JSON.stringify(record));
-                const result = await DB.set([BookPage.Key, book.Url, bookPage.Url], record);
-                logger.info(`save ${result.ok},${result.versionstamp}`);
+            const entry = await DB.get([Book.Key, url]);
+            if (entry.value !== null) {
+                const book = Book.import(entry.value as BookRecord);
+                await SingleBookPage(book, 0);
+                logger.info(`${url}`);
+                for (let index = 0; index < book.ExtendPageCount; index++) {
+                    logger.info(`${url}, ${index}/${book.ExtendPageCount}`);
+                    await SingleBookPage(book, index + 1);
+                }
             }
         } else if (url === "clear") {
             const entries = DB.list({ prefix: [BookPage.Key] });

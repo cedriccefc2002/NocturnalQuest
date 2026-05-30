@@ -122,7 +122,7 @@ async function SingleBook(url: string) {
     let needSave = false;
     const item = await DB.get([Book.Key, url]);
     if (item.value == null) {
-        logger.info(`${url},not exits renew`);
+        logger.info(`${url},not exits create`);
         book = new Book(url);
         await book.refresh();
         needSave = true;

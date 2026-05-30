@@ -58,16 +58,14 @@ if (import.meta.main) {
         // deno task e-hentai.imagePage https://e-hentai.org/g/3962355/69690a454f/
         if (url.startsWith("https://e-hentai.org/g/")) {
             const entries = DB.list({ prefix: [BookPage.Key, url] });
+            let i = 0;
             for await (const entry of entries) {
                 logger.info(`${entry.key}`);
                 const bookPage = BookPage.import(entry.value as BookPageRecord);
                 if (bookPage.IsSuccess) {
                     for (const urlPath of bookPage.Pages) {
-                        const image = ImagePage.createFromBookPage(bookPage, urlPath);
-                        const record = image.export();
-                        // logger.info(JSON.stringify(record));
-                        const result = await DB.set([ImagePage.Key, image.BookUrl, image.BookPageUrl, image.Url], record);
-                        logger.info(`save ${result.ok},${result.versionstamp}`);
+                        logger.info(`${url},${urlPath},${++i}`);
+                        await SingleImagePage(bookPage, urlPath);
                     }
                 }
 

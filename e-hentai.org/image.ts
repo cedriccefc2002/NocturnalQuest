@@ -28,9 +28,9 @@ async function imageDownload(record: ImageRecord): Promise<ImageRecord> {
             const url = new URL(record.ImagePageUrl);
             const downloadname = basename(url.pathname);
             const save = pathJoin(record.Path, downloadname);
-            logger.info(`${record.Url} -> ${save}`)
+            // logger.info(`${record.Url} -> ${save}`)
             if (await exists(save)) {
-                logger.log(`IsExist,${save}`);
+                logger.log(`IsExist,${record.Url}`);
                 record.IsDownloadFinish = true;
                 record.IsExist = true;
                 return { ...record };
@@ -64,7 +64,7 @@ async function imageDownload(record: ImageRecord): Promise<ImageRecord> {
                         });
                         break;
                     } catch (error) {
-                        logger.log(`retry, ${error},${record.Url},${index}`);
+                        logger.log(`Fecth Header Error,${record.Url},${error},retry ${index}`);
                         await sleep(10000);
                         continue;
                     } finally {
@@ -72,7 +72,7 @@ async function imageDownload(record: ImageRecord): Promise<ImageRecord> {
                     }
                 }
                 if (response?.ok) {
-                    logger.log(`ok,${save}`);
+                    logger.log(`ok,${record.Url}`);
                     // Open (or create) the file for writing
                     const saveTemp = `${save}.download`;
                     const file = await Deno.open(saveTemp, { create: true, write: true });
@@ -84,7 +84,7 @@ async function imageDownload(record: ImageRecord): Promise<ImageRecord> {
                         return { ...record };
                     }
                     await Deno.rename(saveTemp, save)
-                    logger.log(`finish,${save}`);
+                    logger.log(`finish,${record.Url}`);
                     record.IsDownloadFinish = true;
                     return { ...record };
                 } else {
@@ -128,6 +128,21 @@ if (import.meta.main) {
                 }
             }
 
+        } else if (url === "count") {
+            const entries = DB.list({ prefix: [ImagePage.Key] });
+            let i = 0, j = 0;
+            for await (const entry of entries) {
+                const record = entry.value as ImageRecord;
+                if (record.IsDownloadFinish) {
+                    j++;
+                } else {
+                    i++
+                }
+                if ((i + j) % 1000 === 0) {
+                    logger.log(`read ${i + j}`);
+                }
+            }
+            logger.log(`tatal ${i + j}, ${i} for process , ${j} IsDownloadFinish`);
         }
     } else {
         try {
@@ -150,7 +165,7 @@ if (import.meta.main) {
                         break;
                     }
                 }
-                console.log(`has finished=${j},process ${pull.length}`);
+                logger.log(`has finished=${j},process ${pull.length}`);
                 if (pull.length > 0) {
                     let i = 0;
                     for (const record of pull) {
