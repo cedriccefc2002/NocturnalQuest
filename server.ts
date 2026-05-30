@@ -15,7 +15,7 @@ function resizeImage(data: Uint8Array<ArrayBuffer>): Uint8Array<ArrayBuffer> {
     // 395x564
     img.resize(395, 564);
     // img.blur(20, 6);
-    img.write(MagickFormat.Jpeg, (x) => { resp = x as Uint8Array<ArrayBuffer> });
+    img.write(MagickFormat.Png, (x) => { resp = x as Uint8Array<ArrayBuffer> });
   });
   return resp;
 }
@@ -136,7 +136,7 @@ async function RandImageAndResize(images: string[]) {
   const data = await Deno.readFile(filename);
   return new Response(resizeImage(data), {
     headers: {
-      "content-type": "image/Jpeg",
+      "content-type": "image/png",
       "cache-control": `public, max-age=${cfg.Server.img_cache_control_max_age}, immutable` // 讓遊戲可以預載資源後減少切換閃爍
     }
   });

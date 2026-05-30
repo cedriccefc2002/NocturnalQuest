@@ -130,44 +130,43 @@ if (import.meta.main) {
 
         }
     } else {
-        const entries = DB.list({ prefix: [ImagePage.Key] });
-        const pull: ImageRecord[] = [];
-        const finish: ImageRecord[] = [];
-        let max = 1000;
-        let j = 0;
-        for await (const entry of entries) {
-            const record = entry.value as ImageRecord;
-            if (record.IsDownloadFinish) {
-                j++;
-                continue;
-            } else {
-                pull.push(record);
-                max--;
-            }
-            if (max <= 0) {
-                break;
-            }
-        }
-        console.log(`finish ${j}`);
-        console.log(pull.length);
-        let i = 0;
-        for (const record of pull) {
-            logger.info(`pull,${++i}/${pull.length}`);
-            const newRecord = await imageDownload(record);
-            if (newRecord.IsDownloadFinish) {
-                finish.push(newRecord);
-            }
-        }
-        i = 0;
-        if (finish.length > 0) {
-            for (const image of finish) {
-                ++i;
-                if (i % 50 === 0) {
-                    logger.info(`finish,${++i}/${finish.length}`);
+        try {
+            let run = true;
+            do {
+                const entries = DB.list({ prefix: [ImagePage.Key] });
+                const pull: ImageRecord[] = [];
+                const finish: ImageRecord[] = [];
+                let max = 100;
+                let j = 0;
+                for await (const entry of entries) {
+                    const record = entry.value as ImageRecord;
+                    if (record.IsDownloadFinish) {
+                        j++;
+                        continue;
+                    } else {
+                        pull.push(record);
+                        max--;
+                    }
+                    if (max <= 0) {
+                        break;
+                    }
                 }
-                await DB.set([ImagePage.Key, image.BookUrl, image.BookPageUrl, image.Url], image);
-                // logger.info(`save ${result.ok},${result.versionstamp}`);
-            }
+                console.log(`finish ${j}`);
+                if (pull.length > 0) {
+                    let i = 0;
+                    for (const record of pull) {
+                        const newRecord = await imageDownload(record);
+                        if (newRecord.IsDownloadFinish) {
+                            await DB.set([ImagePage.Key, record.BookUrl, record.BookPageUrl, record.Url], record);
+                        }
+                        if (++i % 10 === 0) {
+                            logger.info(`finish,${++i}/${finish.length}`);
+                        }
+                    }
+                } else { run = false; }
+            } while (run)
+        } catch (error) {
+            logger.error(`${error}`)
         }
     }
     DB.close();
