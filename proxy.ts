@@ -23,6 +23,8 @@ function IsPass(x: proxy) {
     if(x.proxy.startsWith("http://23.106")) return false;
     if(x.proxy.startsWith("http://45.56")) return false;
     if(x.proxy.startsWith("http://84.17")) return false;
+    if(x.proxy.startsWith("http://37.120")) return false;
+    // http://37.120.233.34:9443
     // http://84.17.50.193:9443
     // http://45.56.228.8:443 
     // http://23.106.56.54:6157

@@ -138,7 +138,9 @@ if (import.meta.main) {
                 bookList.push(Book.import(record));
             }
         }
+        let i = 0;
         for (const book of bookList) {
+            logger.info(`bookList,${++i}/${bookList.length}`);
             await SingleBookPage(book, 0);
             for (let index = 0; index < book.ExtendPageCount; index++) {
                 await SingleBookPage(book, index + 1);
