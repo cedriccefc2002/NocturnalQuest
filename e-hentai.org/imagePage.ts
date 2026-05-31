@@ -1,8 +1,7 @@
 import log4js from "log4js";
 import { basename } from "node:path";
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
-import { cfg, DB, fetchHtml } from "./common.ts";
-import { DOMParser } from "@b-fuze/deno-dom";
+import { cfg, DB } from "./common.ts";
 import { BookPage, BookPageRecord } from "./bookPage.ts";
 
 export type ImagePageRecord = {

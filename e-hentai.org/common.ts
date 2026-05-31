@@ -1,4 +1,4 @@
-import { join as pathJoin } from "node:path";
+import { join as pathJoin, basename } from "node:path";
 import log4js from "log4js";
 import { getRandomPxoxy } from "../proxy.ts";
 log4js.configure({
@@ -6,10 +6,11 @@ log4js.configure({
         out: { type: 'stdout' },
         everything: {
             type: 'dateFile',
-            filename: 'logs/e-hentai.org.log',      // Base filename
+            filename: 'logs/hentai.log',      // Base filename
             pattern: 'yyyy-MM-dd-hh',         // Date format for rolling
             alwaysIncludePattern: true,    // Include date in the current log filename
-            keepFileExt: true              // Keep .log extension at the end (e.g., app.2024-05-27.log)
+            keepFileExt: true,              // Keep .log extension at the end (e.g., app.2024-05-27.log)
+            daysToKeep: 7,
         }
     },
     categories: {
@@ -17,7 +18,7 @@ log4js.configure({
     }
 });
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-const logger = log4js.getLogger(import.meta.filename);
+const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 export const cfg = {
     baseUrl: "https://e-hentai.org",
     basedir: "/media/cefc/Data/Data/e-hentai",
@@ -66,10 +67,10 @@ export async function fetchHtml(url: string, useProxy: boolean, timeoutSec: numb
             "signal": c.signal,
             client: useProxy ? client : undefined,
         });
-        if(resp.ok){
+        if (resp.ok) {
             const html = await resp.text();
             return [true, html];
-        } else{
+        } else {
             logger.log(`retry, ${resp.statusText},${url}`);
             return [false, undefined];
         }

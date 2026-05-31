@@ -19,6 +19,22 @@ function parseHtml(record: ImageRecord, html: string) {
     }
 }
 
+// async function connect(url: URL) {
+//     if (url.protocol === "https:") {
+//         return await Deno.connectTls({
+//             hostname: url.hostname,
+//             port: parseInt(url.port),
+//             unsafelyDisableHostnameVerification: true,
+//             alpnProtocols: ["h2", "http/1.1"]
+//         });
+//     } else {
+//         return await Deno.connect({
+//             hostname: url.hostname,
+//             port: parseInt(url.port),
+//         });
+//     }
+// }
+
 async function imageDownload(record: ImageRecord): Promise<ImageRecord> {
     try {
         const [isSuccess, html] = await fetchHtml(record.Url, true, 30);
@@ -40,6 +56,21 @@ async function imageDownload(record: ImageRecord): Promise<ImageRecord> {
                     const c = new AbortController();
                     const id = setTimeout(() => c.abort(), 10000);
                     try {
+                        const client = Deno.createHttpClient({ })
+                        /*
+                        fetch("https://pncjvjv.xrfkbwxztgmu.hath.network:4443/h/e3b3700d302626129b5c9e131acc73f851796bb4-226058-1280-1280-wbp/keystamp=1780155600-2d4b3c5286;fileindex=204827399;xres=1280/ComfyUI_temp_haiak_00001_.webp", {
+                          "headers": {
+                            "sec-ch-ua": "\"Chromium\";v=\"148\", \"Google Chrome\";v=\"148\", \"Not/A)Brand\";v=\"99\"",
+                            "sec-ch-ua-mobile": "?0",
+                            "sec-ch-ua-platform": "\"Linux\""
+                          },
+                          "referrer": "https://e-hentai.org/",
+                          "body": null,
+                          "method": "GET",
+                          "mode": "cors",
+                          "credentials": "omit"
+                        });
+                        */
                         response = await fetch(url, {
                             "headers": {
                                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -174,7 +205,7 @@ if (import.meta.main) {
                             try {
                                 const newRecord = await imageDownload(record);
                                 if (newRecord.IsDownloadFinish) {
-                                    await DB.set([ImagePage.Key, record.BookUrl, record.BookPageUrl, record.Url], record);
+                                    await DB.set([ImagePage.Key, newRecord.BookUrl, newRecord.BookPageUrl, newRecord.Url], newRecord);
                                 }
                                 if (++i % 10 === 0) {
                                     logger.info(`finish,${i}/${pull.length}`);
