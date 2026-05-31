@@ -52,11 +52,11 @@ async function imageDownload(record: ImageRecord): Promise<ImageRecord> {
                 return { ...record };
             } else {
                 let response: Response | undefined = undefined;
-                for (let index = 0; index < 5; index++) {
+                for (let index = 0; index < 3; index++) {
                     const c = new AbortController();
                     const id = setTimeout(() => c.abort(), 10000);
                     try {
-                        const client = Deno.createHttpClient({ })
+                        // const client = Deno.createHttpClient({ })
                         /*
                         fetch("https://pncjvjv.xrfkbwxztgmu.hath.network:4443/h/e3b3700d302626129b5c9e131acc73f851796bb4-226058-1280-1280-wbp/keystamp=1780155600-2d4b3c5286;fileindex=204827399;xres=1280/ComfyUI_temp_haiak_00001_.webp", {
                           "headers": {

@@ -8,7 +8,7 @@ log4js.configure({
             pattern: 'yyyy-MM-dd-hh',         // Date format for rolling
             alwaysIncludePattern: true,    // Include date in the current log filename
             keepFileExt: true,              // Keep .log extension at the end (e.g., app.2024-05-27.log)
-            daysToKeep: 7,
+            numBackups: 168,
         }
     },
     categories: {
