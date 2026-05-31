@@ -173,7 +173,7 @@ if (import.meta.main) {
                     logger.log(`read ${i + j}`);
                 }
             }
-            logger.log(`tatal ${i + j}, ${i} for process , ${j} IsDownloadFinish`);
+            logger.log(`total ${i + j}, ${i} for process , ${j} IsDownloadFinish`);
         }
     } else {
         try {
