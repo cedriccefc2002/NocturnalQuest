@@ -169,7 +169,7 @@ if (import.meta.main) {
                 } else {
                     i++
                 }
-                if ((i + j) % 1000 === 0) {
+                if ((i + j) % 10000 === 0) {
                     logger.log(`read ${i + j}`);
                 }
             }

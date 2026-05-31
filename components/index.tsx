@@ -3,7 +3,7 @@ import { CSSProperties } from "preact/src/dom.d.ts";
 export function App(refreshSec: number) {
   const img = () => `/image/IndexImgs/0/${crypto.randomUUID()}`;
   const imgCss: CSSProperties = { width: "100vh", height: "100vh", maxWidth: "100%", maxHeight: "100vh", objectFit: "contain" };
-  const now = `${(new Date()).toLocaleTimeString()} Refresh Every ${refreshSec} seconds , click or page down to refr3esh now`;
+  const now = `${(new Date()).toLocaleTimeString()} Refresh Every ${refreshSec} seconds , click or page down to refresh now`;
   return (
     <html>
       <header>
