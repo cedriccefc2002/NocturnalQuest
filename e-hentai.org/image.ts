@@ -196,6 +196,21 @@ if (import.meta.main) {
                 }
             }
             logger.log(`total ${i + j}, ${i} for process , ${j} IsDownloadFinish`);
+        } else if (url === "list" && Deno.args.length >= 2) {
+            const entries = DB.list({ prefix: [ImagePage.Key, Deno.args[1]] });
+            for await (const entry of entries) {
+                logger.log(`${JSON.stringify(entry.key)},${entry.versionstamp},${JSON.stringify(entry.value)}`);
+            }
+        } else if (url === "set_finish" && Deno.args.length >= 4) {
+            const entry = await DB.get([ImagePage.Key, Deno.args[1], Deno.args[2], Deno.args[3]]);
+            if (entry) {
+                const image = entry.value as ImageRecord;
+                image.IsDownloadFinish = true;
+                await DB.set([ImagePage.Key, image.BookUrl, image.BookPageUrl, image.Url], image);
+                logger.info(`update finish`);
+            } else {
+                logger.info(`not find`);
+            }
         }
     } else {
         try {
