@@ -2,9 +2,9 @@ import log4js from "log4js";
 import { basename, join as pathJoin } from "node:path";
 import { DOMParser } from "@b-fuze/deno-dom";
 import { exists } from "@std/fs/exists";
-import { DB, fetchHtml, sleep } from "./common.ts";
+import { OpenDB, fetchHtml, sleep } from "./common.ts";
 import { ImagePage, ImagePageRecord } from "./imagePage.ts";
-
+const DB = await OpenDB();
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 
 export type ImageRecord = ImagePageRecord & {

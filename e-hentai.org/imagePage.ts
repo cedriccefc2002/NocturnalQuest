@@ -1,9 +1,9 @@
 import log4js from "log4js";
 import { basename } from "node:path";
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
-import { cfg, DB } from "./common.ts";
+import { cfg, OpenDB } from "./common.ts";
 import { BookPage, BookPageRecord } from "./bookPage.ts";
-
+const DB = await OpenDB();
 export type ImagePageRecord = {
     BookUrl: string,
     BookPageUrl: string,

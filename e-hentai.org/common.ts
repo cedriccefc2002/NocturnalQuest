@@ -24,14 +24,16 @@ export const cfg = {
     basedir: "/media/cefc/Data/Data/e-hentai",
     exts: [".webp", ".jpg", ".png", ".gif"]
 }
-const dbPath = pathJoin(cfg.basedir, "index.db");
-logger.info(`OpenDB`);
-export const DB = await Deno.openKv(dbPath);
 
+export async function OpenDB() {
+    const dbPath = pathJoin(cfg.basedir, "index.db");
+    logger.info(`OpenDB`);
+    return await Deno.openKv(dbPath);
+}
 
 let client = await getRandomPxoxy();
 let lastChangeProxyUpdate = 0;
-async function ChangeProxyUpdate(force: boolean = false) {
+export async function ChangeProxyUpdate(force: boolean = false) {
     // 強制或是超過30分鐘
     if (force || (Date.now() - lastChangeProxyUpdate) > 1000 * 60 * 30) {
         client = await getRandomPxoxy();

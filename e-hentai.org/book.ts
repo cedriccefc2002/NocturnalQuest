@@ -1,8 +1,9 @@
 import log4js from "log4js";
 import { basename } from "node:path";
-import { DB, fetchHtml } from "./common.ts";
+import { OpenDB, fetchHtml } from "./common.ts";
 import { DOMParser } from "@b-fuze/deno-dom";
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
+const DB = await OpenDB();
 export type BookRecord = {
     Url: string,
     Path?: string;
@@ -152,6 +153,16 @@ if (import.meta.main) {
             logger.info(bookLists.length);
             for (const url of bookLists) {
                 await SingleBook(url);
+            }
+        } else if (url === "uploader") {
+            for (const element of Deno.args.slice(1)) {
+                const bookList = `https://e-hentai.org/uploader/${element}`;
+                logger.info(`read ${bookList}`);
+                const bookLists = await BookList(bookList);
+                logger.info(bookLists.length);
+                for (const url of bookLists) {
+                    await SingleBook(url);
+                }
             }
         }
         DB.close();

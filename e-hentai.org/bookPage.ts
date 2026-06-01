@@ -1,10 +1,10 @@
 import log4js from "log4js";
 import { join as pathJoin, basename } from "node:path";
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
-import { cfg, DB, fetchHtml } from "./common.ts";
+import { cfg, OpenDB, fetchHtml } from "./common.ts";
 import { DOMParser } from "@b-fuze/deno-dom";
 import { Book, BookRecord } from "./book.ts";
-
+const DB = await OpenDB();
 export type BookPageRecord = {
     BookUrl: string,
     Url: string,
