@@ -4,7 +4,6 @@ const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 import { cfg, OpenDB, fetchHtml } from "./common.ts";
 import { DOMParser } from "@b-fuze/deno-dom";
 import { Book, BookRecord } from "./book.ts";
-const DB = await OpenDB();
 export type BookPageRecord = {
     BookUrl: string,
     Url: string,
@@ -75,7 +74,7 @@ export class BookPage {
         return bookPage;
     };
 }
-async function SingleBookPage(book: Book, index: number = 0) {
+async function SingleBookPage(book: Book, DB: Deno.Kv, index: number = 0) {
     const item = await DB.get([BookPage.Key, book.Url, BookPage.createUrl(book, index)]);
     let bookPage: BookPage | undefined;
     if (item.value == null) {
@@ -98,17 +97,18 @@ async function SingleBookPage(book: Book, index: number = 0) {
     }
 }
 if (import.meta.main) {
+    const DB = await OpenDB();
     if (Deno.args.length >= 1) {
         const url = Deno.args[0];
         if (url.startsWith("https://e-hentai.org/g/")) {
             const entry = await DB.get([Book.Key, url]);
             if (entry.value !== null) {
                 const book = Book.import(entry.value as BookRecord);
-                await SingleBookPage(book, 0);
+                await SingleBookPage(book, DB, 0);
                 logger.info(`${url}`);
                 for (let index = 0; index < book.ExtendPageCount; index++) {
                     logger.info(`${url}, ${index}/${book.ExtendPageCount}`);
-                    await SingleBookPage(book, index + 1);
+                    await SingleBookPage(book, DB, index + 1);
                 }
             }
         } else if (url === "clear") {
@@ -130,9 +130,9 @@ if (import.meta.main) {
         let i = 0;
         for (const book of bookList) {
             logger.info(`bookList,${++i}/${bookList.length}`);
-            await SingleBookPage(book, 0);
+            await SingleBookPage(book, DB, 0);
             for (let index = 0; index < book.ExtendPageCount; index++) {
-                await SingleBookPage(book, index + 1);
+                await SingleBookPage(book, DB, index + 1);
             }
         }
     }

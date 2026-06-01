@@ -3,7 +3,6 @@ import { basename } from "node:path";
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 import { cfg, OpenDB } from "./common.ts";
 import { BookPage, BookPageRecord } from "./bookPage.ts";
-const DB = await OpenDB();
 export type ImagePageRecord = {
     BookUrl: string,
     BookPageUrl: string,
@@ -40,7 +39,7 @@ export class ImagePage {
         return imagePage;
     };
 }
-async function SingleImagePage(bookPage: BookPage, urlPath: string) {
+async function SingleImagePage(bookPage: BookPage, urlPath: string, DB: Deno.Kv) {
     const item = await DB.get([ImagePage.Key, bookPage.BookUrl, bookPage.Url, ImagePage.createUrl(urlPath)]);
     let image: ImagePage | undefined;
     if (item.value == null) {
@@ -52,6 +51,7 @@ async function SingleImagePage(bookPage: BookPage, urlPath: string) {
     }
 }
 if (import.meta.main) {
+    const DB = await OpenDB();
     if (Deno.args.length >= 1) {
         const url = Deno.args[0];
         // deno task e-hentai.imagePage https://e-hentai.org/g/3962355/69690a454f/
@@ -64,7 +64,7 @@ if (import.meta.main) {
                 if (bookPage.IsSuccess) {
                     for (const urlPath of bookPage.Pages) {
                         logger.info(`${url},${urlPath},${++i}`);
-                        await SingleImagePage(bookPage, urlPath);
+                        await SingleImagePage(bookPage, urlPath, DB);
                     }
                 }
 
@@ -90,7 +90,7 @@ if (import.meta.main) {
         for (const bookPage of bookPageList) {
             logger.info(`bookPageList,${++i}/${bookPageList.length}`);
             for (const urlPath of bookPage.Pages) {
-                await SingleImagePage(bookPage, urlPath);
+                await SingleImagePage(bookPage, urlPath, DB);
             }
         }
     }

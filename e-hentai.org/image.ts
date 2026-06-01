@@ -4,7 +4,6 @@ import { DOMParser } from "@b-fuze/deno-dom";
 import { exists } from "@std/fs/exists";
 import { OpenDB, fetchHtml, sleep } from "./common.ts";
 import { ImagePage, ImagePageRecord } from "./imagePage.ts";
-const DB = await OpenDB();
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 
 export type ImageRecord = ImagePageRecord & {
@@ -34,6 +33,28 @@ function parseHtml(record: ImageRecord, html: string) {
 //         });
 //     }
 // }
+
+const WatchDogCheckTimeout = 1000 * 60 * 5;
+let WatchDogCheckUpdate = 0;
+let WatchDogCheckTimeoutID: NodeJS.Timeout | undefined;
+function ResetWatchDogCheck() {
+    if (WatchDogCheckTimeoutID) {
+        clearTimeout(WatchDogCheckTimeoutID);
+    }
+    WatchDogCheckUpdate = Date.now();
+    WatchDogCheckTimeoutID = setTimeout(WatchDogCheck, WatchDogCheckTimeout);
+}
+function WatchDogCheck() {
+    if (WatchDogCheckTimeoutID) {
+        clearTimeout(WatchDogCheckTimeoutID);
+    }
+    if ((Date.now() - WatchDogCheckUpdate) > WatchDogCheckTimeout) {
+        logger.error(`WatchDog TIMEOUT !!! ${WatchDogCheckTimeout / 1000} SEC`)
+    } else {
+        WatchDogCheckTimeoutID = setTimeout(WatchDogCheck, WatchDogCheckTimeout);
+    }
+}
+
 
 async function imageDownload(record: ImageRecord): Promise<ImageRecord> {
     try {
@@ -132,6 +153,7 @@ async function imageDownload(record: ImageRecord): Promise<ImageRecord> {
 }
 
 if (import.meta.main) {
+    const DB = await OpenDB();
     if (Deno.args.length >= 1) {
         const url = Deno.args[0];
         const finish: ImageRecord[] = [];
@@ -215,6 +237,7 @@ if (import.meta.main) {
                             }
                         })());
                         if (tasks.length > 1) {
+                            ResetWatchDogCheck();
                             await Promise.all(tasks);
                             tasks.length = 0;
                         }

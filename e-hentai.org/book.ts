@@ -3,7 +3,6 @@ import { basename } from "node:path";
 import { OpenDB, fetchHtml } from "./common.ts";
 import { DOMParser } from "@b-fuze/deno-dom";
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
-const DB = await OpenDB();
 export type BookRecord = {
     Url: string,
     Path?: string;
@@ -136,7 +135,7 @@ export class Book {
         return book;
     };
 }
-async function SingleBook(url: string) {
+async function SingleBook(url: string, DB: Deno.Kv) {
     let book: Book | undefined;
     let needSave = false;
     const item = await DB.get([Book.Key, url]);
@@ -162,15 +161,16 @@ async function SingleBook(url: string) {
 }
 if (import.meta.main) {
     if (Deno.args.length >= 1) {
+        const DB = await OpenDB();
         const arg0 = Deno.args[0];
         // deno task e-hentai.book https://e-hentai.org/g/3962355/69690a454f/
         if (arg0.startsWith("https://e-hentai.org/g/")) {
-            await SingleBook(arg0);
+            await SingleBook(arg0, DB);
         } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search") || Deno.args[0].startsWith("https://e-hentai.org/uploader/")) {
             const bookLists = await BookList(Deno.args[0]);
             logger.info(bookLists.length);
             for (const url of bookLists) {
-                await SingleBook(url);
+                await SingleBook(url, DB);
             }
         } else if (arg0 === "uploader") {
             for (const element of Deno.args.slice(1)) {
@@ -179,7 +179,7 @@ if (import.meta.main) {
                 const bookLists = await BookList(bookList);
                 logger.info(bookLists.length);
                 for (const url of bookLists) {
-                    await SingleBook(url);
+                    await SingleBook(url, DB);
                 }
             }
         } else if (arg0 === "indexImg") {

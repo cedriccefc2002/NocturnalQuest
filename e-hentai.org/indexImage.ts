@@ -3,7 +3,6 @@ import { basename, join as pathJoin } from "node:path";
 import { exists } from "@std/fs/exists";
 import { cfg, OpenDB, client, sleep } from "./common.ts";
 import { Book, BookRecord } from "./book.ts";
-const DB = await OpenDB();
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 async function indexImageDownload(record: BookRecord) {
     try {
@@ -79,6 +78,7 @@ async function indexImageDownload(record: BookRecord) {
 }
 
 if (import.meta.main) {
+    const DB = await OpenDB();
     const entries = DB.list({ prefix: [Book.Key] });
     let i = 0;
     for await (const entry of entries) {
