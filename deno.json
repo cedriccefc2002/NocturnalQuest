@@ -9,7 +9,7 @@
     "build": "deno compile --allow-read --allow-write mod_replace.ts",
     "build-win": "deno compile --allow-read --allow-write --target=x86_64-pc-windows-msvc mod_replace.ts",
     "server": "deno run --allow-net --allow-read server.ts",
-    "download": "deno run --allow-net --allow-read --allow-write download.ts",
+    "tuoyiku": "deno run --allow-net --allow-read --allow-write tuoyiku.ts",
     "hentai": "deno run --allow-env --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org.ts",
     "hentai.check": "deno run --allow-env --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org.check.ts",
     "e-hentai.book": "deno run --allow-env --unstable-kv --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org/book.ts",
