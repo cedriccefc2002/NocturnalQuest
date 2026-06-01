@@ -22,6 +22,8 @@ const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 export const cfg = {
     baseUrl: "https://e-hentai.org",
     basedir: "/media/cefc/Data/Data/e-hentai",
+    indexImageBaseUrl:"https://ehgt.org",
+    indexImagebasedir: "/media/cefc/Data/Data/ehgt",
     exts: [".webp", ".jpg", ".png", ".gif"]
 }
 
@@ -31,7 +33,7 @@ export async function OpenDB() {
     return await Deno.openKv(dbPath);
 }
 
-let client = await getRandomPxoxy();
+export let client = await getRandomPxoxy();
 let lastChangeProxyUpdate = 0;
 export async function ChangeProxyUpdate(force: boolean = false) {
     // 強制或是超過30分鐘

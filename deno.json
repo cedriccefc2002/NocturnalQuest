@@ -15,7 +15,8 @@
     "e-hentai.book": "deno run --allow-env --unstable-kv --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org/book.ts",
     "e-hentai.bookPage": "deno run --allow-env --unstable-kv --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org/bookPage.ts",
     "e-hentai.imagePage": "deno run --allow-env --unstable-kv --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org/imagePage.ts",
-    "e-hentai.image": "deno run --allow-env --unstable-kv --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org/image.ts"
+    "e-hentai.image": "deno run --allow-env --unstable-kv --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org/image.ts",
+    "e-hentai.indexImage": "deno run --allow-env --unstable-kv --unsafely-ignore-certificate-errors --allow-net --allow-read --allow-write e-hentai.org/indexImage.ts"
   },
   "imports": {
     "preact-render-to-string": "npm:preact-render-to-string@^6.7.0",

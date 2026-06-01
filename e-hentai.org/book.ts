@@ -12,6 +12,7 @@ export type BookRecord = {
     ImagesCount?: number;
     ExtendPageCount?: number;
     BasePages?: string[];
+    IndexImgUrl?: string;
 }
 
 async function BookList(url: string): Promise<string[]> {
@@ -43,6 +44,7 @@ export class Book {
     }
     public Path: string = "";
     public Title: string = "";
+    public IndexImgUrl: string = "";
     public IsSuccess: boolean = false;
     public ImagesCount: number = 0;
     public ExtendPageCount: number = 0;
@@ -53,11 +55,23 @@ export class Book {
             this.ParseHtml(html);
         }
     }
+    private static indexImgP = /https[\w:/.-]+.webp/g;
     private ParseHtml(html: string) {
         if (html !== "") {
             this.BasePages = [];
             const doc = new DOMParser().parseFromString(html, "text/html");
             this.Title = doc.querySelector("H1#gn")?.textContent ?? "";
+            const indexImg = doc.querySelector("#gd1")?.querySelector("div");
+            if (indexImg) {
+                // logger.debug(`${indexImg.outerHTML}`);
+                // logger.debug(`${indexImg.getAttribute("style")}`);
+                const style = indexImg.getAttribute("style");
+                const match = style?.match(Book.indexImgP);
+                if (match !== null && match !== undefined) {
+                    this.IndexImgUrl = match[0]
+                    // logger.debug(`${this.IndexImgUrl}`);
+                }
+            }
             const links = doc.querySelectorAll("a")!;
             const totalmsg = doc.querySelector(".gpc");
             if (totalmsg) {
@@ -92,6 +106,7 @@ export class Book {
             ImagesCount: this.ImagesCount,
             ExtendPageCount: this.ExtendPageCount,
             BasePages: this.BasePages,
+            IndexImgUrl: this.IndexImgUrl,
         };
     };
     public static import(record: BookRecord): Book {
@@ -114,6 +129,9 @@ export class Book {
         }
         if (record.BasePages !== undefined) {
             book.BasePages = record.BasePages;
+        }
+        if (record.IndexImgUrl !== undefined) {
+            book.IndexImgUrl = record.IndexImgUrl;
         }
         return book;
     };
@@ -144,17 +162,17 @@ async function SingleBook(url: string) {
 }
 if (import.meta.main) {
     if (Deno.args.length >= 1) {
-        const url = Deno.args[0];
+        const arg0 = Deno.args[0];
         // deno task e-hentai.book https://e-hentai.org/g/3962355/69690a454f/
-        if (url.startsWith("https://e-hentai.org/g/")) {
-            await SingleBook(url);
+        if (arg0.startsWith("https://e-hentai.org/g/")) {
+            await SingleBook(arg0);
         } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search") || Deno.args[0].startsWith("https://e-hentai.org/uploader/")) {
             const bookLists = await BookList(Deno.args[0]);
             logger.info(bookLists.length);
             for (const url of bookLists) {
                 await SingleBook(url);
             }
-        } else if (url === "uploader") {
+        } else if (arg0 === "uploader") {
             for (const element of Deno.args.slice(1)) {
                 const bookList = `https://e-hentai.org/uploader/${element}`;
                 logger.info(`read ${bookList}`);
@@ -163,6 +181,24 @@ if (import.meta.main) {
                 for (const url of bookLists) {
                     await SingleBook(url);
                 }
+            }
+        } else if (arg0 === "indexImg") {
+            const entries = DB.list({ prefix: [Book.Key] });
+            const bookList: Book[] = [];
+            for await (const entry of entries) {
+                const record = entry.value as BookRecord;
+                if (record.IndexImgUrl === undefined || record.IndexImgUrl === "") {
+                    bookList.push(Book.import(record));
+                }
+            }
+            logger.info(`read ${bookList.length}`);
+            let i = 0;
+            for (const book of bookList) {
+                logger.info(`${book.Url},${++i}/${bookList.length}`);
+                await book.refresh();
+                const record = book.export();
+                const result = await DB.set([Book.Key, book.Url], record);
+                logger.info(`save ${result.ok},${result.versionstamp}`);
             }
         }
         DB.close();
