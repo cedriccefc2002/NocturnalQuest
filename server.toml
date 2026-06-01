@@ -252,4 +252,4 @@ sources = []
 port = 8000
 hostname = "127.0.0.1"
 img_cache_control_max_age = 600
-index_img_refresh_sec = 10
+index_img_refresh_sec = 15
