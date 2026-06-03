@@ -166,7 +166,11 @@ if (import.meta.main) {
         // deno task e-hentai.book https://e-hentai.org/g/3962355/69690a454f/
         if (arg0.startsWith("https://e-hentai.org/g/")) {
             await SingleBook(arg0, DB);
-        } else if (Deno.args[0].startsWith("https://e-hentai.org/?f_search") || Deno.args[0].startsWith("https://e-hentai.org/uploader/")) {
+        } else if (
+            Deno.args[0].startsWith("https://e-hentai.org/?f_search") || 
+            Deno.args[0].startsWith("https://e-hentai.org/uploader/") ||
+            Deno.args[0].startsWith("https://e-hentai.org/?f_cats")
+        ) {
             const bookLists = await BookList(Deno.args[0]);
             logger.info(bookLists.length);
             for (const url of bookLists) {

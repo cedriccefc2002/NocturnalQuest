@@ -253,9 +253,12 @@ if (import.meta.main) {
                         })());
                         if (tasks.length > 1) {
                             ResetWatchDogCheck();
-                            await Promise.all(tasks);
+                            await Promise.allSettled(tasks);
                             tasks.length = 0;
                         }
+                    }
+                    if (tasks.length > 0) {
+                        await Promise.allSettled(tasks);
                     }
                 } else { run = false; }
             } while (run)
