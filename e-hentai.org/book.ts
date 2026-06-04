@@ -167,7 +167,7 @@ if (import.meta.main) {
         if (arg0.startsWith("https://e-hentai.org/g/")) {
             await SingleBook(arg0, DB);
         } else if (
-            Deno.args[0].startsWith("https://e-hentai.org/?f_search") || 
+            Deno.args[0].startsWith("https://e-hentai.org/?f_search") ||
             Deno.args[0].startsWith("https://e-hentai.org/uploader/") ||
             Deno.args[0].startsWith("https://e-hentai.org/?f_cats")
         ) {
@@ -204,6 +204,42 @@ if (import.meta.main) {
                 const result = await DB.set([Book.Key, book.Url], record);
                 logger.info(`save ${result.ok},${result.versionstamp}`);
             }
+        } else if (arg0 === "search" && Deno.args.length >= 2) {
+            // https://e-hentai.org/?f_search=%E6%B2%88%E5%A8%87%E5%A8%87+-censorship+-non-nude+-gender&prev=1
+            const search = Deno.args[1];
+            const excludes = [
+                "non-nude",
+                "censorship",
+                "gender"
+            ];
+            const prefix = "https://e-hentai.org/?f_search="
+            let prev = 1;
+            let continueRun = false;
+            do {
+                const url = `${prefix}${encodeURIComponent(search)}+${excludes.map(x => `-${x}`).join("+")}&prev=${prev}`;
+                logger.trace(url);
+                const bookLists = await BookList(url);
+                logger.info(bookLists.length);
+                for (const url of bookLists) {
+                    await SingleBook(url, DB);
+                }
+                if (bookLists.length == 25) {
+                    try {
+                        const d = new URL(bookLists[0]).pathname.match(/\d+/);
+                        if (d != null) {
+                            // logger.warn(`${JSON.stringify(d)}}`);
+                            prev = parseInt(d[0]);
+                            continueRun = true;
+                        } else {
+                            continueRun = false;
+                        }
+                    } catch (error) {
+                        logger.warn(`${bookLists[0]}, ${error}`)
+                    }
+                } else {
+                    continueRun = false;
+                }
+            } while (continueRun);
         }
         DB.close();
     }
