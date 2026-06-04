@@ -267,4 +267,5 @@ if (import.meta.main) {
         }
     }
     DB.close();
+    clearTimeout(WatchDogCheckTimeoutID);
 }
