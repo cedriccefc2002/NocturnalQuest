@@ -206,6 +206,8 @@ if (import.meta.main) {
             }
         } else if (arg0 === "search" && Deno.args.length >= 2) {
             // https://e-hentai.org/?f_search=%E6%B2%88%E5%A8%87%E5%A8%87+-censorship+-non-nude+-gender&prev=1
+            // 钛合金titi
+            // https://e-hentai.org/?f_search=uploader:sslgod+-censorship+-non-nude+-gender&prev=1  deno task e-hentai.book search "uploader:sslgod"
             const search = Deno.args[1];
             const excludes = [
                 "non-nude",
