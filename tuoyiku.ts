@@ -2,10 +2,10 @@ import { basename, join as pathJoin } from "node:path";
 import { exists } from "@std/fs/exists";
 
 const cfg = {
-    saveDir: "/media/cefc/Data/Data/tuoyiku",
+    saveDir: "/run/media/cefc/Data/Data/tuoyiku/",
     dataDir: "tuoyiku",
-    now: "20260601",
-    before: "20260526",
+    now: "20260621",
+    before: "20260601",
     subs: [
         {
             name: "all",

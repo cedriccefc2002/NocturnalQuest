@@ -74,7 +74,26 @@ const demo2 = {
     "currentPage": 1,
     "total": 3000
 }
-
+// fetch("https://tuki88.xyz/dashboard/filter-by-category", {
+//   "headers": {
+//     "accept": "*/*",
+//     "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+//     "content-type": "application/json",
+//     "priority": "u=1, i",
+//     "sec-ch-ua": "\"Google Chrome\";v=\"149\", \"Chromium\";v=\"149\", \"Not)A;Brand\";v=\"24\"",
+//     "sec-ch-ua-mobile": "?0",
+//     "sec-ch-ua-platform": "\"Linux\"",
+//     "sec-fetch-dest": "empty",
+//     "sec-fetch-mode": "cors",
+//     "sec-fetch-site": "same-origin",
+//     "x-csrf-token": "K68rp2nshxsr5gb2wvPIcucP1uDWoLIus5aNRXJ2"
+//   },
+//   "referrer": "https://tuki88.xyz/dashboard",
+//   "body": "{\"category\":\"image\",\"page\":1,\"per_page\":50,\"username\":null}",
+//   "method": "POST",
+//   "mode": "cors",
+//   "credentials": "include"
+// });
 type category = "image" | "video" | "i2v" | "mdress" | "iface" | "vface" | "udress" | "cdress"
 //              3000       622      5839    29         610       824       396         4
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -84,7 +103,7 @@ async function loadBycategory(category: category, page: number = 1): Promise<[ha
     try {
         // 使用 chrome 複製為 fetch模式抓取 headers x-csrf-token 每次登入都不一樣
         // js 貼到 chrome 執行
-        const d = await fetch("https://tuoyiku.net/dashboard/filter-by-category", {
+        const d = await fetch("https://tuki88.xyz/dashboard/filter-by-category", {
             "headers": {
                 "accept": "*/*",
                 "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -96,9 +115,9 @@ async function loadBycategory(category: category, page: number = 1): Promise<[ha
                 "sec-fetch-dest": "empty",
                 "sec-fetch-mode": "cors",
                 "sec-fetch-site": "same-origin",
-                "x-csrf-token": "73hBiClsJVz6T6zHvCp1G3dq6yUXVp0TmkDISrsB"
+                "x-csrf-token": "K68rp2nshxsr5gb2wvPIcucP1uDWoLIus5aNRXJ2"
             },
-            "referrer": "https://tuoyiku.net/dashboard",
+            "referrer": "https://tuki88.xyz/dashboard",
             "body": "{\"category\":\"" + category + "\",\"page\":" + page + ",\"per_page\":50,\"username\":null}",
             "method": "POST",
             "mode": "cors",
@@ -119,14 +138,33 @@ async function loadBycategory(category: category, page: number = 1): Promise<[ha
     }
 }
 
-
+// fetch("https://tuki88.xyz/dashboard/load-more", {
+//   "headers": {
+//     "accept": "*/*",
+//     "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+//     "content-type": "application/json",
+//     "priority": "u=1, i",
+//     "sec-ch-ua": "\"Google Chrome\";v=\"149\", \"Chromium\";v=\"149\", \"Not)A;Brand\";v=\"24\"",
+//     "sec-ch-ua-mobile": "?0",
+//     "sec-ch-ua-platform": "\"Linux\"",
+//     "sec-fetch-dest": "empty",
+//     "sec-fetch-mode": "cors",
+//     "sec-fetch-site": "same-origin",
+//     "x-csrf-token": "K68rp2nshxsr5gb2wvPIcucP1uDWoLIus5aNRXJ2"
+//   },
+//   "referrer": "https://tuki88.xyz/dashboard",
+//   "body": "{\"page\":2,\"username\":null}",
+//   "method": "POST",
+//   "mode": "cors",
+//   "credentials": "include"
+// });
 
 async function load(page: number = 1): Promise<[hasMore: boolean, resps: string[]]> {
     const resps: string[] = [];
     try {
         // 使用 chrome 複製為 fetch模式抓取 headers x-csrf-token 每次登入都不一樣
         // js 貼到 chrome 執行
-        const d = await fetch("https://tuoyiku.net/dashboard/load-more", {
+        const d = await fetch("https://tuki88.xyz/dashboard/load-more", {
             "headers": {
                 "accept": "*/*",
                 "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -138,9 +176,9 @@ async function load(page: number = 1): Promise<[hasMore: boolean, resps: string[
                 "sec-fetch-dest": "empty",
                 "sec-fetch-mode": "cors",
                 "sec-fetch-site": "same-origin",
-                "x-csrf-token": "TxGk15fCmmiSk3KsuoWdc95k4jZPA94r9JXVrEFP"
+                "x-csrf-token": "K68rp2nshxsr5gb2wvPIcucP1uDWoLIus5aNRXJ2"
             },
-            "referrer": "https://tuoyiku.net/dashboard",
+            "referrer": "https://tuki88.xyz/dashboard",
             "body": "{\"page\":" + page + ",\"username\":null}",
             "method": "POST",
             "mode": "cors",

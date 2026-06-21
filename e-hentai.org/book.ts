@@ -19,9 +19,11 @@ async function BookList(url: string): Promise<string[]> {
     try {
         const [isSuccess, html] = await fetchHtml(url, true, 30);
         if (isSuccess && html !== undefined) {
+            // logger.trace(html);
             const doc = new DOMParser().parseFromString(html, "text/html");
             const links = doc.querySelectorAll("a")!;
             for (const element of links) {
+                // logger.trace(`${element.getAttribute("href")}`);
                 const href = element.getAttribute("href");
                 if (href?.startsWith("https://e-hentai.org/g/")) {
                     result.push(href)

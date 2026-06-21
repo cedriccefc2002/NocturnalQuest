@@ -21,9 +21,9 @@ export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 const logger = log4js.getLogger(basename(import.meta.filename ?? ""));
 export const cfg = {
     baseUrl: "https://e-hentai.org",
-    basedir: "/media/cefc/Data/Data/e-hentai",
+    basedir: "/run/media/cefc/Data/Data/e-hentai",
     indexImageBaseUrl:"https://ehgt.org",
-    indexImagebasedir: "/media/cefc/Data/Data/ehgt",
+    indexImagebasedir: "/run/media/cefc/Data/Data/ehgt",
     exts: [".webp", ".jpg", ".png", ".gif"]
 }
 

@@ -3,15 +3,15 @@ exts = [".webp", ".jpg", ".png", ".gif"]
 # IndexImgs
 [IndexImgs]
 BaseSources = [
-    "/media/cefc/Data/Data/Source/",
-    "/media/cefc/Data/Data/tuoyiku/",
-    "/media/cefc/Data/Data/e-hentai/"
+    "/run/media/cefc/Data/Data/Source/",
+    "/run/media/cefc/Data/Data/tuoyiku/",
+    "/run/media/cefc/Data/Data/e-hentai/"
 ]
 
 # BaseSources
 [Background]
 BaseSources = [
-    "/media/cefc/Data/Data/Source/Wallpaper/Blade and soul Wallpapers/",
+    "/run/media/cefc/Data/Data/Source/Wallpaper/Blade and soul Wallpapers/",
 ]
 
 # 地圖
@@ -67,8 +67,8 @@ sources = []
 [Monster]
 ResizeImage = false
 BaseSources = [
-    "/media/cefc/Data/Data/Source/Cosplay/Neko_薇薇微博图集2026/",
-    "/media/cefc/Data/Data/e-hentai/_g_3401944_d5461206dc_/Realistic AI works 仿真AI作品 05 [AI Generated]/",
+    "/run/media/cefc/Data/Data/Source/Cosplay/Neko_薇薇微博图集2026/",
+    "/run/media/cefc/Data/Data/e-hentai/_g_3401944_d5461206dc_/Realistic AI works 仿真AI作品 05 [AI Generated]/",
 ]
 [[Monster.Source]]
 name = "acolyte"
@@ -165,7 +165,7 @@ sources = []
 [Class]
 ResizeImage = true
 BaseSources = [
-    "/media/cefc/Data/Data/e-hentai/_g_3320997_48293872f7_/Realistic AI works 仿真AI作品 02 [AI Generated]/",
+    "/run/media/cefc/Data/Data/e-hentai/_g_3320997_48293872f7_/Realistic AI works 仿真AI作品 02 [AI Generated]/",
 ]
 
 [[Class.Source]]
@@ -222,18 +222,18 @@ sources = []
 name = 'warrior'
 notIncludeBaseSources = true
 sources = [
-    "/media/cefc/Data/Data/e-hentai/_g_3961667_ed442c835e_/Female Warriors Volume 62 [AI generated]/",
+    "/run/media/cefc/Data/Data/e-hentai/_g_3961667_ed442c835e_/Female Warriors Volume 62 [AI generated]/",
 ]
 [[Class.Source]]
 name = 'warrior_blood'
 sources = [
-    "/media/cefc/Data/Data/e-hentai/_g_3961667_ed442c835e_/Female Warriors Volume 62 [AI generated]/",
+    "/run/media/cefc/Data/Data/e-hentai/_g_3961667_ed442c835e_/Female Warriors Volume 62 [AI generated]/",
 ]
 notIncludeBaseSources = true
 [[Class.Source]]
 name = 'warrior_protection'
 sources = [
-    "/media/cefc/Data/Data/e-hentai/_g_3961667_ed442c835e_/Female Warriors Volume 62 [AI generated]/",
+    "/run/media/cefc/Data/Data/e-hentai/_g_3961667_ed442c835e_/Female Warriors Volume 62 [AI generated]/",
 ]
 notIncludeBaseSources = true
 
