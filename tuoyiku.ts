@@ -4,8 +4,8 @@ import { exists } from "@std/fs/exists";
 const cfg = {
     saveDir: "/run/media/cefc/Data/Data/tuoyiku/",
     dataDir: "tuoyiku",
-    now: "20260621",
-    before: "20260601",
+    now: "20260926",
+    before: "20260912",
     subs: [
         {
             name: "all",
@@ -42,6 +42,18 @@ const cfg = {
         {
             name: "cdress",
             save: "cdress",
+        },
+        {
+            name: "v2v",
+            save: "v2v",
+        },
+        {
+            name: "ref2va",
+            save: "ref2va",
+        },
+        {
+            name: "i2va",
+            save: "i2va",
         }
     ]
 };

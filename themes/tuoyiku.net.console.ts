@@ -94,7 +94,11 @@ const demo2 = {
 //   "mode": "cors",
 //   "credentials": "include"
 // });
-type category = "image" | "video" | "i2v" | "mdress" | "iface" | "vface" | "udress" | "cdress"
+
+
+
+const token = "K68rp2nshxsr5gb2wvPIcucP1uDWoLIus5aNRXJ2";
+type category = "image" | "video" | "i2v" | "mdress" | "iface" | "vface" | "udress" | "cdress" | "v2v" | "ref2va"
 //              3000       622      5839    29         610       824       396         4
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -115,7 +119,7 @@ async function loadBycategory(category: category, page: number = 1): Promise<[ha
                 "sec-fetch-dest": "empty",
                 "sec-fetch-mode": "cors",
                 "sec-fetch-site": "same-origin",
-                "x-csrf-token": "K68rp2nshxsr5gb2wvPIcucP1uDWoLIus5aNRXJ2"
+                "x-csrf-token": token
             },
             "referrer": "https://tuki88.xyz/dashboard",
             "body": "{\"category\":\"" + category + "\",\"page\":" + page + ",\"per_page\":50,\"username\":null}",
@@ -138,27 +142,6 @@ async function loadBycategory(category: category, page: number = 1): Promise<[ha
     }
 }
 
-// fetch("https://tuki88.xyz/dashboard/load-more", {
-//   "headers": {
-//     "accept": "*/*",
-//     "accept-language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-//     "content-type": "application/json",
-//     "priority": "u=1, i",
-//     "sec-ch-ua": "\"Google Chrome\";v=\"149\", \"Chromium\";v=\"149\", \"Not)A;Brand\";v=\"24\"",
-//     "sec-ch-ua-mobile": "?0",
-//     "sec-ch-ua-platform": "\"Linux\"",
-//     "sec-fetch-dest": "empty",
-//     "sec-fetch-mode": "cors",
-//     "sec-fetch-site": "same-origin",
-//     "x-csrf-token": "K68rp2nshxsr5gb2wvPIcucP1uDWoLIus5aNRXJ2"
-//   },
-//   "referrer": "https://tuki88.xyz/dashboard",
-//   "body": "{\"page\":2,\"username\":null}",
-//   "method": "POST",
-//   "mode": "cors",
-//   "credentials": "include"
-// });
-
 async function load(page: number = 1): Promise<[hasMore: boolean, resps: string[]]> {
     const resps: string[] = [];
     try {
@@ -175,8 +158,8 @@ async function load(page: number = 1): Promise<[hasMore: boolean, resps: string[
                 "sec-ch-ua-platform": "\"Linux\"",
                 "sec-fetch-dest": "empty",
                 "sec-fetch-mode": "cors",
-                "sec-fetch-site": "same-origin",
-                "x-csrf-token": "K68rp2nshxsr5gb2wvPIcucP1uDWoLIus5aNRXJ2"
+                    "sec-fetch-site": "same-origin",
+                    "x-csrf-token": token
             },
             "referrer": "https://tuki88.xyz/dashboard",
             "body": "{\"page\":" + page + ",\"username\":null}",
@@ -235,20 +218,14 @@ async function loadAllByCategory(category: category, page: number = 1) {
     return resps;
 }
 
-// console.log(JSON.stringify(await loadAll()));
-
+console.log(JSON.stringify(await loadAll()));
 console.log(JSON.stringify(await loadAllByCategory("cdress")));
-
-console.log(JSON.stringify(await loadAllByCategory("udress")));
-
-console.log(JSON.stringify(await loadAllByCategory("vface")));
-
-console.log(JSON.stringify(await loadAllByCategory("iface")));
-
-console.log(JSON.stringify(await loadAllByCategory("mdress")));
-
 console.log(JSON.stringify(await loadAllByCategory("i2v")));
-
-console.log(JSON.stringify(await loadAllByCategory("video")));
-
+console.log(JSON.stringify(await loadAllByCategory("iface")));
 console.log(JSON.stringify(await loadAllByCategory("image")));
+console.log(JSON.stringify(await loadAllByCategory("mdress")));
+console.log(JSON.stringify(await loadAllByCategory("ref2va")));
+console.log(JSON.stringify(await loadAllByCategory("udress")));
+console.log(JSON.stringify(await loadAllByCategory("v2v")));
+console.log(JSON.stringify(await loadAllByCategory("vface")));
+console.log(JSON.stringify(await loadAllByCategory("video")));
